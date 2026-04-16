@@ -522,15 +522,15 @@
 
   <div class="note warn-note">
     <strong>切替時の注意:</strong>
-    汎用コード（「決まった時刻に」「特定の条件の場合」等）に移行する際は、
+    「朝食前」「起床時」等の主要な食事タイミングコードは新マスタにも標準コードとして残っています。
+    ただし、汎用コード（「決まった時刻に」「特定の条件の場合」等）に移行するケースでは、
     <strong>用法補足レコードへの記録が正しく行われるよう、システム設定の確認が重要</strong>です。
     コードだけを差し替えて補足レコードの設定を怠ると、具体的な服用タイミングや条件の情報が
-    処方箋上から欠落します。特に以下の薬剤は食事タイミングとの関係が臨床上重要であり、
-    補足レコードでの情報伝達が不可欠です:
+    処方箋上から欠落します。特に以下の薬剤は食事タイミングとの関係が臨床上重要です:
     <ul style="margin-top:.5rem; margin-bottom:0;">
-      <li>ビスホスホネート製剤 — 起床時・空腹時の服用が必須</li>
-      <li>速効型インスリン分泌促進薬 — 食直前の服用が必要</li>
-      <li>α-グルコシダーゼ阻害薬（ボグリボース、アカルボース等）— 食直前の服用が必須</li>
+      <li>ビスホスホネート製剤 — 起床時・空腹時の服用が必須（標準コードあり）</li>
+      <li>速効型インスリン分泌促進薬 — 食直前の服用が必要（標準コードあり）</li>
+      <li>α-グルコシダーゼ阻害薬（ボグリボース等）— 食直前の服用が必須（標準コードあり）</li>
     </ul>
   </div>
 </section>
@@ -764,10 +764,162 @@
   </div>
 </section>
 
-<!-- ──────── 7. 対応のお願い ──────── -->
+<!-- ──────── 7. 妥当性評価 ──────── -->
+<section>
+  <h2>7. 妥当性評価 — この改訂は十分か</h2>
+  <p>
+    改訂の内容を厚労省配布 Excel・JAMI 標準用法規格・JPFHIR CodeSystem・
+    電子処方箋推進会議資料等の一次ソースで検証し、課題と評価をまとめました。
+  </p>
+
+  <h3>評価① 食事タイミング系の情報は保たれるか</h3>
+  <table class="comparison-table">
+    <thead>
+      <tr><th style="width:25%">観点</th><th>検証結果</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>主要コードの存続</strong></td>
+        <td>
+          「朝食前」「朝食後」「起床時」「食直前」等の主要パターンは新マスタに<strong>標準コードとして残存</strong>。<br>
+          <span style="font-size:.82rem; color:var(--gray-600);">
+            JPFHIR CodeSystem（202507版）で確認: 1011000100000000「１日１回朝食前 服用」、
+            1011000090000000「１日１回起床時 服用」、1012000190000000「１日２回起床時と朝食前 服用」等
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>投与タイミングフィールド</strong></td>
+        <td>
+          用法マスタレイアウト表の「投与タイミング」フィールド（項番14）は、新マスタ全1,803件で
+          <strong>「0: 不要」</strong>に設定。独立した構造化フィールドとしては使われなくなった。<br>
+          <span style="font-size:.82rem; color:var(--gray-600);">
+            ※ 食事タイミング情報はコード名称自体（「朝食前」等）に埋め込まれる形で保持される。
+            適用ガイドコード使用時は用法補足レコード（用法補足区分5: 用法の続き）に記録。
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>国際標準との比較</strong></td>
+        <td>
+          HL7 FHIR R5 は <code>Timing.repeat.when</code> で食事タイミング（ACM=食前、PCM=食後、WAKE=起床時等）を
+          独立した構造要素として表現可能。日本の新マスタはコード名称への埋込み方式であり、<strong>二次利用・機械判定の面ではやや不利</strong>。
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note" style="background:var(--success-bg); border-color:#a9dfbf;">
+    <strong style="color:var(--success);">評価: 概ね妥当</strong> —
+    「食事タイミング情報の全面消失」ではなく、主要パターンはコードとして残存。
+    ただし構造化の観点では弱体化しており、例外的なケースは補足レコード・自由記載に依存する。
+    ビスホスホネート等の臨床上重要な食事タイミング指定は引き続き標準コードで表現可能。
+  </div>
+
+  <h3>評価② 注射・注入のカバレッジは足りているか</h3>
+  <table class="comparison-table">
+    <thead>
+      <tr><th></th><th>旧マスタ</th><th></th><th>新マスタ</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>注射コード</strong></td>
+        <td class="old">393件（ダミー率 46.8%）</td>
+        <td class="arrow">→</td>
+        <td class="new">565件（全件標準コード）</td>
+      </tr>
+      <tr>
+        <td><strong>注入コード</strong></td>
+        <td class="old">57件（ダミー率 98.2%）</td>
+        <td class="arrow">→</td>
+        <td class="new">28件（全件標準コード）</td>
+      </tr>
+      <tr>
+        <td><strong>特徴</strong></td>
+        <td>テンプレートコード（○回）が中心。投与方法の区別なし</td>
+        <td class="arrow">→</td>
+        <td>ワンショット／点滴／持続投与、院内／在宅の場面区別あり</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:.88rem;">
+    旧マスタの注射・注入コードは<strong>全件が類型3（削除）</strong>。
+    新マスタでは注射が 393→565 件に増加し、投与方法と使用場面まで細分化された標準コードに全面刷新。
+    旧マスタに存在したダミー／テンプレートコードが解消され、<strong>コード品質は大幅に改善</strong>。
+  </p>
+  <div class="note" style="background:var(--success-bg); border-color:#a9dfbf;">
+    <strong style="color:var(--success);">評価: 大幅改善</strong> —
+    注射領域は今回の改訂で最も改善された分野。
+    ただし旧コードからの移行作業（全件再マッピング）は各施設で必要。
+    学術文献（JAMI 2024年春季学術大会）でも HS027 標準への対応は「課題」として報告されており、
+    注射の標準化は業界全体で進行中のテーマ。
+  </div>
+
+  <h3>評価③ 経過措置期間は十分か</h3>
+  <table class="comparison-table">
+    <thead>
+      <tr><th>項目</th><th>状況</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>切替期間</strong></td>
+        <td>2025年11月〜2026年7月末 = <strong>9ヶ月間</strong></td>
+      </tr>
+      <tr>
+        <td><strong>導入率（2025年9月時点）</strong></td>
+        <td>
+          全体: <strong>35.3%</strong>（75,332施設）<br>
+          <span style="font-size:.85rem;">病院 15.3% ／ 医科診療所 22.1% ／ 薬局 85.5%</span><br>
+          <span style="font-size:.82rem; color:var(--gray-600);">
+            出典: 第5回電子処方箋推進会議資料（令和7年9月29日）
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>主要ベンダー対応</strong></td>
+        <td>
+          富士通 Japan: <strong>対応済み</strong>（2025年7月末時点）<br>
+          NEC: <strong>2026年3月対応予定</strong>（移行期間の折り返し地点）<br>
+          <span style="font-size:.82rem; color:var(--gray-600);">
+            病院向け約5,600施設、医科診療所向け約67,000施設のベンダーを厚労省が確認
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>移行中の仕様更新</strong></td>
+        <td>
+          2026年3月25日: 電子処方箋システムの基本機能更新<br>
+          2026年3月26日: システムベンダ向け技術解説書更新<br>
+          <span style="font-size:.82rem; color:var(--gray-600);">
+            → 移行期間の真っ只中に周辺仕様が変更されている
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>補助金</strong></td>
+        <td>
+          電子処方箋<strong>導入</strong>の補助は令和8年9月まで延長（ICT基金）。<br>
+          ただし<strong>用法マスタ切替に特化した補助は存在しない</strong>。
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <strong>評価: 対象施設数を踏まえると現実的だが、個々の施設にとっては余裕がない</strong> —
+    病院の導入率は15.3%（約1,200施設）であり、実際に移行作業が必要な施設数は限定的。
+    導入率が低いからこそ9ヶ月で対応可能という判断は合理的であり、
+    仮に導入率が50%超であればベンダーのサポート負荷も大幅に増え、より長期間が必要になる。
+    ただし、<strong>NEC等の主要ベンダー対応完了が2026年3月（残4ヶ月）</strong>であること、
+    移行期間中にも周辺仕様が更新されていることから、
+    個々の施設にとっては<strong>ベンダー対応を待ってから着手すると時間が限られる</strong>。
+    過去の医療情報標準化でも診療所で2ヶ月・病院で3〜6ヶ月の移行作業が通例であり、
+    <strong>ベンダー対応待ちの施設ほど早期の計画策定が重要</strong>。
+  </div>
+</section>
+
+<!-- ──────── 8. 対応のお願い ──────── -->
 <section>
   <div class="cta">
-    <h2>対応のお願い</h2>
+    <h2>8. 対応のお願い</h2>
     <p>
       本改訂は、JAMI・日本薬剤師会・日本病院薬剤師会の提言を踏まえ、<br>
       電子処方箋を<strong>安全かつ正確に</strong>運用するための基盤整備です。<br>
@@ -808,6 +960,18 @@
     ／
     <a href="https://www.jshp.or.jp/content/2025/0722-1.html" target="_blank">
       日本病院薬剤師会 マスタ見直しについて（2025年7月）
+    </a>
+    ／
+    <a href="https://jpfhir.jp/fhir/core/terminology/ig/CodeSystem-mhlw-medicationusagejami-cs.html" target="_blank">
+      JPFHIR 標準用法コード CodeSystem（202507版）
+    </a>
+    ／
+    <a href="https://www.mhlw.go.jp/content/11121000/001569995.pdf" target="_blank">
+      第5回電子処方箋推進会議資料（令和7年9月29日）
+    </a>
+    ／
+    <a href="https://www.digital.go.jp/resources/govdashboard/electronic-prescription" target="_blank">
+      デジタル庁 電子処方箋導入状況ダッシュボード
     </a>
   </p>
   <p>本資料は 2026年4月16日時点の情報に基づいて作成しています。</p>
