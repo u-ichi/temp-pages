@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Auto-inject Google Analytics tag into staged HTML files
+# Measurement ID: G-YNNVTYJGS2
+
+GA_SNIPPET='<!-- Google tag (gtag.js) -->\
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YNNVTYJGS2"></script>\
+<script>\
+  window.dataLayer = window.dataLayer || [];\
+  function gtag(){dataLayer.push(arguments);}\
+  gtag("js", new Date());\
+  gtag("config", "G-YNNVTYJGS2");\
+</script>'
+
+modified=false
+
+for file in $(git diff --cached --name-only --diff-filter=ACM -- '*.html'); do
+  if grep -q 'G-YNNVTYJGS2' "$file"; then
+    continue
+  fi
+
+  if ! grep -q '</head>' "$file"; then
+    continue
+  fi
+
+  # Use awk for reliable multiline insertion before </head>
+  awk -v tag="$GA_SNIPPET" '/<\/head>/ { print tag } { print }' "$file" > "$file.tmp" \
+    && mv "$file.tmp" "$file"
+  git add "$file"
+  modified=true
+  echo "pre-commit: GA tag injected into $file"
+done
+
+if [ "$modified" = true ]; then
+  echo "pre-commit: GA tags have been added to staged HTML files."
+fi
+
+exit 0
