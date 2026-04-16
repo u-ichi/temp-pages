@@ -17,6 +17,8 @@
     --gray-100: #ecf0f1;
     --gray-600: #636e72;
     --gray-800: #2d3436;
+    --info: #8e44ad;
+    --info-bg: #f5eef8;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,7 +63,7 @@
   }
 
   /* ── 共通 ── */
-  .container { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
+  .container { max-width: 920px; margin: 0 auto; padding: 0 1.5rem; }
   section { padding: 2.5rem 0; }
   section + section { border-top: 1px solid var(--gray-100); }
   h2 {
@@ -236,6 +238,7 @@
   }
   .timeline-item.warn::before { background: var(--warn); box-shadow: 0 0 0 2px #f5b7b1; }
   .timeline-item.done::before { background: var(--success); box-shadow: 0 0 0 2px #a9dfbf; }
+  .timeline-item.current::before { background: #f39c12; box-shadow: 0 0 0 2px #fdebd0; }
   .timeline-date {
     font-size: .82rem;
     font-weight: 700;
@@ -243,6 +246,7 @@
   }
   .timeline-item.warn .timeline-date { color: var(--warn); }
   .timeline-item.done .timeline-date { color: var(--success); }
+  .timeline-item.current .timeline-date { color: #e67e22; }
   .timeline-body {
     font-size: .92rem;
     margin-top: .1rem;
@@ -326,6 +330,57 @@
   }
   .note strong { color: #b7950b; }
 
+  .note.info {
+    background: var(--info-bg);
+    border-color: #d2b4de;
+  }
+  .note.info strong { color: var(--info); }
+
+  .note.warn-note {
+    background: var(--warn-bg);
+    border-color: #f5b7b1;
+  }
+  .note.warn-note strong { color: var(--warn); }
+
+  /* ── 二層構造の図 ── */
+  .layer-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin: 1rem 0;
+    max-width: 600px;
+  }
+  .layer {
+    border-radius: 8px;
+    padding: 1rem 1.4rem;
+    position: relative;
+  }
+  .layer.top {
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+  }
+  .layer.bottom {
+    background: var(--success-bg);
+    border: 2px solid var(--success);
+  }
+  .layer .layer-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: .3rem;
+  }
+  .layer.top .layer-label { color: var(--accent); }
+  .layer.bottom .layer-label { color: var(--success); }
+  .layer .layer-content {
+    font-size: .9rem;
+  }
+  .layer-arrow {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--gray-600);
+  }
+
   @media (max-width: 600px) {
     .hero h1 { font-size: 1.3rem; }
     .flow { flex-direction: column; }
@@ -345,8 +400,9 @@
   </div>
 </header>
 
-<!-- ──────── 1. 背景と課題 ──────── -->
 <div class="container">
+
+<!-- ──────── 1. 背景と課題 ──────── -->
 <section>
   <h2>1. なぜ用法マスタを改訂するのか</h2>
 
@@ -364,8 +420,8 @@
       <ul>
         <li><strong>コードが多すぎる</strong> — 約 2,860 件。似た用法が別々のコードで存在</li>
         <li><strong>表記が揺れている</strong> — 「朝食中」と「朝食事中」が別コード</li>
+        <li><strong>JAMI標準用法規格との乖離</strong> — 電子処方箋のモデル事業で標準用法コードとの食い違いが発覚し、施設間で混乱が発生</li>
         <li><strong>自由記載コードの乱用</strong> — 該当コードがないためダミーコードに独自の用法を設定 → 施設ごとにバラバラ</li>
-        <li><strong>施設間で意味が通じない</strong> — 同じコードを違う意味で使うリスク</li>
       </ul>
     </div>
     <div class="flow-arrow">→</div>
@@ -373,11 +429,19 @@
       <h4>改訂後のゴール（新マスタ）</h4>
       <ul>
         <li><strong>約 1,800 件に整理</strong> — 類似コードを統合し、1コード＝1つの意味に</li>
-        <li><strong>表記を統一</strong> — 名称の揺れを解消</li>
+        <li><strong>JAMI標準との整合</strong> — 学会・業界団体の提言を反映し、標準規格に準拠</li>
+        <li><strong>二層構造へ移行</strong> — 用法コード（分類）＋ 用法補足レコード（詳細）の組合せで情報を記録</li>
         <li><strong>標準コードで共有</strong> — どの施設でも同じコードが同じ意味</li>
-        <li><strong>データ活用の基盤</strong> — 集計・分析・二次利用が可能に</li>
       </ul>
     </div>
+  </div>
+
+  <div class="note info">
+    <strong>改訂の経緯:</strong>
+    日本医療情報学会（JAMI）が2023年5月に「電子処方箋の用法マスタに関する提言」を、
+    医薬品情報標準化推進協議会が同年3月に厚労省へ意見書を提出。
+    標準用法コードと電子処方箋用法コードの不整合が医療安全上のリスクとして指摘され、
+    関係団体との協議を経て今回の改訂に至りました。
   </div>
 
   <div class="note">
@@ -388,9 +452,84 @@
   </div>
 </section>
 
-<!-- ──────── 2. 数字で見る変化 ──────── -->
+<!-- ──────── 2. 設計思想 ──────── -->
 <section>
-  <h2>2. 数字で見る改訂の規模</h2>
+  <h2>2. 新マスタの設計思想 — 二層構造への移行</h2>
+
+  <p>
+    今回の改訂の本質は、単なるコード数の削減ではありません。
+    旧マスタの<strong>「すべてをコード名称に詰め込む」列挙型</strong>から、
+    新マスタの<strong>「コード（分類）＋ 補足レコード（詳細）」の二層構造</strong>への設計転換です。
+  </p>
+
+  <h3>新しい情報の記録方法</h3>
+
+  <div class="layer-diagram">
+    <div class="layer top">
+      <div class="layer-label">第1層: 用法コード（分類・パターン）</div>
+      <div class="layer-content">
+        例: <code>（特定の条件の場合）　点眼</code><br>
+        → 投与経路と大まかなタイミングパターンを表す
+      </div>
+    </div>
+    <div class="layer-arrow">＋</div>
+    <div class="layer bottom">
+      <div class="layer-label">第2層: 用法補足レコード（具体的な条件・詳細）</div>
+      <div class="layer-content">
+        例: <code>頓用の条件指定 → 「疼痛時」</code><br>
+        → 具体的な使用条件・タイミングを構造化された補足フィールドに記録
+      </div>
+    </div>
+  </div>
+
+  <p>
+    旧マスタでは「疼痛時　点眼」「発熱時　点眼」「発作時　点眼」がすべて別のコードでした。
+    新マスタでは、<strong>投与経路は用法コードで、具体的な条件は補足レコードで</strong>記録します。
+    これにより、コードの組合せ爆発を防ぎつつ、臨床情報を保持できます。
+  </p>
+
+  <h3>補足レコードが必要になるケース</h3>
+  <table class="comparison-table">
+    <thead>
+      <tr><th>補足フィールド</th><th>対象</th><th>記録例</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>頓用の条件指定</strong></td>
+        <td>「（特定の条件の場合）」「必要時」「適宜」のコード</td>
+        <td>「疼痛時」「発熱時」「血糖上昇時」等</td>
+      </tr>
+      <tr>
+        <td><strong>投与時刻</strong></td>
+        <td>「決まった時刻に」のコード（時刻指定型）</td>
+        <td>「8:00」「20:00」等</td>
+      </tr>
+      <tr>
+        <td><strong>部位</strong></td>
+        <td>外用の貼付・塗布・点眼等</td>
+        <td>「左眼」「右肩」等</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note warn-note">
+    <strong>切替時の注意:</strong>
+    汎用コード（「決まった時刻に」「特定の条件の場合」等）に移行する際は、
+    <strong>用法補足レコードへの記録が正しく行われるよう、システム設定の確認が重要</strong>です。
+    コードだけを差し替えて補足レコードの設定を怠ると、具体的な服用タイミングや条件の情報が
+    処方箋上から欠落します。特に以下の薬剤は食事タイミングとの関係が臨床上重要であり、
+    補足レコードでの情報伝達が不可欠です:
+    <ul style="margin-top:.5rem; margin-bottom:0;">
+      <li>ビスホスホネート製剤 — 起床時・空腹時の服用が必須</li>
+      <li>速効型インスリン分泌促進薬 — 食直前の服用が必要</li>
+      <li>α-グルコシダーゼ阻害薬（ボグリボース、アカルボース等）— 食直前の服用が必須</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ──────── 3. 数字で見る変化 ──────── -->
+<section>
+  <h2>3. 数字で見る改訂の規模</h2>
 
   <div class="stat-row">
     <div class="stat-item">
@@ -420,33 +559,28 @@
     <div class="card solution">
       <div class="label">新規追加コード</div>
       <div class="value">785 件</div>
-      <div class="desc">別表4: より適切な粒度で新設されたコード</div>
+      <div class="desc">別表4: 注射565件を中心に新設（内服140件、外用52件、注入28件）</div>
     </div>
   </div>
 
-  <h3>削除コードの内訳</h3>
+  <h3>削除コードの移行先の内訳</h3>
   <div class="card-row">
-    <div class="card" style="border-top: 3px solid var(--accent);">
-      <div class="label" style="color: var(--accent);">名称修正のみ（1対1置換）</div>
-      <div class="value">641 件</div>
-      <div class="desc">コードは変わるが用法の意味は同等。例:「朝食中」→「朝食事中」</div>
-    </div>
-    <div class="card" style="border-top: 3px solid #8e44ad;">
-      <div class="label" style="color: #8e44ad;">統合（多対1）</div>
-      <div class="value">92 パターン</div>
-      <div class="desc">複数の旧コードが1つの新コードに集約。例: 起床時+各食事の組合せ → 「決まった時刻に」</div>
+    <div class="card" style="border-top: 3px solid var(--success);">
+      <div class="label" style="color: var(--success);">明示的なコード置換</div>
+      <div class="value">1,634 件</div>
+      <div class="desc">旧コードに対応する新コードが指定されている（1対1の名称修正＋多対1の統合）</div>
     </div>
     <div class="card" style="border-top: 3px solid var(--gray-600);">
-      <div class="label" style="color: var(--gray-600);">該当なし → 自由記載</div>
+      <div class="label" style="color: var(--gray-600);">ダミーコード＋テキスト記述</div>
       <div class="value">836 件</div>
-      <div class="desc">新マスタに対応コードなし。ダミーコード＋テキスト記述で対応</div>
+      <div class="desc">新マスタに該当コードなし。自由記載で対応</div>
     </div>
   </div>
 </section>
 
-<!-- ──────── 3. 具体例 ──────── -->
+<!-- ──────── 4. 具体例 ──────── -->
 <section>
-  <h2>3. 具体的にどう変わるか</h2>
+  <h2>4. 具体的にどう変わるか</h2>
 
   <h3>パターン A: 表記統一（1対1の置換）</h3>
   <p>名称の揺れを解消し、意味を明確化します。</p>
@@ -482,11 +616,11 @@
     「朝食中」は「朝食の最中に」なのか曖昧 → 「朝食事中」に統一することで意味を明確化
   </p>
 
-  <h3>パターン B: 過剰な細分化の統合（多対1）</h3>
-  <p>細かすぎるタイミング指定を汎用コードに集約し、詳細はテキスト補足に委ねます。</p>
+  <h3>パターン B: 汎用コード＋補足レコードへの移行（多対1）</h3>
+  <p>細かすぎるタイミング指定を汎用コードに集約し、<strong>詳細は用法補足レコードに記録</strong>します。</p>
   <table class="comparison-table">
     <thead>
-      <tr><th colspan="2">旧コード（すべて別々のコード）</th><th></th><th colspan="2">新コード（1つに統合）</th></tr>
+      <tr><th colspan="2">旧コード（すべて別々のコード）</th><th></th><th colspan="2">新コード（1つに統合）＋ 補足レコード</th></tr>
     </thead>
     <tbody>
       <tr>
@@ -497,7 +631,10 @@
         <td>1日2回 起床時と朝食<strong>前</strong>　服用</td>
         <td class="arrow" rowspan="6" style="vertical-align:middle;">→</td>
         <td class="new" rowspan="6" style="vertical-align:middle;">1032Z000...</td>
-        <td rowspan="6" style="vertical-align:middle;"><strong>1日2回 決まった時刻に　服用</strong></td>
+        <td rowspan="6" style="vertical-align:middle;">
+          <strong>1日2回 決まった時刻に　服用</strong><br>
+          <span style="font-size:.8rem; color:var(--info);">＋ 補足レコードに具体的な時刻を記録</span>
+        </td>
       </tr>
       <tr><td>1日2回 起床時と朝食<strong>直前</strong>　服用</td></tr>
       <tr><td>1日2回 起床時と朝食<strong>直後</strong>　服用</td></tr>
@@ -506,22 +643,45 @@
       <tr><td>1日2回 起床時と朝食<strong>中</strong>　服用</td></tr>
     </tbody>
   </table>
-  <p style="font-size:.85rem; color:var(--gray-600);">
-    「起床時と朝食○○」のバリエーション（前・直前・直後・後・2時間後・中）が 1 つのコードに。
-    同様のパターンは昼食・夕食・就寝前との組合せにも適用され、合計 <strong>35 件が 1 コードに統合</strong>されます。
-  </p>
+
+  <h3>パターン C: 頓用の条件統合</h3>
+  <p>症状×投与経路の全組合せコード（旧マスタの最大の膨張原因）を汎用化します。</p>
+  <table class="comparison-table">
+    <thead>
+      <tr><th colspan="2">旧コード（症状ごとに別コード）</th><th></th><th colspan="2">新コード＋ 補足レコード</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="old" rowspan="4" style="vertical-align:middle; text-align:center;">
+          47 件
+          <span class="merge-indicator">統合</span>
+        </td>
+        <td><strong>疼痛時</strong>　点眼</td>
+        <td class="arrow" rowspan="4" style="vertical-align:middle;">→</td>
+        <td class="new" rowspan="4" style="vertical-align:middle;">2H50Z000...</td>
+        <td rowspan="4" style="vertical-align:middle;">
+          <strong>（特定の条件の場合）　点眼</strong><br>
+          <span style="font-size:.8rem; color:var(--info);">＋ 頓用の条件指定（<strong>必須</strong>）に具体的症状を記録</span>
+        </td>
+      </tr>
+      <tr><td><strong>発熱時</strong>　点眼</td></tr>
+      <tr><td><strong>発作時</strong>　点眼</td></tr>
+      <tr><td>（ほか 疼痛・頭痛・歯痛・腹痛…計47症状）</td></tr>
+    </tbody>
+  </table>
 </section>
 
-<!-- ──────── 4. 期待される効果 ──────── -->
+<!-- ──────── 5. 期待される効果 ──────── -->
 <section>
-  <h2>4. この改訂で得られる効果</h2>
+  <h2>5. この改訂で得られる効果</h2>
 
   <div class="benefit-grid">
     <div class="benefit-item">
       <div class="icon">🏥 ⇄ 💊</div>
       <h4>施設間の情報伝達が正確に</h4>
-      <p>病院で入力した用法が、薬局で同じコード・同じ意味で表示される。
-        解釈の齟齬による調剤ミスのリスクを低減。</p>
+      <p>JAMI標準用法規格との整合により、病院・薬局間で
+        同じコードが同じ意味で解釈される。
+        モデル事業で発覚した混乱を是正。</p>
     </div>
     <div class="benefit-item">
       <div class="icon">🔒</div>
@@ -538,29 +698,37 @@
     </div>
     <div class="benefit-item">
       <div class="icon">⚙️</div>
-      <h4>システム運用の効率化</h4>
-      <p>コード数が約 37% 削減されることで、マスタ管理の負担が軽減。
+      <h4>コード管理の合理化</h4>
+      <p>コード数が37%削減。「疼痛時の浣腸」等、
+        現実にはほぼ使われない組合せコードを整理し、
         類似コードの選択ミスも減少。</p>
     </div>
   </div>
 </section>
 
-<!-- ──────── 5. スケジュール ──────── -->
+<!-- ──────── 6. スケジュール ──────── -->
 <section>
-  <h2>5. 対応スケジュール</h2>
+  <h2>6. 対応スケジュール</h2>
 
   <div class="timeline">
     <div class="timeline-item done">
-      <div class="timeline-date">2025年11月1日（実施済み）</div>
+      <div class="timeline-date">2025年7月〜10月</div>
       <div class="timeline-body">
-        <strong>新マスタ適用開始</strong><br>
-        新マスタ（類型4）のコードが利用可能に。旧マスタと並行運用。
+        <strong>周知期間</strong><br>
+        改訂内容の周知・各施設での影響範囲の確認。
       </div>
     </div>
-    <div class="timeline-item">
+    <div class="timeline-item done">
+      <div class="timeline-date">2025年11月1日</div>
+      <div class="timeline-body">
+        <strong>新マスタ適用開始 ／ 薬局の受入準備完了</strong><br>
+        新マスタ（類型4）のコードが利用可能に。薬局は新コードでの処方箋を受け入れられるよう準備。
+      </div>
+    </div>
+    <div class="timeline-item current">
       <div class="timeline-date">2025年11月1日 〜 2026年7月31日</div>
       <div class="timeline-body">
-        <strong>経過措置期間</strong>（現在ここ）<br>
+        <strong>経過措置期間（医療機関の切替期間）</strong>— 現在ここ<br>
         旧マスタ・新マスタの両方が利用可能。この間にシステム設定を切り替えてください。
       </div>
     </div>
@@ -579,20 +747,29 @@
       </div>
     </div>
   </div>
+
+  <div class="note warn-note">
+    <strong>補助金について:</strong>
+    日本病院薬剤師会の案内（2025年7月）によると、
+    本改訂に関する<strong>補助金の支給予定はありません</strong>。
+    各施設がシステムベンダーと連携し、自施設の予算で対応する必要があります。
+  </div>
 </section>
 
-<!-- ──────── 6. 対応のお願い ──────── -->
+<!-- ──────── 7. 対応のお願い ──────── -->
 <section>
   <div class="cta">
     <h2>対応のお願い</h2>
     <p>
-      本改訂は、電子処方箋を<strong>安全かつ正確に</strong>運用するための基盤整備です。<br>
+      本改訂は、JAMI・日本薬剤師会・日本病院薬剤師会の提言を踏まえ、<br>
+      電子処方箋を<strong>安全かつ正確に</strong>運用するための基盤整備です。<br>
       経過措置期間中に、以下のご対応をお願いいたします。
     </p>
     <ol class="action-steps">
       <li><strong>現状確認</strong> — 自院のシステムで使用中の用法コードを確認</li>
       <li><strong>影響範囲の把握</strong> — 削除対象の旧コード（類型3）が含まれていないかチェック</li>
-      <li><strong>新コードへの切替</strong> — 厚労省配布の対照表（本Excel）を参考に、新コードに設定変更</li>
+      <li><strong>新コードへの切替</strong> — 厚労省配布の対照表を参考に、新コードに設定変更</li>
+      <li><strong>補足レコードの確認</strong> — 汎用コードへの移行時に、補足情報が正しく記録されるかテスト</li>
       <li><strong>動作確認</strong> — 切替後、電子処方箋の発行・受付が正常に行えることを確認</li>
     </ol>
   </div>
@@ -615,6 +792,14 @@
     ／
     <a href="https://www.mhlw.go.jp/content/11120000/001509337.xlsx" target="_blank">
       厚生労働省 用法マスタ改訂 概要資料（Excel）
+    </a>
+    ／
+    <a href="https://www.jami.jp/information/23847/" target="_blank">
+      JAMI 電子処方箋の用法マスタに関する提言（2023年5月）
+    </a>
+    ／
+    <a href="https://www.jshp.or.jp/content/2025/0722-1.html" target="_blank">
+      日本病院薬剤師会 マスタ見直しについて（2025年7月）
     </a>
   </p>
   <p>本資料は 2026年4月16日時点の情報に基づいて作成しています。</p>
