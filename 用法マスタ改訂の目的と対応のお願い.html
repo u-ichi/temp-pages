@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電子処方箋 用法マスタ改訂 — 目的と対応のお願い</title>
+<style>
+  :root {
+    --primary: #1a5276;
+    --accent: #2980b9;
+    --accent-light: #d6eaf8;
+    --warn: #e74c3c;
+    --warn-bg: #fdedec;
+    --success: #27ae60;
+    --success-bg: #eafaf1;
+    --gray-50: #f8f9fa;
+    --gray-100: #ecf0f1;
+    --gray-600: #636e72;
+    --gray-800: #2d3436;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    color: var(--gray-800);
+    line-height: 1.8;
+    background: var(--gray-50);
+  }
+
+  /* ── ヘッダー ── */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: #fff;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
+    letter-spacing: .04em;
+  }
+  .hero .subtitle {
+    font-size: 1rem;
+    opacity: .9;
+  }
+  .hero .deadline-banner {
+    display: inline-block;
+    margin-top: 1.2rem;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.4);
+    border-radius: 6px;
+    padding: .5rem 1.5rem;
+    font-size: .95rem;
+    font-weight: 600;
+  }
+  .hero .deadline-banner strong {
+    color: #f9e79f;
+    font-size: 1.1rem;
+  }
+
+  /* ── 共通 ── */
+  .container { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 2.5rem 0; }
+  section + section { border-top: 1px solid var(--gray-100); }
+  h2 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    padding-left: .7rem;
+    border-left: 4px solid var(--accent);
+  }
+  h3 {
+    font-size: 1.05rem;
+    color: var(--gray-800);
+    margin: 1.2rem 0 .5rem;
+  }
+  p { margin-bottom: .8rem; }
+  ul, ol { margin-bottom: .8rem; padding-left: 1.4rem; }
+  li { margin-bottom: .3rem; }
+
+  /* ── カード ── */
+  .card-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .card.problem  { border-top: 3px solid var(--warn); }
+  .card.solution { border-top: 3px solid var(--success); }
+  .card .label {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: .4rem;
+  }
+  .card.problem  .label { color: var(--warn); }
+  .card.solution .label { color: var(--success); }
+  .card .value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    line-height: 1.3;
+  }
+  .card .desc {
+    font-size: .85rem;
+    color: var(--gray-600);
+    margin-top: .3rem;
+  }
+
+  /* ── 問題→解決 フロー図 ── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-box {
+    flex: 1 1 280px;
+    padding: 1.4rem;
+    border-radius: 8px;
+    min-width: 250px;
+  }
+  .flow-box.before {
+    background: var(--warn-bg);
+    border: 1px solid #f5b7b1;
+  }
+  .flow-box.after {
+    background: var(--success-bg);
+    border: 1px solid #a9dfbf;
+  }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--accent);
+    padding: 0 .6rem;
+    flex-shrink: 0;
+  }
+  .flow-box h4 {
+    font-size: .9rem;
+    margin-bottom: .6rem;
+  }
+  .flow-box.before h4 { color: var(--warn); }
+  .flow-box.after  h4 { color: var(--success); }
+  .flow-box ul { font-size: .9rem; margin-bottom: 0; }
+
+  /* ── 比較テーブル ── */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: .88rem;
+  }
+  .comparison-table th, .comparison-table td {
+    padding: .6rem .8rem;
+    border: 1px solid var(--gray-100);
+    text-align: left;
+    vertical-align: top;
+  }
+  .comparison-table thead th {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .comparison-table tbody tr:nth-child(even) { background: #f7fbff; }
+  .comparison-table .old { color: var(--warn); font-weight: 600; }
+  .comparison-table .new { color: var(--success); font-weight: 600; }
+  .comparison-table .arrow { text-align: center; color: var(--accent); font-weight: 700; }
+  .merge-indicator {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .15rem .5rem;
+    border-radius: 3px;
+    display: inline-block;
+    margin-left: .3rem;
+  }
+
+  /* ── 数字ハイライト ── */
+  .stat-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin: 1.2rem 0;
+  }
+  .stat-item {
+    text-align: center;
+    flex: 1 1 140px;
+  }
+  .stat-item .num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .stat-item .num.red { color: var(--warn); }
+  .stat-item .num.green { color: var(--success); }
+  .stat-item .unit {
+    font-size: .85rem;
+    color: var(--gray-600);
+  }
+
+  /* ── タイムライン ── */
+  .timeline {
+    position: relative;
+    margin: 1.5rem 0 1rem 1.5rem;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--accent-light);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.85rem;
+    top: .35rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--accent-light);
+  }
+  .timeline-item.warn::before { background: var(--warn); box-shadow: 0 0 0 2px #f5b7b1; }
+  .timeline-item.done::before { background: var(--success); box-shadow: 0 0 0 2px #a9dfbf; }
+  .timeline-date {
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .timeline-item.warn .timeline-date { color: var(--warn); }
+  .timeline-item.done .timeline-date { color: var(--success); }
+  .timeline-body {
+    font-size: .92rem;
+    margin-top: .1rem;
+  }
+
+  /* ── 効果リスト ── */
+  .benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .benefit-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.2rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    border-left: 4px solid var(--accent);
+  }
+  .benefit-item .icon {
+    font-size: 1.4rem;
+    margin-bottom: .3rem;
+  }
+  .benefit-item h4 {
+    font-size: .95rem;
+    margin-bottom: .3rem;
+    color: var(--primary);
+  }
+  .benefit-item p {
+    font-size: .85rem;
+    color: var(--gray-600);
+    margin-bottom: 0;
+  }
+
+  /* ── CTA ── */
+  .cta {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+  .cta h2 {
+    color: #fff;
+    border-left: none;
+    padding-left: 0;
+    margin-bottom: .6rem;
+  }
+  .cta p {
+    font-size: .95rem;
+    opacity: .92;
+  }
+  .cta .action-steps {
+    text-align: left;
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: .92rem;
+  }
+  .cta .action-steps li {
+    margin-bottom: .4rem;
+  }
+
+  /* ── フッター ── */
+  .footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: .78rem;
+    color: var(--gray-600);
+  }
+  .footer a { color: var(--accent); }
+
+  /* ── 注釈 ── */
+  .note {
+    background: #fef9e7;
+    border: 1px solid #f9e79f;
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: .88rem;
+    margin: 1rem 0;
+  }
+  .note strong { color: #b7950b; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.3rem; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); padding: .3rem 0; }
+    .stat-item .num { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────── ヘッダー ──────── -->
+<header class="hero">
+  <h1>電子処方箋 用法マスタ改訂のご案内</h1>
+  <p class="subtitle">なぜ改訂するのか／何が変わるのか／何をすればよいのか</p>
+  <div class="deadline-banner">
+    経過措置期限: <strong>2026年7月31日</strong>
+  </div>
+</header>
+
+<!-- ──────── 1. 背景と課題 ──────── -->
+<div class="container">
+<section>
+  <h2>1. なぜ用法マスタを改訂するのか</h2>
+
+  <p>
+    電子処方箋管理サービスでは、薬の飲み方・使い方を<strong>「用法コード」</strong>で記録します。
+    病院が発行した処方を薬局が正しく読み取るには、双方が<strong>同じコード体系</strong>を使い、
+    <strong>同じ意味</strong>で解釈できることが不可欠です。
+  </p>
+
+  <p>しかし、現行の用法マスタ（旧マスタ）には構造上の課題がありました。</p>
+
+  <div class="flow">
+    <div class="flow-box before">
+      <h4>現状の課題（旧マスタ）</h4>
+      <ul>
+        <li><strong>コードが多すぎる</strong> — 約 2,860 件。似た用法が別々のコードで存在</li>
+        <li><strong>表記が揺れている</strong> — 「朝食中」と「朝食事中」が別コード</li>
+        <li><strong>自由記載コードの乱用</strong> — 該当コードがないためダミーコードに独自の用法を設定 → 施設ごとにバラバラ</li>
+        <li><strong>施設間で意味が通じない</strong> — 同じコードを違う意味で使うリスク</li>
+      </ul>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box after">
+      <h4>改訂後のゴール（新マスタ）</h4>
+      <ul>
+        <li><strong>約 1,800 件に整理</strong> — 類似コードを統合し、1コード＝1つの意味に</li>
+        <li><strong>表記を統一</strong> — 名称の揺れを解消</li>
+        <li><strong>標準コードで共有</strong> — どの施設でも同じコードが同じ意味</li>
+        <li><strong>データ活用の基盤</strong> — 集計・分析・二次利用が可能に</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>ポイント:</strong>
+    用法マスタを設定しておらず、すべて <code>0X0XXXXXXXXX0000</code>（自由記載コード）を使用している場合は、
+    本改訂に伴う影響はありません。ただし、医療情報の電子的な共有・交換のためには、
+    標準コードの設定が重要です。
+  </div>
+</section>
+
+<!-- ──────── 2. 数字で見る変化 ──────── -->
+<section>
+  <h2>2. 数字で見る改訂の規模</h2>
+
+  <div class="stat-row">
+    <div class="stat-item">
+      <div class="num red">2,862</div>
+      <div class="unit">旧マスタの用法コード数</div>
+    </div>
+    <div class="stat-item">
+      <div class="num" style="font-size:1.6rem;">→</div>
+      <div class="unit"></div>
+    </div>
+    <div class="stat-item">
+      <div class="num green">1,803</div>
+      <div class="unit">新マスタの用法コード数</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">37%</div>
+      <div class="unit">削減率</div>
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="card problem">
+      <div class="label">削除されるコード</div>
+      <div class="value">2,470 件</div>
+      <div class="desc">旧マスタから廃止。新コードへの移行が必要</div>
+    </div>
+    <div class="card solution">
+      <div class="label">新規追加コード</div>
+      <div class="value">785 件</div>
+      <div class="desc">別表4: より適切な粒度で新設されたコード</div>
+    </div>
+  </div>
+
+  <h3>削除コードの内訳</h3>
+  <div class="card-row">
+    <div class="card" style="border-top: 3px solid var(--accent);">
+      <div class="label" style="color: var(--accent);">名称修正のみ（1対1置換）</div>
+      <div class="value">641 件</div>
+      <div class="desc">コードは変わるが用法の意味は同等。例:「朝食中」→「朝食事中」</div>
+    </div>
+    <div class="card" style="border-top: 3px solid #8e44ad;">
+      <div class="label" style="color: #8e44ad;">統合（多対1）</div>
+      <div class="value">92 パターン</div>
+      <div class="desc">複数の旧コードが1つの新コードに集約。例: 起床時+各食事の組合せ → 「決まった時刻に」</div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--gray-600);">
+      <div class="label" style="color: var(--gray-600);">該当なし → 自由記載</div>
+      <div class="value">836 件</div>
+      <div class="desc">新マスタに対応コードなし。ダミーコード＋テキスト記述で対応</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── 3. 具体例 ──────── -->
+<section>
+  <h2>3. 具体的にどう変わるか</h2>
+
+  <h3>パターン A: 表記統一（1対1の置換）</h3>
+  <p>名称の揺れを解消し、意味を明確化します。</p>
+  <table class="comparison-table">
+    <thead>
+      <tr><th>旧コード</th><th>旧用法名称</th><th></th><th>新コード</th><th>新用法名称</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="old">1011000900...</td>
+        <td>1日1回朝食<strong>中</strong>　服用</td>
+        <td class="arrow">→</td>
+        <td class="new">1011000600...</td>
+        <td>1日1回朝<strong>食事中</strong>　服用</td>
+      </tr>
+      <tr>
+        <td class="old">1011009000...</td>
+        <td>1日1回昼食<strong>中</strong>　服用</td>
+        <td class="arrow">→</td>
+        <td class="new">1011006000...</td>
+        <td>1日1回昼<strong>食事中</strong>　服用</td>
+      </tr>
+      <tr>
+        <td class="old">1011090000...</td>
+        <td>1日1回夕食<strong>中</strong>　服用</td>
+        <td class="arrow">→</td>
+        <td class="new">1011060000...</td>
+        <td>1日1回夕<strong>食事中</strong>　服用</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:.85rem; color:var(--gray-600);">
+    「朝食中」は「朝食の最中に」なのか曖昧 → 「朝食事中」に統一することで意味を明確化
+  </p>
+
+  <h3>パターン B: 過剰な細分化の統合（多対1）</h3>
+  <p>細かすぎるタイミング指定を汎用コードに集約し、詳細はテキスト補足に委ねます。</p>
+  <table class="comparison-table">
+    <thead>
+      <tr><th colspan="2">旧コード（すべて別々のコード）</th><th></th><th colspan="2">新コード（1つに統合）</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="old" rowspan="6" style="vertical-align:middle; text-align:center;">
+          6 件
+          <span class="merge-indicator">統合</span>
+        </td>
+        <td>1日2回 起床時と朝食<strong>前</strong>　服用</td>
+        <td class="arrow" rowspan="6" style="vertical-align:middle;">→</td>
+        <td class="new" rowspan="6" style="vertical-align:middle;">1032Z000...</td>
+        <td rowspan="6" style="vertical-align:middle;"><strong>1日2回 決まった時刻に　服用</strong></td>
+      </tr>
+      <tr><td>1日2回 起床時と朝食<strong>直前</strong>　服用</td></tr>
+      <tr><td>1日2回 起床時と朝食<strong>直後</strong>　服用</td></tr>
+      <tr><td>1日2回 起床時と朝食<strong>後</strong>　服用</td></tr>
+      <tr><td>1日2回 起床時と朝食<strong>2時間後</strong>　服用</td></tr>
+      <tr><td>1日2回 起床時と朝食<strong>中</strong>　服用</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:.85rem; color:var(--gray-600);">
+    「起床時と朝食○○」のバリエーション（前・直前・直後・後・2時間後・中）が 1 つのコードに。
+    同様のパターンは昼食・夕食・就寝前との組合せにも適用され、合計 <strong>35 件が 1 コードに統合</strong>されます。
+  </p>
+</section>
+
+<!-- ──────── 4. 期待される効果 ──────── -->
+<section>
+  <h2>4. この改訂で得られる効果</h2>
+
+  <div class="benefit-grid">
+    <div class="benefit-item">
+      <div class="icon">🏥 ⇄ 💊</div>
+      <h4>施設間の情報伝達が正確に</h4>
+      <p>病院で入力した用法が、薬局で同じコード・同じ意味で表示される。
+        解釈の齟齬による調剤ミスのリスクを低減。</p>
+    </div>
+    <div class="benefit-item">
+      <div class="icon">🔒</div>
+      <h4>患者安全の向上</h4>
+      <p>「1コード＝1つの意味」が保証されることで、
+        ダミーコードに独自の意味を持たせる運用がなくなり、
+        意図しない用法の取り違えを防止。</p>
+    </div>
+    <div class="benefit-item">
+      <div class="icon">📊</div>
+      <h4>データの二次利用が可能に</h4>
+      <p>標準化されたコードは、処方動向の分析・医療政策への活用・
+        臨床研究でのデータ集計など、幅広い二次利用の基盤となる。</p>
+    </div>
+    <div class="benefit-item">
+      <div class="icon">⚙️</div>
+      <h4>システム運用の効率化</h4>
+      <p>コード数が約 37% 削減されることで、マスタ管理の負担が軽減。
+        類似コードの選択ミスも減少。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── 5. スケジュール ──────── -->
+<section>
+  <h2>5. 対応スケジュール</h2>
+
+  <div class="timeline">
+    <div class="timeline-item done">
+      <div class="timeline-date">2025年11月1日（実施済み）</div>
+      <div class="timeline-body">
+        <strong>新マスタ適用開始</strong><br>
+        新マスタ（類型4）のコードが利用可能に。旧マスタと並行運用。
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025年11月1日 〜 2026年7月31日</div>
+      <div class="timeline-body">
+        <strong>経過措置期間</strong>（現在ここ）<br>
+        旧マスタ・新マスタの両方が利用可能。この間にシステム設定を切り替えてください。
+      </div>
+    </div>
+    <div class="timeline-item warn">
+      <div class="timeline-date">2026年7月31日</div>
+      <div class="timeline-body">
+        <strong>旧マスタ廃止</strong><br>
+        類型3（旧コード）が使用不可に。この日までに新コードへの移行完了が必要。
+      </div>
+    </div>
+    <div class="timeline-item warn">
+      <div class="timeline-date">2026年8月1日〜</div>
+      <div class="timeline-body">
+        <strong>新マスタのみで運用</strong><br>
+        旧コードを使用している場合、電子処方箋の記録・交換に支障が生じます。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── 6. 対応のお願い ──────── -->
+<section>
+  <div class="cta">
+    <h2>対応のお願い</h2>
+    <p>
+      本改訂は、電子処方箋を<strong>安全かつ正確に</strong>運用するための基盤整備です。<br>
+      経過措置期間中に、以下のご対応をお願いいたします。
+    </p>
+    <ol class="action-steps">
+      <li><strong>現状確認</strong> — 自院のシステムで使用中の用法コードを確認</li>
+      <li><strong>影響範囲の把握</strong> — 削除対象の旧コード（類型3）が含まれていないかチェック</li>
+      <li><strong>新コードへの切替</strong> — 厚労省配布の対照表（本Excel）を参考に、新コードに設定変更</li>
+      <li><strong>動作確認</strong> — 切替後、電子処方箋の発行・受付が正常に行えることを確認</li>
+    </ol>
+  </div>
+
+  <div class="note">
+    <strong>参考資料:</strong>
+    厚労省から配布されている Excel には、削除される旧コードごとに「どの新コードに移行すべきか」の
+    対照表が含まれています（「用法コード再設定に係る参考資料」シート）。<br>
+    設定先はあくまで例示です。実際の設定は、各医療機関・薬局で使用している用法や処方内容に応じてご判断ください。
+  </div>
+</section>
+</div>
+
+<footer class="footer">
+  <p>
+    出典:
+    <a href="https://iryohokenjyoho.service-now.com/csm?id=kb_article_view&sysparm_article=KB0012414" target="_blank">
+      医療機関等向け総合ポータルサイト KB0012414
+    </a>
+    ／
+    <a href="https://www.mhlw.go.jp/content/11120000/001509337.xlsx" target="_blank">
+      厚生労働省 用法マスタ改訂 概要資料（Excel）
+    </a>
+  </p>
+  <p>本資料は 2026年4月16日時点の情報に基づいて作成しています。</p>
+</footer>
+
+</body>
+</html>
