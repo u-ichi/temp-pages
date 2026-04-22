@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第9回 電子処方箋等検討ワーキンググループ 資料・議事録まとめ</title>
+<title>第9回 電子処方箋等検討ワーキンググループ 資料・議事録まとめ（2026-03-19）</title>
 <style>
   :root {
     --fg: #222;
@@ -88,6 +88,10 @@
   ul.tight li { margin: 2px 0; }
   .summary-box { background: #fff9e5; border: 2px solid #f0c040; border-radius: 8px; padding: 14px 20px; margin: 20px 0; }
   .summary-box h3 { margin-top: 0; border: none; color: #8a6000; }
+  .tag-change { background: #fef0f5; color: #a01c6a; border: 1px solid #e6b6d0; }
+  .change-box { background: #fef0f5; border: 2px solid #a01c6a; border-radius: 8px; padding: 14px 20px; margin: 20px 0; }
+  .change-box h3 { margin-top: 0; border: none; color: #a01c6a; }
+  .affiliation-note { color: var(--muted); font-size: 0.82em; font-style: italic; }
   .page-ref { color: var(--muted); font-size: 0.85em; font-weight: normal; }
   .page-ref a { color: var(--accent); text-decoration: none; }
   .page-ref a:hover { text-decoration: underline; }
@@ -116,10 +120,18 @@
 <section class="meta">
   <dl>
     <dt>主管</dt><dd>厚生労働省 医薬局 総務課 電子処方箋サービス推進室</dd>
+    <dt>主査</dt><dd>山口 育子（認定NPO法人ささえあい医療人権センターCOML 理事長）</dd>
+    <dt>構成員</dt><dd>
+      新垣 淑仁（JAHIS）／大道 道大（日本病院会）／小野寺 哲夫（日本歯科医師会）／
+      川上 純一（日本病院薬剤師会）／木倉 敬之（全国健康保険協会）／
+      實松 尊徳（全国後期高齢者医療広域連合協議会）／田河 慶太（健康保険組合連合会）／
+      鳥飼 幸太（群馬大学医学部附属病院）／長島 公之（日本医師会）／
+      原口 亨（日本薬剤師会） ／オブザーバー：石井 夏生利（中央大学）
+    </dd>
     <dt>出欠</dt><dd>全国健康保険協会 木倉構成員 欠席 / 日本薬剤師会 原口構成員の代理として堀越氏 出席 / その他全員出席</dd>
-    <dt>主査</dt><dd>山口 主査</dd>
     <dt>事務局</dt><dd>徳弘企画官、福澤専門官、笹子総務課長</dd>
     <dt>資料</dt><dd>資料1（34ページ、1.9MB） / 議事次第 / 参考資料1（開催要綱・構成員名簿）</dd>
+    <dt>過去回参照</dt><dd>第7回（2025-09-01）、第8回（2025-12-23）の資料も取得して変化点を整理</dd>
   </dl>
 </section>
 
@@ -127,6 +139,7 @@
   <strong>目次</strong>
   <ol>
     <li><a href="#overall">全体サマリー</a></li>
+    <li><a href="#changes">過去回からの変化点（第7回・第8回→第9回）</a></li>
     <li><a href="#report">報告事項（施策の現状報告）</a>
       <ol>
         <li><a href="#r1">医薬品コードの公開</a>（資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=4">4</a>〜<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=5">5</a>ページ）</li>
@@ -158,6 +171,87 @@
   </div>
 </section>
 
+<!-- ================= 過去回からの変化点 ================= -->
+<section id="changes">
+  <h2>過去回からの変化点（第7回・第8回→第9回）</h2>
+  <div class="change-box">
+    <p>電子処方箋推進の主要論点が、第7回（<a href="https://www.mhlw.go.jp/content/11121000/001548596.pdf" target="_blank">2025-09-01</a>）→第8回（<a href="https://www.mhlw.go.jp/content/11121000/001619188.pdf" target="_blank">2025-12-23</a>）→第9回（今回）でどう動いたかを整理。</p>
+    <table>
+      <tr>
+        <th>論点</th>
+        <th>第7回（2025-09-01）</th>
+        <th>第8回（2025-12-23）</th>
+        <th>今回 第9回（2026-03-19）</th>
+        <th>変化</th>
+      </tr>
+      <tr>
+        <td><strong>電子処方箋の新目標設定</strong></td>
+        <td>R7.7推進チームで新目標提示（薬局8割超導入、医療機関1割）</td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="tag tag-change">⏩ 確定</span></td>
+      </tr>
+      <tr>
+        <td><strong>院内処方対応</strong></td>
+        <td>—</td>
+        <td>プレ運用状況報告（R7.11時点: 20病院+134医科+878歯科）</td>
+        <td>2026年4月から<strong>正式運用</strong>、基本機能を施設類型別に再整理</td>
+        <td><span class="tag tag-change">🔄 本格化</span></td>
+      </tr>
+      <tr>
+        <td><strong>医薬品コード・マスタ整備</strong></td>
+        <td>ダミーコード廃止（R7.8完了）、マスタ一元管理方針</td>
+        <td>ハウスコード問題対応、点検報告未完了施設は R8.1.11 接続一時停止方針</td>
+        <td>YJ/レセ電/一般名コードの関係性を<strong>総合ポータルで公開</strong>（R8.4〜）、R10 PMDA DB に統合予定</td>
+        <td><span class="tag tag-change">⏩ 進展</span></td>
+      </tr>
+      <tr>
+        <td><strong>単位のチェック</strong></td>
+        <td>—</td>
+        <td>議論開始</td>
+        <td><strong>形式チェック導入方針確定</strong>、単位マスタ公開</td>
+        <td><span class="tag tag-change">⏩ 確定</span></td>
+      </tr>
+      <tr>
+        <td><strong>併用注意チェック</strong></td>
+        <td>—</td>
+        <td>アンケート開始（現場の声ヒアリング）</td>
+        <td>アンケート結果判明、<strong>中長期的・慎重に検討</strong>（アラート疲労懸念）</td>
+        <td><span class="tag tag-change">🔁 継続検討</span></td>
+      </tr>
+      <tr>
+        <td><strong>薬剤数の表示機能</strong></td>
+        <td>—</td>
+        <td>論点整理開始（成分単位 vs 薬剤単位）</td>
+        <td>方針確定: <strong>薬剤単位</strong>（配合剤も1剤、同成分の銘柄違いも1剤）で実装</td>
+        <td><span class="tag tag-change">⏩ 確定</span></td>
+      </tr>
+      <tr>
+        <td><strong>事前送付 UX 向上</strong></td>
+        <td>—</td>
+        <td>—（第5回 2024-06 で議論後、一度棚上げ）</td>
+        <td>第5回の「かかりつけ薬局自動送付」案を<strong>廃案</strong>、<strong>患者自らマイナポータルで全国の薬局から選択</strong>する方式に転換</td>
+        <td><span class="tag tag-change">🔄 方針転換</span></td>
+      </tr>
+      <tr>
+        <td><strong>重複投薬アラート多発対応</strong></td>
+        <td>支払基金・国保中央会調査（マイスリー錠 2,157錠等の事例）</td>
+        <td>R7.12 通知発出（アラート多発時の薬局対応整理）</td>
+        <td>—（継続運用）</td>
+        <td><span class="tag tag-change">⏸ 運用フェーズ</span></td>
+      </tr>
+      <tr>
+        <td><strong>医療機関への導入拡大</strong></td>
+        <td>電子カルテ更新タイミングでの一体導入方針</td>
+        <td>—</td>
+        <td>電子カルテ情報共有サービスの新目標を今夏設定予定、整合させる</td>
+        <td><span class="tag tag-change">🔁 継続検討</span></td>
+      </tr>
+    </table>
+    <p class="sub">🔄 方針転換 / ⏩ 進展・確定 / 🔁 継続検討 / ⏸ 棚上げ・運用移行</p>
+  </div>
+</section>
+
 <!-- ================= 報告事項 ================= -->
 <section id="report">
   <h2>報告事項</h2>
@@ -178,7 +272,7 @@
     </table>
     <p class="sub">ポータルでの対応表公開は、PMDA 製品DB 公開までの<em>時限的措置</em>。</p>
     <div class="note">
-      <span class="speaker">鳥飼構成員</span>：国が医薬品マスタ整備を明記したことを評価。GS1コードの標準化も大きな意義。
+      <span class="speaker">鳥飼構成員（群馬大学医学部附属病院）</span><span class="affiliation-note">（名簿から補完）</span>：国が医薬品マスタ整備を明記したことを評価。GS1コードの標準化も大きな意義。
     </div>
   </div>
 
@@ -228,7 +322,7 @@
       <strong>構成員からの反応（院内処方中心施設）</strong><br>
       <span class="speaker">小野寺構成員（日歯）</span>：歯科は院内処方が 7〜8 割。院外処方ベースに院内処方を上乗せする建付けは高額で乗りづらく、<em>院内処方のみの基本機能</em>も将来検討してほしい。<br>
       <span class="speaker">長島構成員（日医）</span>：医科の小規模施設も同様。院内処方機能の有無でどれだけ価格差が出るか、ベンダ負担がどの程度かを厚労省が把握し、国による支援策を検討してほしい。<br>
-      <span class="speaker">鳥飼構成員</span>：中止・変更などトラブル時の現場運用を丁寧にヒアリングし、使いづらさが残らないよう機能に反映すべき。<br>
+      <span class="speaker">鳥飼構成員（群馬大学医学部附属病院）</span><span class="affiliation-note">（名簿から補完）</span>：中止・変更などトラブル時の現場運用を丁寧にヒアリングし、使いづらさが残らないよう機能に反映すべき。<br>
       <span class="speaker">大道構成員（日病）</span>：病院は DX 導入意欲はあるが、「何をどう入れたらいいか」「いくらかかるか」が不透明。例：300床・外来500人で電子処方箋いくら？「標準処方箋」が未整備のまま DX だけ進めても普及しない。第一単位・第二単位・処方形態の統一が先。</p>
     </div>
 
@@ -270,7 +364,7 @@
         <li><span class="speaker">長島構成員</span>：接続停止となった施設数・支援策は？ → <span class="speaker2">福澤専門官</span>「個別に電話連絡し理由確認・報告依頼を丁寧に実施中」、<span class="speaker2">徳弘企画官</span>「数は把握済み。ベンダと官民連携し、簡単な手続で再開できるよう周知継続」<span class="sub">（原文では具体数未開示）</span>。</li>
         <li><span class="speaker">堀越構成員代理（日薬）</span>：方向性に賛成。第一単位と第二単位の整合性は必ず取れるのか、登録不可時の代替運用はあるか → <span class="speaker2">福澤専門官</span>「現状システムでは第二単位や係数の正しさ自体まではチェックできず、ルール準拠の形式チェックに留まる。係数妥当性チェックは中長期標準化の課題として承る」。</li>
         <li><span class="speaker">新垣構成員（JAHIS）</span>：単位マスタに第二単位・変換係数も含めて公開してほしい → 「第二単位は施設ごと差が大きく把握できておらず現時点では対応困難。中長期標準化で検討」。また紙が原本でデータのみ電子処方箋管理サービスへ送る運用時のエラー扱いは実装段階で検討を。</li>
-        <li><span class="speaker">鳥飼構成員</span>：Web API 標準化とアーキテクチャ現代化（生成AI の設計能力を活用）を提案。古いアーキテクチャに機能を乗せ続けるとコストが累積する。</li>
+        <li><span class="speaker">鳥飼構成員（群馬大学医学部附属病院）</span><span class="affiliation-note">（名簿から補完）</span>：Web API 標準化とアーキテクチャ現代化（生成AI の設計能力を活用）を提案。古いアーキテクチャに機能を乗せ続けるとコストが累積する。</li>
         <li><span class="speaker">長島構成員</span>：標準型電子カルテ・電子カルテ情報共有サービスと一体で API 連携すべき。医薬局・医政局・保険局の連携が必要。</li>
         <li><span class="speaker">大道構成員（日病）</span>：「標準処方箋」がないまま DX を進めても普及しない。アナログ部分の標準化を先に固めるべき。</li>
       </ul>
@@ -306,7 +400,7 @@
     <div class="agree">
       <strong>構成員の反応（方向性に合意）</strong><br>
       <span class="speaker">長島構成員</span>：併用注意は併用禁忌と性質が違い膨大。効果・業務負担・費用・使いやすさを丁寧に見極め、既存の重複投薬・併用禁忌を進めつつ中長期・慎重に。<br>
-      <span class="speaker">鳥飼構成員</span>：過不足ないベーシック機能の完備が最優先。高度なフィルタリングは意思決定支援システムに近い領域で、患者状態（病名・検査値）との連携が必要。国はまず OS 的にベース機能を担い、中小電子カルテでも利用可能にする意義は大きい。<br>
+      <span class="speaker">鳥飼構成員（群馬大学医学部附属病院）</span><span class="affiliation-note">（名簿から補完）</span>：過不足ないベーシック機能の完備が最優先。高度なフィルタリングは意思決定支援システムに近い領域で、患者状態（病名・検査値）との連携が必要。国はまず OS 的にベース機能を担い、中小電子カルテでも利用可能にする意義は大きい。<br>
       <span class="speaker">堀越構成員代理</span>：薬局では既に 74.4% が実装済。中央一律実装で重要警告が埋もれる懸念。まず重複投薬・併用禁忌の効果検証を。
     </div>
   </div>
@@ -401,7 +495,7 @@
         <li><span class="speaker">實松構成員（後期高齢者医療広域連合協議会）</span>：高齢者のスマホ・アプリ操作困難者への配慮。家族・介護者の代理操作、簡便UI、電話等の既存手段との併存を。</li>
         <li><span class="speaker">小野寺構成員（日歯）</span>：高齢患者はスマホを持っていてもマイナポータル操作が難しい。手続を単純で分かりやすく。</li>
         <li><span class="speaker">新垣構成員（JAHIS）</span>：画面イメージ中心ではなく<strong>マイナポータルAPI</strong>を通じたデータ利活用・民間アプリ連携の検討も。</li>
-        <li><span class="speaker">鳥飼構成員</span>：電子カルテ情報共有サービスとの結合（処方・病名の共有）が必要。対面価値を保ちつつ、本人確認・情報提供機能を分離再構成すれば、薬の受取困難者への配送にもつながり得る。</li>
+        <li><span class="speaker">鳥飼構成員（群馬大学医学部附属病院）</span><span class="affiliation-note">（名簿から補完）</span>：電子カルテ情報共有サービスとの結合（処方・病名の共有）が必要。対面価値を保ちつつ、本人確認・情報提供機能を分離再構成すれば、薬の受取困難者への配送にもつながり得る。</li>
         <li><span class="speaker">大道構成員（日病）</span>：マイナポータル上の薬局検索でナビイとの連携は？ 薬局在庫不足時のコールバックも利便性上重要（エピペン処方で3軒回った事例）。</li>
         <li><span class="speaker">堀越構成員代理</span>：大道構成員の在庫対応は薬局側の受入姿勢の課題として改善に努める。</li>
       </ul>
@@ -469,10 +563,25 @@
   <h2>参考・出典</h2>
   <div class="card">
     <ul>
-      <li><a href="https://www.mhlw.go.jp/content/10701000/001693273.pdf">議事録 PDF（001693273.pdf, 24ページ）</a></li>
-      <li><a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf">資料1 PDF（001668909.pdf, 34ページ, 1.9MB）</a></li>
-      <li><a href="https://www.mhlw.go.jp/stf/newpage_71328.html">第9回 電子処方箋等検討ワーキンググループ 資料等</a></li>
-      <li><a href="https://www.mhlw.go.jp/stf/shingi/other-iyaku_470779_00024.html">電子処方箋等検討ワーキンググループ ポータル</a></li>
+      <li><strong>第9回（2026-03-19 今回）</strong>
+        <ul>
+          <li><a href="https://www.mhlw.go.jp/content/10701000/001693273.pdf">議事録 PDF（24ページ）</a></li>
+          <li><a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf">資料1 PDF（34ページ, 1.9MB）</a></li>
+          <li><a href="https://www.mhlw.go.jp/content/11121000/001668910.pdf">参考資料1 PDF（開催要綱・構成員名簿）</a></li>
+          <li><a href="https://www.mhlw.go.jp/stf/newpage_71328.html">第9回 資料等ポータル</a></li>
+        </ul>
+      </li>
+      <li><strong>第8回（2025-12-23）</strong>
+        <ul>
+          <li><a href="https://www.mhlw.go.jp/content/11121000/001619188.pdf">資料1 PDF</a> / <a href="https://www.mhlw.go.jp/stf/newpage_67805.html">資料等ポータル</a></li>
+        </ul>
+      </li>
+      <li><strong>第7回（2025-09-01）</strong>
+        <ul>
+          <li><a href="https://www.mhlw.go.jp/content/11121000/001548596.pdf">資料1 PDF</a> / <a href="https://www.mhlw.go.jp/stf/newpage_62405.html">資料等ポータル</a></li>
+        </ul>
+      </li>
+      <li><a href="https://www.mhlw.go.jp/stf/shingi/other-iyaku_470779_00024.html">WG ポータル（全回一覧）</a></li>
     </ul>
     <p class="sub">本ページは議事録原文と資料1 PDF の両方を一次ソースとして統合整理したもの。発言引用は議事録原文、機能整理表・アンケート数値・仕様詳細は資料1 PDF からの整理。</p>
   </div>
