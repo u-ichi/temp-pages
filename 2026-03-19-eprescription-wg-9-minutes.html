@@ -2,18 +2,20 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第9回 電子処方箋等検討ワーキンググループ 議事録まとめ</title>
+<title>第9回 電子処方箋等検討ワーキンググループ 資料・議事録まとめ</title>
 <style>
   :root {
     --fg: #222;
     --muted: #666;
     --accent: #0b5394;
+    --accent2: #b35900;
     --bg: #fafafa;
     --card: #fff;
     --border: #ddd;
     --note-bg: #eef5fc;
     --warn-bg: #fff6e5;
     --agree-bg: #e9f7ee;
+    --highlight: #fff3b0;
   }
   * { box-sizing: border-box; }
   body {
@@ -24,18 +26,19 @@
     margin: 0;
     padding: 0;
   }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
   header { border-bottom: 3px solid var(--accent); padding-bottom: 16px; margin-bottom: 24px; }
   h1 { font-size: 1.6em; margin: 0 0 6px; color: var(--accent); }
   .sub { color: var(--muted); font-size: 0.9em; }
   h2 {
-    font-size: 1.25em;
+    font-size: 1.3em;
     color: var(--accent);
     border-left: 5px solid var(--accent);
     padding: 4px 0 4px 12px;
-    margin-top: 40px;
+    margin-top: 44px;
   }
-  h3 { font-size: 1.05em; margin-top: 24px; border-bottom: 1px dashed var(--border); padding-bottom: 4px; }
+  h3 { font-size: 1.08em; margin-top: 26px; border-bottom: 1px dashed var(--border); padding-bottom: 4px; }
+  h4 { font-size: 1em; margin-top: 18px; margin-bottom: 6px; color: var(--accent); }
   .meta {
     background: var(--card);
     border: 1px solid var(--border);
@@ -75,14 +78,23 @@
   .note { background: var(--note-bg); border-left: 4px solid var(--accent); padding: 10px 14px; margin: 10px 0; border-radius: 3px; }
   .warn { background: var(--warn-bg); border-left: 4px solid #cc8400; padding: 10px 14px; margin: 10px 0; border-radius: 3px; }
   .agree { background: var(--agree-bg); border-left: 4px solid #2a7a3a; padding: 10px 14px; margin: 10px 0; border-radius: 3px; }
+  .qa { background: #f5f0fa; border-left: 4px solid #6a3fa0; padding: 10px 14px; margin: 10px 0; border-radius: 3px; }
+  .highlight { background: var(--highlight); padding: 0 3px; border-radius: 2px; }
   table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.92em; }
   th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
   th { background: #f0f2f5; }
   .speaker { font-weight: bold; color: var(--accent); }
+  .speaker2 { font-weight: bold; color: var(--accent2); }
   ul.tight li { margin: 2px 0; }
   .summary-box { background: #fff9e5; border: 2px solid #f0c040; border-radius: 8px; padding: 14px 20px; margin: 20px 0; }
   .summary-box h3 { margin-top: 0; border: none; color: #8a6000; }
+  .page-ref { color: var(--muted); font-size: 0.85em; font-weight: normal; }
+  .page-ref a { color: var(--accent); text-decoration: none; }
+  .page-ref a:hover { text-decoration: underline; }
+  .page-ref a::before { content: "📄 "; }
   footer { margin-top: 60px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85em; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } .meta dl { grid-template-columns: 1fr; } }
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNNVTYJGS2"></script>
@@ -97,47 +109,51 @@
 <div class="wrap">
 
 <header>
-  <h1>第9回 電子処方箋等検討ワーキンググループ 議事録まとめ</h1>
-  <div class="sub">健康・医療・介護情報利活用検討会 / 2026-03-19 13:00–14:30 / Web開催（YouTube ライブ配信）</div>
+  <h1>第9回 電子処方箋等検討ワーキンググループ 資料・議事録まとめ</h1>
+  <div class="sub">健康・医療・介護情報利活用検討会 / 2026-03-19 (令和8年3月19日) 13:00–14:30 / Web開催（YouTube ライブ配信）</div>
 </header>
 
 <section class="meta">
   <dl>
+    <dt>主管</dt><dd>厚生労働省 医薬局 総務課 電子処方箋サービス推進室</dd>
     <dt>出欠</dt><dd>全国健康保険協会 木倉構成員 欠席 / 日本薬剤師会 原口構成員の代理として堀越氏 出席 / その他全員出席</dd>
     <dt>主査</dt><dd>山口 主査</dd>
-    <dt>事務局</dt><dd>徳弘企画官、福澤専門官、笹子総務課長 ほか</dd>
+    <dt>事務局</dt><dd>徳弘企画官、福澤専門官、笹子総務課長</dd>
+    <dt>資料</dt><dd>資料1（34ページ、1.9MB） / 議事次第 / 参考資料1（開催要綱・構成員名簿）</dd>
   </dl>
 </section>
 
 <section class="toc">
   <strong>目次</strong>
   <ol>
-    <li><a href="#overall">全体サマリー（3行）</a></li>
+    <li><a href="#overall">全体サマリー</a></li>
     <li><a href="#report">報告事項（施策の現状報告）</a>
       <ol>
-        <li><a href="#r1">医薬品コードの公開</a></li>
-        <li><a href="#r2">電子処方箋システムの基本機能（院内処方対応）</a></li>
-        <li><a href="#r3">処方情報に記録する単位のチェック</a></li>
+        <li><a href="#r1">医薬品コードの公開</a>（資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=4">4</a>〜<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=5">5</a>ページ）</li>
+        <li><a href="#r2">電子処方箋システムの基本機能（院内処方対応）</a>（資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=6">6</a>〜<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=11">11</a>ページ）</li>
+        <li><a href="#r3">処方情報に記録する単位のチェック</a>(資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=12">12</a>〜<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=13">13</a>ページ）</li>
       </ol>
     </li>
     <li><a href="#discuss">検討事項（機能追加・改善）</a>
       <ol>
-        <li><a href="#d1">併用注意チェック機能</a></li>
-        <li><a href="#d2">薬剤数の表示機能</a></li>
-        <li><a href="#d3">UX向上：マイナポータル経由の事前送付</a></li>
+        <li><a href="#d1">併用注意チェック機能</a>（資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=16">16</a>〜<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=21">21</a>ページ）</li>
+        <li><a href="#d2">薬剤数の表示機能</a>（資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=22">22</a>ページ）</li>
+        <li><a href="#d3">UX向上：マイナポータル経由の事前送付</a>（資料<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=23">23</a>〜<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=34">34</a>ページ）</li>
       </ol>
     </li>
     <li><a href="#closing">閉会挨拶（笹子総務課長）</a></li>
+    <li><a href="#refs">参考・出典</a></li>
   </ol>
 </section>
 
 <section id="overall">
-  <h2>全体サマリー（3行）</h2>
+  <h2>全体サマリー</h2>
   <div class="summary-box">
     <ul class="tight">
-      <li><strong>報告事項</strong>: 医薬品コードの公開、院内処方を含む基本機能の再整理、単位記録の形式チェック導入を事務局から報告。</li>
-      <li><strong>検討事項</strong>: 併用注意チェックは<em>中長期的・慎重に</em>、薬剤数表示は方針どおり実装、マイナポータル経由の事前送付は<em>多くの課題を一つずつ丁寧に</em>検討。</li>
-      <li><strong>横断テーマ</strong>: 現場負担・コスト、標準化、院内処方への配慮、囲い込み回避、高齢者配慮、医療DX全体での整合。</li>
+      <li><strong>背景</strong>：令和6年12月の電子処方箋トラブル（医師の意図と異なる医薬品名が薬局システムで表示）を受けた安全運用体制の整備が一定程度完了し、次のフェーズへ移行する会。</li>
+      <li><strong>報告事項</strong>：(1) 医薬品コード公開は令和8年4月〜、令和10年度に PMDA 製品DBへ統合、(2) 2026年4月の院内処方機能正式運用に合わせ基本機能を再整理、(3) 単位の形式チェック機能を新設。</li>
+      <li><strong>検討事項</strong>：(1) 併用注意チェックは中長期・慎重に、(2) 薬剤数表示は方針どおり実装（配合剤も1剤、成分違っても同成分なら1剤）、(3) マイナポータル事前送付は「かかりつけ薬局自動送付」案を<strong>廃案</strong>とし「患者が全国の薬局から自ら選択」案に転換。</li>
+      <li><strong>組織改編</strong>：2026年夏、厚労省内に医療DX政策を扱う組織を集約予定。電子処方箋・電子カルテ・オンライン資格確認を一部局に統合、デジタル庁との連携強化。</li>
     </ul>
   </div>
 </section>
@@ -147,69 +163,116 @@
   <h2>報告事項</h2>
 
   <div class="card" id="r1">
-    <h3><span class="tag tag-report">報告1</span>医薬品コードの公開について <span class="sub">（資料4〜5ページ）</span></h3>
+    <h3><span class="tag tag-report">報告1</span>医薬品コードの公開 <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=4" target="_blank">資料4〜5ページ</a>）</span></h3>
+    <h4>経緯と方針</h4>
     <ul>
-      <li><strong>2025年7月</strong>の「医療DX令和ビジョン2030」厚生労働省推進チームで、令和8年度から医薬品コードの関係性を明らかにする方針を決定。</li>
-      <li><strong>2026年4月頃</strong>：電子処方箋管理サービス内で利用する医薬品マスタ、YJコード、レセ電コード、一般名コードの関係を整理し、<em>医療機関等向け総合ポータルサイト</em>で公開予定。</li>
-      <li><strong>令和10年度以降</strong>：PMDA が構築中の製品データベース（GS1コード・YJコード含む）が公開される予定。これが出るまでの<em>時限的措置</em>としてポータルで先行公開。</li>
+      <li><strong>令和6年12月の電子処方箋トラブル</strong>（医薬品コード設定に起因する表示事故）の再発リスク低減と、ベンダ・現場の独自マスタ／ハウスコード整備負担の軽減が目的。</li>
+      <li><strong>2025年7月1日</strong>の第7回「医療DX令和ビジョン2030」厚生労働省推進チームで、<em>主要な医薬品コードの関係性を医薬品マスタとして整理し、国が責任を持って維持管理する</em>方針を決定。</li>
+      <li>コード自体を統一することは困難（各コードに意味が含まれるため）なので、<strong>関係性を整理した対応表</strong>を国が管理する形。</li>
     </ul>
+    <h4>公開スケジュール</h4>
+    <table>
+      <tr><th>時期</th><th>対応</th></tr>
+      <tr><td>令和8年度〜（2026年4月頃〜）</td><td>電子処方箋管理サービスで使用中の医薬品マスタ、YJコード、レセ電コード、一般名コードの関係性を<strong>医療機関等向け総合ポータルサイト</strong>（支払基金・国保中央会が運営）で公開</td></tr>
+      <tr><td>令和10年度以降</td><td>PMDA が構築する GS1コード・YJコード等を含む<strong>公的な製品データベース</strong>を公開。物流分野キーコードも整備されトレーサビリティ強化</td></tr>
+    </table>
+    <p class="sub">ポータルでの対応表公開は、PMDA 製品DB 公開までの<em>時限的措置</em>。</p>
     <div class="note">
-      <span class="speaker">鳥飼構成員</span>：国が医薬品マスタ整備を明記したことを評価。GS1コード等の標準化の意義を強調。
+      <span class="speaker">鳥飼構成員</span>：国が医薬品マスタ整備を明記したことを評価。GS1コードの標準化も大きな意義。
     </div>
   </div>
 
   <div class="card" id="r2">
-    <h3><span class="tag tag-report">報告2</span>電子処方箋システムの基本機能（院内処方対応） <span class="sub">（資料6〜11ページ）</span></h3>
-    <ul>
-      <li>2026年4月から<strong>院内処方機能を正式運用</strong>するのに合わせ、院内処方を行う医療機関に求められる機能を整理。</li>
-      <li>院外処方と異なる点：
-        <ul class="tight">
-          <li>必要最低限機能として「院内処方等情報の登録・取消し」を追加。</li>
-          <li>処方登録に <strong>HPKIカードは必ずしも必須ではない</strong>。</li>
-          <li>院内リフィル処方箋は「将来的に実装されていることが望ましい機能」に分類。</li>
-        </ul>
-      </li>
-      <li>薬局側でも院内処方関連機能は「将来実装が望ましい機能」として整理。</li>
-    </ul>
+    <h3><span class="tag tag-report">報告2</span>電子処方箋システムの基本機能（院内処方対応） <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=6" target="_blank">資料6〜11ページ</a>）</span></h3>
+    <p>2026年4月から<strong>院内処方機能を正式運用</strong>するのに合わせ、施設類型ごとに「必要最小限の基本機能」と「実装されていることが望ましい機能」を再整理。</p>
+
+    <h4>施設類型ごとの機能整理</h4>
+    <table>
+      <tr><th>類型</th><th>必要最小限の基本機能（抜粋）</th><th>望ましい機能（抜粋）</th></tr>
+      <tr>
+        <td><strong>主に院内処方を扱う医療機関</strong>（今回新設）</td>
+        <td>処方箋登録、処方箋参考情報取得、処方箋取消、処方箋発行形態の管理、<strong>院内処方等登録／取消</strong>、重複投薬等チェック、処方箋状況・調剤結果取得、薬剤情報等管理、口頭同意による情報閲覧</td>
+        <td><strong>リフィル処方箋</strong>、処方箋変更、院内処方等変更、重複投薬等チェック事前処理、処方箋ID検索、院内処方等ID検索</td>
+      </tr>
+      <tr>
+        <td>主に院外処方を扱う医療機関</td>
+        <td>処方箋登録、処方箋参考情報取得、処方箋取消、<strong>リフィル処方箋</strong>、処方箋発行形態の管理、重複投薬等チェック、処方箋状況・調剤結果取得、薬剤情報等管理、口頭同意による情報閲覧</td>
+        <td>処方箋変更、重複投薬等チェック事前処理、処方箋ID検索、薬剤情報等管理（院内処方分）、院内処方等登録／取消／変更／ID検索</td>
+      </tr>
+      <tr>
+        <td>薬局</td>
+        <td>処方箋受付、処方箋受付取消、処方箋回収、<strong>リフィル処方箋</strong>、重複投薬等チェック、薬剤情報等管理、口頭同意による情報閲覧、調剤結果登録、調剤結果取消</td>
+        <td>調剤結果変更、重複投薬等チェック事前処理、処方箋ID／調剤結果ID検索、薬剤情報等管理（院内処方分）</td>
+      </tr>
+    </table>
+
+    <h4 style="color:var(--accent2)">HPKI カードの取扱い <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=6" target="_blank">資料6ページ脚注</a>）</span></h4>
+    <div class="warn">
+      <strong>正確な建付け</strong>：<span class="highlight">院内処方等情報の登録時には<strong>電子署名そのものを求めない</strong></span>。したがって電子署名に必要な HPKI カードの保有等も必ずしも必要ない。補助事業においても「電子署名を必要としない施設には HPKI カード保有等を求めない」と明記。<br>
+      <span class="sub">※リモート署名で代替するという話ではなく、そもそも院内処方登録には署名要件がない、という建付け。</span><br>
+      <span class="sub">※処方箋登録（院外処方）については従来通り電子署名が必要で、方式は「ローカル署名」か「リモート署名」のいずれか（HPKIカード／FIDO／マイナンバーカード等）。</span>
+    </div>
+
+    <h4 style="color:var(--accent2)">リフィル処方箋が院内処方中心施設では「望ましい機能」に分類された理由 <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=6" target="_blank">資料6〜8ページ</a>）</span></h4>
+    <div class="warn">
+      議事録中にはリフィル機能単独の議論はなく、<strong>事務局の資料上の整理</strong>として提示され、異論なく受け入れられた。資料を読むと構造的理由が見える：
+      <ul class="tight">
+        <li>リフィル処方箋は「院外処方」の概念（薬局で繰り返し調剤）のため、<strong>院内処方中心の医療機関では使用頻度が低い</strong>。</li>
+        <li>院外処方中心の医療機関・薬局では今も<strong>必要最小限の基本機能</strong>として残る。</li>
+        <li>同じリフィル機能でも、類型により分類が変わる＝「医療の質の向上・効率化の観点から必要か」で判定。</li>
+        <li>この整理は小規模医療機関（歯科7〜8割、中小医科）の導入負担緩和文脈とも整合。</li>
+      </ul>
+    </div>
+
     <div class="note">
-      <strong>構成員からの反応（歯科・医科の院内処方中心施設）</strong><br>
+      <strong>構成員からの反応（院内処方中心施設）</strong><br>
       <span class="speaker">小野寺構成員（日歯）</span>：歯科は院内処方が 7〜8 割。院外処方ベースに院内処方を上乗せする建付けは高額で乗りづらく、<em>院内処方のみの基本機能</em>も将来検討してほしい。<br>
-      <span class="speaker">長島構成員（日医）</span>：医科の小規模施設も同様。院内処方機能の有無で<em>どれだけ価格差が出るか</em>、ベンダ負担がどの程度かを厚労省が把握し、国による支援策を検討してほしい。<br>
-      <span class="speaker">事務局</span>：今夏に電子カルテ情報共有サービスの新目標が出るので、補助の在り方を医療DX全体で整合するよう検討する。クラウドベース型では個別カスタマイズの方がむしろコスト高となる点も周知したい。
+      <span class="speaker">長島構成員（日医）</span>：医科の小規模施設も同様。院内処方機能の有無でどれだけ価格差が出るか、ベンダ負担がどの程度かを厚労省が把握し、国による支援策を検討してほしい。<br>
+      <span class="speaker">鳥飼構成員</span>：中止・変更などトラブル時の現場運用を丁寧にヒアリングし、使いづらさが残らないよう機能に反映すべき。<br>
+      <span class="speaker">大道構成員（日病）</span>：病院は DX 導入意欲はあるが、「何をどう入れたらいいか」「いくらかかるか」が不透明。例：300床・外来500人で電子処方箋いくら？「標準処方箋」が未整備のまま DX だけ進めても普及しない。第一単位・第二単位・処方形態の統一が先。</p>
+    </div>
+
+    <div class="qa">
+      <strong>事務局回答</strong><br>
+      <span class="speaker2">福澤専門官</span>：現行補助は院外処方ベース＋院内処方追加という構成。補助の在り方は、電子カルテ情報共有サービスで今夏に新目標設定があるのでそれに合わせて医療DX全体で整合を見ながら検討する。クラウドベースの共通機能提供では、機能を削る方がむしろコスト高になる可能性もあり、丁寧に周知する。電子処方箋機能も標準電子カルテ仕様の一部として必須項目を含めて検討中。
     </div>
   </div>
 
   <div class="card" id="r3">
-    <h3><span class="tag tag-report">報告3</span>処方情報に記録する単位のチェック <span class="sub">（資料12〜13ページ）</span></h3>
-    <p><strong>2024年12月</strong>に「医師の意図と異なる医薬品名が薬局システムで表示される事例」が報告されたことを踏まえた対応。医療機関・薬局に仕様準拠の点検・報告を要請し、<strong>2026年1月</strong>から点検・報告を行った施設のみ接続可とする運用に変更。以降、単位に関する誤表示事例は報告されていない。</p>
+    <h3><span class="tag tag-report">報告3</span>処方情報に記録する単位のチェック <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=12" target="_blank">資料12〜13ページ</a>）</span></h3>
+    <h4>経緯</h4>
+    <ul>
+      <li><strong>令和6年12月</strong>：薬局システムで医師の意図と異なる医薬品名が表示される事例が報告。一時的に医療機関からの電子処方箋発行を停止。</li>
+      <li>医療機関・薬局に対し以下の点検・報告を要請：
+        <ul class="tight">
+          <li>医薬品コードが適切に設定されていること</li>
+          <li>薬価基準上の単位で入力、それ以外の場合は単位変換係数も入力</li>
+        </ul>
+      </li>
+      <li><strong>2026年1月11日</strong>：点検未報告の医療機関・薬局は電子処方箋管理サービスへの接続を一時停止。以降、単位変換係数の設定誤りに起因する事象の報告なし。</li>
+    </ul>
+
+    <h4>チェック仕様（案）</h4>
     <table>
-      <tr><th>現状</th><th>今後の対応</th></tr>
-      <tr>
-        <td>
-          <ul class="tight">
-            <li>原則は<strong>薬価基準上の単位</strong>で記録。</li>
-            <li>「100mlで一瓶」等のニーズに応え、他単位での記録も可能（単位変換係数の記録を必須）。</li>
-            <li>現状は係数の<em>正しさ</em>まではチェックできない。</li>
-          </ul>
-        </td>
-        <td>
-          <ul class="tight">
-            <li>薬価基準上の単位と一致／不一致を<strong>形式的チェック</strong>。係数の有無・冗長記録をエラー化。</li>
-            <li>電子処方箋管理サービスで使う<strong>単位マスタを公開</strong>（全角／半角等の揺れを吸収する目的）。</li>
-            <li>将来的に単位そのものを<em>標準化</em>（中長期課題）。</li>
-          </ul>
-        </td>
-      </tr>
+      <tr><th>判定</th><th>エラー条件</th><th>例</th></tr>
+      <tr><td>単位マスタ不一致 かつ 変換係数なし</td><td>エラー（登録不可）</td><td>薬価基準「mL」／処方「本」／係数なし</td></tr>
+      <tr><td>単位マスタ一致 かつ 変換係数あり</td><td>エラー（登録不可）</td><td>薬価基準「g」／処方「g」／係数100</td></tr>
     </table>
+    <ul class="tight">
+      <li>チェックは<strong>処方情報登録時</strong>に実施。電子処方箋・引換番号付き紙処方箋いずれも対象。</li>
+      <li>単位（単位名）は<strong>文字列データ</strong>として比較（全角／半角の違いも判定に影響するため単位マスタ公開）。</li>
+      <li>単位の<em>標準化</em>そのものは中長期課題として検討。</li>
+    </ul>
+
     <div class="note">
       <strong>構成員からの主な指摘</strong>
       <ul class="tight">
-        <li><span class="speaker">長島構成員</span>：接続停止となった施設数・支援策は？ → <span class="speaker">福澤専門官</span>「個別に電話連絡し理由確認・報告依頼を丁寧に実施中」、<span class="speaker">徳弘企画官</span>「数は把握済み。ベンダと官民連携し、簡単な手続で再開できるよう周知継続」（※原文では具体数は示されず）。</li>
-        <li><span class="speaker">堀越構成員代理（日薬）</span>：第一単位・第二単位の整合、QRコードとレセプトデータの不一致など、<em>標準化の推進</em>を要望。</li>
-        <li><span class="speaker">新垣構成員（JAHIS）</span>：マスタ公開は「単位マスタだけ」の理解でよいか。第二単位や変換係数も公開した方が活用が進むのでは。→ 事務局「第二単位は施設ごと差が大きく把握できておらず対象外。中長期の標準化で検討」。</li>
-        <li><span class="speaker">鳥飼構成員</span>：実装コストを下げるには Web API・アーキテクチャ現代化が必要。生成AIを活用した設計で根本から手を入れる提案を。</li>
-        <li><span class="speaker">大道構成員（日病）</span>：<em>標準処方箋</em>がないまま DX を進めても普及しない。アナログ部分を固めてからの議論を。</li>
-        <li><span class="speaker">新垣構成員</span>：紙が原本で電子処方箋管理サービスに<em>データのみ送信</em>するケースでも同じエラー扱いになるのか、実装段階で検討を。</li>
+        <li><span class="speaker">長島構成員</span>：接続停止となった施設数・支援策は？ → <span class="speaker2">福澤専門官</span>「個別に電話連絡し理由確認・報告依頼を丁寧に実施中」、<span class="speaker2">徳弘企画官</span>「数は把握済み。ベンダと官民連携し、簡単な手続で再開できるよう周知継続」<span class="sub">（原文では具体数未開示）</span>。</li>
+        <li><span class="speaker">堀越構成員代理（日薬）</span>：方向性に賛成。第一単位と第二単位の整合性は必ず取れるのか、登録不可時の代替運用はあるか → <span class="speaker2">福澤専門官</span>「現状システムでは第二単位や係数の正しさ自体まではチェックできず、ルール準拠の形式チェックに留まる。係数妥当性チェックは中長期標準化の課題として承る」。</li>
+        <li><span class="speaker">新垣構成員（JAHIS）</span>：単位マスタに第二単位・変換係数も含めて公開してほしい → 「第二単位は施設ごと差が大きく把握できておらず現時点では対応困難。中長期標準化で検討」。また紙が原本でデータのみ電子処方箋管理サービスへ送る運用時のエラー扱いは実装段階で検討を。</li>
+        <li><span class="speaker">鳥飼構成員</span>：Web API 標準化とアーキテクチャ現代化（生成AI の設計能力を活用）を提案。古いアーキテクチャに機能を乗せ続けるとコストが累積する。</li>
+        <li><span class="speaker">長島構成員</span>：標準型電子カルテ・電子カルテ情報共有サービスと一体で API 連携すべき。医薬局・医政局・保険局の連携が必要。</li>
+        <li><span class="speaker">大道構成員（日病）</span>：「標準処方箋」がないまま DX を進めても普及しない。アナログ部分の標準化を先に固めるべき。</li>
       </ul>
     </div>
   </div>
@@ -220,69 +283,170 @@
   <h2>検討事項</h2>
 
   <div class="card" id="d1">
-    <h3><span class="tag tag-discuss">検討1</span>併用注意チェック機能 <span class="sub">（資料16〜21ページ）</span></h3>
-    <p>アンケート結果：自施設システムで併用注意チェックを実装している割合は <strong>病院約41%／医科診療所33.4%／薬局74.4%</strong>。アラート疲労軽減のために独自の絞り込みを行う施設が一定数存在。（17ページのアラート疲労アンケート詳細・31ページ以降のUXニーズ調査詳細は、原文でも「説明は割愛」とされており数値は読み上げられていない）</p>
-    <p>事務局案：チェック対象範囲は限定せず、<strong>添付文書ベースで全薬剤</strong>を対象に検討。ただし重複投薬・併用禁忌チェックとは別に、<em>任意でチェックできる機能</em>として設ける方向。</p>
+    <h3><span class="tag tag-discuss">検討1</span>併用注意チェック機能 <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=16" target="_blank">資料16〜21ページ</a>）</span></h3>
+
+    <h4>アンケート結果（令和7年10月17〜30日 実施）</h4>
+    <table>
+      <tr><th></th><th>病院</th><th>医科診療所</th><th>歯科診療所</th><th>薬局</th></tr>
+      <tr><td>実装済み・利用中</td><td>41.0%</td><td>33.4%</td><td>5.1%</td><td>74.4%</td></tr>
+      <tr><td>実装済み・未利用</td><td>16.3%</td><td>27.7%</td><td>50.0%</td><td>8.1%</td></tr>
+      <tr><td>実装していない</td><td>28.2%</td><td>28.3%</td><td>38.2%</td><td>10.3%</td></tr>
+      <tr><td>n=</td><td>1,668</td><td>9,696</td><td>4,485</td><td>13,039</td></tr>
+    </table>
+    <p>アラート疲労軽減のための独自取組：<strong>範囲限定</strong>（ハイリスク薬・特定属性患者・過去インシデント実績等）、<strong>設定変更</strong>（医師・薬剤師判断で個別解除）、<strong>表示方法</strong>（色分け・併用禁忌／注意の分離表示）、<strong>ダブルチェック体制</strong>等。</p>
+
+    <h4>事務局案</h4>
+    <ul>
+      <li>対象範囲：<strong>添付文書ベースで実施可能な全薬剤</strong>（ハイリスク薬等への限定は、現場の独自チェックと二重になるため不採用）。</li>
+      <li>アラート疲労対策：既存の重複投薬・併用禁忌チェックの仕様は変更せず、<strong>併用注意は別途確認できる仕組み</strong>（別ボタンで表示等）を採用。重複投薬・併用禁忌の見逃しリスクを抑制する。</li>
+      <li>メリット：施設をまたぐ併用注意チェック（他医療機関・他薬局での処方との照合）、マスタメンテナンス負荷の中央集約。</li>
+      <li>ただし<strong>中長期かつ慎重に有用性を検討</strong>。現行の重複投薬等チェックの効果検証を先行。</li>
+    </ul>
+
     <div class="agree">
-      <strong>方向性への合意</strong><br>
-      <span class="speaker">長島構成員</span>：方向性に異論なし。併用禁忌と違い非常に膨大になるため、<em>既存機能（重複投薬・併用禁忌）の効果検証</em>を進めつつ<strong>中長期的・慎重に</strong>検討すべき。<br>
-      <span class="speaker">鳥飼構成員</span>：抜け落ちがなく過不足ないベーシック機能の完備が最優先。クレバーなフィルタリングは病名・検査値などの患者状態が必要で、ほぼ意思決定支援システム。まずは国が OS的にベース機能を提供し、中小電子カルテでも使えるようにする意義は大きい。<br>
-      <span class="speaker">堀越構成員代理</span>：薬局では既に74.4%が実装。中央で一律実装すると過剰アラートで重要警告を見落とす恐れ。まず重複投薬・併用禁忌の効果検証を。
+      <strong>構成員の反応（方向性に合意）</strong><br>
+      <span class="speaker">長島構成員</span>：併用注意は併用禁忌と性質が違い膨大。効果・業務負担・費用・使いやすさを丁寧に見極め、既存の重複投薬・併用禁忌を進めつつ中長期・慎重に。<br>
+      <span class="speaker">鳥飼構成員</span>：過不足ないベーシック機能の完備が最優先。高度なフィルタリングは意思決定支援システムに近い領域で、患者状態（病名・検査値）との連携が必要。国はまず OS 的にベース機能を担い、中小電子カルテでも利用可能にする意義は大きい。<br>
+      <span class="speaker">堀越構成員代理</span>：薬局では既に 74.4% が実装済。中央一律実装で重要警告が埋もれる懸念。まず重複投薬・併用禁忌の効果検証を。
     </div>
   </div>
 
   <div class="card" id="d2">
-    <h3><span class="tag tag-discuss">検討2</span>薬剤数の表示機能 <span class="sub">（資料22ページ）</span></h3>
-    <p>目的：オンライン資格確認で閲覧する前段階で、<strong>患者が現在使用中の薬剤の「数」</strong>を表示して気付きを与える。<em>薬剤単位でカウント</em>する方針（成分単位ではない）。</p>
+    <h3><span class="tag tag-discuss">検討2</span>薬剤数の表示機能 <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=22" target="_blank">資料22ページ</a>）</span></h3>
+    <p>オンライン資格確認で詳細情報を開く前段階で、<strong>「処方・調剤日における薬剤数：X」</strong>を表示して気付きを与える。</p>
+
+    <h4>カウントロジック（事務局案）</h4>
+    <table>
+      <tr><th>論点</th><th>対応</th></tr>
+      <tr><td>ロジック</td><td>重複投薬等チェックのロジックを活用。使用中の医薬品＋処方・調剤しようとする今回情報もカウント</td></tr>
+      <tr><td>送信タイミング</td><td>重複投薬等チェックと<strong>同時</strong>、常に送信</td></tr>
+      <tr><td>表示情報</td><td>投与経路・剤形等は表示せず、<strong>薬剤数のみ</strong></td></tr>
+      <tr><td>単位</td><td><strong>薬剤単位</strong>でカウント（成分単位ではない）。<br>・<strong>配合剤も1剤</strong><br>・<strong>銘柄・規格違いでも成分が同じなら1剤</strong></td></tr>
+    </table>
+    <p class="sub">第8回WGでは「成分数も併記」意見もあったが、全ての医薬品成分が単剤として製造販売されているわけではなく、成分数併記の効果は限定的と判断。詳細は薬剤情報閲覧機能で確認する前提。</p>
+
     <div class="agree">
       <strong>主な意見</strong>
       <ul class="tight">
-        <li><span class="speaker">長島構成員</span>：異論なし。五月雨式の実装はベンダ・現場負担が大きいので、<em>実装時期を他機能とまとめて</em>配慮してほしい。「客観的に薬剤数を表示するだけで、多い＝悪いではない」点の周知も重要。</li>
-        <li><span class="speaker">堀越構成員代理</span>：入口情報として有用だが、多剤投与の適否判断は患者背景・個々の薬剤内容を踏まえた薬学的評価が前提。機能の<em>意図・限界を正確に周知</em>してほしい。</li>
+        <li><span class="speaker">長島構成員</span>：異論なし。五月雨式実装はベンダ・現場負担が大きいので、<em>実装時期を他機能とまとめて</em>配慮を。「客観的に薬剤数を表示するだけで、多い＝悪いではない」点の周知が重要。</li>
+        <li><span class="speaker">堀越構成員代理</span>：入口情報として有用。ただし多剤投与の適否判断は患者背景・個々の薬剤内容を踏まえた薬学的評価が前提で、機能の<em>意図と限界</em>を明確に周知してほしい。</li>
       </ul>
     </div>
   </div>
 
   <div class="card" id="d3">
-    <h3><span class="tag tag-discuss">検討3</span>UX向上：マイナポータル経由の電子処方箋事前送付 <span class="sub">（資料23〜30ページ）</span></h3>
-    <p>令和6年の第5回WGでの議論を、現状の運用安定化を受けて再開。当初案の「事前設定したかかりつけ薬局へ自動送付」を改め、<strong>患者がマイナポータル経由で全国の薬局から選択→調剤を事前開始</strong>できる仕組みとして再整理。</p>
-    <h4>想定するメリット（事務局案）</h4>
-    <table>
-      <tr><th>対象</th><th>メリット</th></tr>
-      <tr><td>医療機関</td><td>FAX送付・紙控えの削減</td></tr>
-      <tr><td>薬局</td><td>事前情報共有で対人業務に集中</td></tr>
-      <tr><td>患者</td><td>待ち時間の短縮</td></tr>
-    </table>
-    <h4>仕組み（29ページ図の要約）</h4>
-    <ol class="tight">
-      <li>医療機関が電子処方箋を発行</li>
-      <li>電子処方箋管理サービス経由で<strong>マイナポータルに通知</strong></li>
-      <li>患者がマイナポータルで<em>全国の薬局から選択</em>・情報提供同意</li>
-      <li>オンライン資格確認経由で薬局側に通知（※現状はプッシュ通知不可のため改修要）</li>
-      <li>薬局が調剤を開始</li>
-    </ol>
+    <h3><span class="tag tag-discuss">検討3</span>UX向上：マイナポータル経由の電子処方箋事前送付 <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=23" target="_blank">資料23〜34ページ</a>）</span></h3>
+
+    <h4>経緯と方針転換</h4>
+    <p>令和6年（2024年）6月19日の第5回WGで一度議論。当時の案「事前設定したかかりつけ薬局へ<strong>自動送付</strong>」は原本取扱い・囲い込み・来局薬局変更への対応など課題多数との指摘を受けて<strong>廃案</strong>。</p>
     <div class="warn">
-      <strong>主な論点・課題（30ページ）</strong>
-      <ul class="tight">
-        <li>自ら選択した薬局以外に行く場合の扱い</li>
-        <li>マイナポータル、オンライン資格確認システムの改修が必要</li>
-        <li>薬局の開局時間・受付可否の反映</li>
-        <li>プッシュ型通知が現基盤でできないため改修検討が必要</li>
-      </ul>
+      <strong>方針転換</strong>：<span class="highlight">「かかりつけ薬局自動送付」→「患者自らマイナポータルで全国の薬局から選択して通知」</span>に変更。自動送付は行わない。
     </div>
+
+    <h4>新しい仕組みの全体像</h4>
+    <table>
+      <tr><th>ステップ</th><th>内容</th></tr>
+      <tr><td>①</td><td>医師が電子処方箋を発行 → 電子カルテ経由で電子処方箋管理サービスへ</td></tr>
+      <tr><td>②③</td><td>電子処方箋管理サービス → マイナポータル → <strong>患者のマイナポアプリ／メールへ発行通知</strong></td></tr>
+      <tr><td>④</td><td>患者がマイナポータルで操作：薬局選択、来局予定日時、情報提供同意、ジェネリック希望 等</td></tr>
+      <tr><td>⑤⑥</td><td>登録内容をオンライン資格確認等システムへ連携 → 電子処方箋を薬局へ通知</td></tr>
+      <tr><td>⑦⑧</td><td>薬局システムで通知受信 → 電子処方箋・情報閲覧 → 調剤開始</td></tr>
+    </table>
+
+    <h4>想定メリット（事務局案）</h4>
+    <table>
+      <tr><th>対象</th><th>メリット</th><th>仕組み要件</th></tr>
+      <tr><td>医療機関</td><td>紙の処方箋・控えのFAX対応不要</td><td>電子処方箋発行を患者に電子通知</td></tr>
+      <tr><td>薬局</td><td>来局前に薬剤情報を確認して調剤開始</td><td>全国の薬局から選択可、自動送付されない、事前に薬剤情報閲覧可、発行検知</td></tr>
+      <tr><td>患者</td><td>医療機関・薬局での待ち時間短縮</td><td>—</td></tr>
+    </table>
+
+    <h4>ニーズ調査結果 <span class="page-ref">（令和8年1月28日〜2月3日実施、<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=28" target="_blank">資料28〜34ページ</a>）</span></h4>
+    <div class="two-col">
+      <div>
+        <strong>医療機関・薬局側</strong>（n=医療機関 3,477／薬局 8,471）
+        <ul class="tight">
+          <li>既存事前送付に不満あり：医療機関 <strong>66.7%</strong>／薬局 <strong>78.4%</strong></li>
+          <li>マイナポータル事前送付が<em>患者側に</em>有用：医療機関 70.0%／薬局 <strong>86.3%</strong></li>
+          <li>マイナポータル事前送付が<em>施設に</em>有用：医療機関 56.7%／薬局 <strong>83.4%</strong></li>
+        </ul>
+      </div>
+      <div>
+        <strong>国民側</strong>（n=2,000、民間経験者 n=693）
+        <ul class="tight">
+          <li>民間経験者の既存サービス不満：25.7% 実感あり／27.3% 感じそう／<strong>47.0% 不満なし</strong></li>
+          <li>マイナポータル経由を利用したい：民間経験者 <strong>55.4%</strong>／未経験者 47.4%／全体 50.2%</li>
+          <li>約8割が薬局との連絡機能（在庫確認・変更希望・相談）に魅力を感じる</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>継続検討課題 <span class="page-ref">（<a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf#page=30" target="_blank">資料30ページ</a>）</span></h4>
+    <table>
+      <tr><th>課題</th><th>内容</th></tr>
+      <tr><td>選択薬局以外に行った場合</td><td>薬局で受付取消すれば電子処方箋管理サービスに返却され、他薬局で原本として再受付可。それでも運用整理が必要。</td></tr>
+      <tr><td>患者への通知方法</td><td>マイナポータル側の改修が必要。マイナポアプリで通知、薬局選択UI、情報提供同意の仕組みの実装。</td></tr>
+      <tr><td>情報提供同意・問診の事前取得</td><td>マイナポータル→オン資連携の仕組み実装が必要。</td></tr>
+      <tr><td>薬局の受付可否（営業時間）</td><td>各薬局の営業状況をマイナポータルに反映する仕組みの要否を検討。</td></tr>
+      <tr><td>薬局側の通知受信</td><td>現在のオン資基盤では<strong>PUSH型通知ができない</strong>。薬局側からのポーリング方式が前提。待ち時間短縮のため短周期ポーリング可否を検討。代替手段の検討も。</td></tr>
+    </table>
+
     <div class="note">
       <strong>構成員からの主な意見</strong>
       <ul class="tight">
         <li><span class="speaker">田河構成員（健保連）</span>：薬品欠品時の患者へのプッシュ通知も課題。</li>
         <li><span class="speaker">長島構成員</span>：方向性は妥当。30ページの課題を<em>一つ一つ丁寧に</em>。</li>
-        <li><span class="speaker">堀越構成員代理（日薬）</span>：UX だけでなく<strong>UI</strong>、そして医療安全・患者利益・全国一律の公平アクセスなど<em>公的基盤としての目的</em>に則るべき。API連携による<em>囲い込み</em>にならないよう強く要望。薬局選択権・原本の扱い、同意未取得時の監査も論点。</li>
-        <li><span class="speaker">川上構成員（日病薬）</span>：メリット記載が時間効率中心で残念。<em>かかりつけ薬局による継続的・一元的管理</em>、医師が診療環境にいるうちに変更調剤連絡や疑義照会ができるなど、医療・薬物治療の本質に係る便益を示してほしい。</li>
-        <li><span class="speaker">實松構成員（後期高齢者医療広域連合協議会）</span>：高齢者にはスマホ・アプリが難しい人が多い。<em>家族・介護者による代理操作</em>、簡単UI、電話等の併存運用を配慮してほしい。</li>
-        <li><span class="speaker">小野寺構成員（日歯）</span>：マイナポータルを使いづらい層への配慮、手続をとにかく単純・分かりやすく。</li>
-        <li><span class="speaker">新垣構成員（JAHIS）</span>：<strong>マイナポータルAPI</strong>を通じたデータ利活用・民間アプリ連携も検討してほしい。</li>
-        <li><span class="speaker">鳥飼構成員</span>：取りに行かずとも薬が届けられる地域医療実態もある。<em>本人確認・情報提供・対面指導</em>の機能を分離・再構成することでデジタル化の役割を拡大できる。</li>
-        <li><span class="speaker">大道構成員（日病）</span>：薬剤在庫との連携（例：ナビイ、コールバック）まで考慮してほしい。エピペン処方で患者が3軒回った実例を紹介。</li>
+        <li><span class="speaker">堀越構成員代理（日薬）</span>：UX だけでなく<strong>UI</strong>も重要。既存民間サービスへの保険財政の支出／対民間コスト負担の現状を踏まえるべき。<em>公的基盤</em>なら医療安全・患者利益・全国一律の公平アクセスを目的とすべきで、API連携による<strong>囲い込み</strong>は避けるべき。薬局選択権・原本扱い・同意未取得時の監査も論点。</li>
+        <li><span class="speaker">川上構成員（日病薬）</span>：27ページのメリット記載が時間効率中心で残念。<em>かかりつけ薬局での継続的・一元的管理</em>、医師が診療環境にいるうちに変更調剤連絡や疑義照会ができるなど、医療・薬物治療の本質に係る便益を前面に。</li>
+        <li><span class="speaker">實松構成員（後期高齢者医療広域連合協議会）</span>：高齢者のスマホ・アプリ操作困難者への配慮。家族・介護者の代理操作、簡便UI、電話等の既存手段との併存を。</li>
+        <li><span class="speaker">小野寺構成員（日歯）</span>：高齢患者はスマホを持っていてもマイナポータル操作が難しい。手続を単純で分かりやすく。</li>
+        <li><span class="speaker">新垣構成員（JAHIS）</span>：画面イメージ中心ではなく<strong>マイナポータルAPI</strong>を通じたデータ利活用・民間アプリ連携の検討も。</li>
+        <li><span class="speaker">鳥飼構成員</span>：電子カルテ情報共有サービスとの結合（処方・病名の共有）が必要。対面価値を保ちつつ、本人確認・情報提供機能を分離再構成すれば、薬の受取困難者への配送にもつながり得る。</li>
+        <li><span class="speaker">大道構成員（日病）</span>：マイナポータル上の薬局検索でナビイとの連携は？ 薬局在庫不足時のコールバックも利便性上重要（エピペン処方で3軒回った事例）。</li>
+        <li><span class="speaker">堀越構成員代理</span>：大道構成員の在庫対応は薬局側の受入姿勢の課題として改善に努める。</li>
       </ul>
+    </div>
+
+    <div class="qa">
+      <strong>事務局回答（要旨）</strong>
+      <ul class="tight">
+        <li><span class="speaker2">福澤専門官</span>：医療の質向上などの本質的メリットも含め、便益の見せ方を改めて整理。</li>
+        <li><span class="speaker2">福澤専門官</span>：この仕組みへの全面切替ではなく、既存運用との併存も含めて検討。家族代理はオン資等を含む医療DX全体の課題として関係部署と協力。</li>
+        <li><span class="speaker2">福澤専門官</span>：マイナポータルAPI の論点はデジタル庁と共同で検討。</li>
+        <li><span class="speaker2">福澤専門官</span>：全国の薬局から選択できることが公的仕組みの意義。<strong>囲い込み回避</strong>を含めて検討。</li>
+        <li><span class="speaker2">福澤専門官</span>：ナビイ等との営業時間連携、在庫不足時の患者連絡先連携も検討対象。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 横断論点 ================= -->
+<section>
+  <h2>横断的な論点</h2>
+  <div class="two-col">
+    <div class="card">
+      <h4>標準化</h4>
+      医薬品コード・単位・処方形態・電子処方箋機能・API 連携すべてで中心論点。大道・長島・鳥飼構成員は、<em>標準型電子カルテ・クラウドネイティブ実装と一体で進める必要</em>を強調。単位チェックでも第二単位・係数の標準化は中長期課題。
+    </div>
+    <div class="card">
+      <h4>現場負担・費用</h4>
+      歯科・医科・病院のいずれからも、導入費用の不透明さ、院内処方対応コスト、五月雨実装、頻繁な仕様変更への懸念。笹子課長も「現場負担」は一貫した重要論点と明言。
+    </div>
+    <div class="card">
+      <h4>囲い込み回避・公平性</h4>
+      UX 向上策で堀越・川上構成員が繰り返し強調。公的基盤なら全国一律・公平なアクセスを担保すべきで、API連携経由でも囲い込みにしないこと。事務局も「全国の薬局から選択可」を意義として応答。
+    </div>
+    <div class="card">
+      <h4>高齢者・家族支援</h4>
+      實松・小野寺構成員。家族・介護者の代理操作、電話等の既存手段併存、簡便UIが必要。事務局は全面切替ではなく併存を前提に関係部署と検討。
+    </div>
+    <div class="card">
+      <h4>医療の質・安全</h4>
+      川上・鳥飼・堀越構成員。待ち時間短縮やFAX削減だけでなく、継続的一元管理、疑義照会早期化、患者利益、医療安全こそが主たる価値。
+    </div>
+    <div class="card">
+      <h4>省庁・部局横断</h4>
+      マイナポータルAPI・家族代理操作はデジタル庁や関連部局との課題。2026年夏に厚労省内で医療DX政策を扱う組織を集約予定（笹子課長発言）。
     </div>
   </div>
 </section>
@@ -292,33 +456,32 @@
   <h2>閉会挨拶（笹子総務課長）</h2>
   <div class="card">
     <ul>
-      <li>現場負担への配慮と、技術進展（コスト低減）のバランスを取りつつ、横串を刺した検討を進める。</li>
+      <li>現場負担への配慮と技術進展（コスト低減）のバランスを取り、横串を刺した検討を進める。</li>
       <li><strong>2026年夏</strong>に厚労省内で<strong>医療DX政策を扱う組織を集約</strong>予定。電子処方箋・電子カルテ・オンライン資格確認などを一部局に集約する組織改編。デジタル庁との連携を強化。</li>
-      <li>今年度は電子処方箋の新目標を7月に設定、医薬品コード点検ではベンダ・医療機関・薬局の協力に感謝。</li>
+      <li>今年度は電子処方箋の新目標を7月に設定。医薬品コード点検ではベンダ・医療機関・薬局の協力に感謝。</li>
     </ul>
   </div>
   <p class="sub">次回日程は追って連絡。</p>
 </section>
 
-<section>
-  <h2>参考：並列調査による補正</h2>
+<!-- ================= 参考・出典 ================= -->
+<section id="refs">
+  <h2>参考・出典</h2>
   <div class="card">
-    <p class="sub">本まとめは Claude と Codex（gpt-5.4, research profile）による並列要約を統合評価したもの。Codex 側の原文精査により以下を補強しています。関係者へ渡す際はこの節を削れば純粋な議事録まとめになります。</p>
-    <ul class="tight">
-      <li>各項目の資料ページ番号（例：報告1 資料4〜5ページ、検討3 資料23〜30ページ）</li>
-      <li>時系列の具体化：2025年7月の推進チーム決定、2024年12月の誤表示事例報告、2026年1月の接続制限切替</li>
-      <li>事務局発言の話者分離：福澤専門官 vs 徳弘企画官 vs 笹子総務課長</li>
-      <li>透明性：17ページのアラート疲労アンケート詳細、31ページ以降のUXニーズ調査詳細は原文でも「説明は割愛」で数値未開示</li>
-      <li>鳥飼構成員の所属は原文の発言読み上げ中では明示されていない点</li>
-      <li>検討3 の方針が「当初の自動送付前提」から「全国の薬局から患者自身で選択」に変わった点</li>
+    <ul>
+      <li><a href="https://www.mhlw.go.jp/content/10701000/001693273.pdf">議事録 PDF（001693273.pdf, 24ページ）</a></li>
+      <li><a href="https://www.mhlw.go.jp/content/11121000/001668909.pdf">資料1 PDF（001668909.pdf, 34ページ, 1.9MB）</a></li>
+      <li><a href="https://www.mhlw.go.jp/stf/newpage_71328.html">第9回 電子処方箋等検討ワーキンググループ 資料等</a></li>
+      <li><a href="https://www.mhlw.go.jp/stf/shingi/other-iyaku_470779_00024.html">電子処方箋等検討ワーキンググループ ポータル</a></li>
     </ul>
+    <p class="sub">本ページは議事録原文と資料1 PDF の両方を一次ソースとして統合整理したもの。発言引用は議事録原文、機能整理表・アンケート数値・仕様詳細は資料1 PDF からの整理。</p>
   </div>
 </section>
 
 <footer>
-  出典：厚生労働省「第9回 電子処方箋等検討ワーキンググループ 議事録」（2026-03-19 開催） / PDF: mhlw.go.jp/content/10701000/001693273.pdf<br>
-  本ページは議事録原文からの要約・整理。一次情報は原文 PDF を参照してください。<br>
-  並列要約：Claude Opus 4.7 + Codex（gpt-5.4, research profile）統合版
+  出典：厚生労働省「第9回 電子処方箋等検討ワーキンググループ」資料1 + 議事録（2026-03-19 開催）<br>
+  編集：Claude Opus 4.7 / 並列調査補正 by Codex（gpt-5.4, research profile）<br>
+  本ページは一次情報の要約。正確性は原文 PDF を参照してください。
 </footer>
 
 </div>
