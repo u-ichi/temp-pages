@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>医療情報システム安全管理ガイドライン 6.0→6.1→7.0 変更追跡レポート</title>
+  <style>
+:root {
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg: #f7f8fb;
+  --panel: #ffffff;
+  --text: #17202a;
+  --muted: #516173;
+  --line: #d8dee8;
+  --accent: #2563eb;
+  --callout: #fff7e6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.document-header,
+.document-content {
+  width: 100%;
+  margin: 0;
+}
+
+.document-header {
+  padding: 40px 0 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow,
+.document-meta {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 34px;
+  line-height: 1.18;
+}
+
+.document-summary {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.document-content {
+  padding: 28px 0 56px;
+}
+
+.report-section {
+  margin: 0 0 18px;
+  padding: 22px 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+
+.report-section h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.block-content {
+  margin: 0;
+}
+
+.block-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.block-content th,
+.block-content td {
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.block-content th {
+  background: #f1f5f9;
+}
+
+.block-content pre {
+  overflow-x: auto;
+  padding: 14px 16px;
+  background: #101828;
+  color: #eef2ff;
+  border-radius: 6px;
+}
+
+.block-content pre code,
+.diagram-source code {
+  color: #f8fafc;
+}
+
+.callout {
+  padding: 14px 16px;
+  background: var(--callout);
+  border-radius: 6px;
+}
+
+.diagram-source {
+  overflow-x: auto;
+  padding: 14px 16px;
+  background: #101828;
+  color: #eef2ff;
+  border-radius: 6px;
+}
+
+.diagram-fallback figcaption {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.mermaid-diagram {
+  margin: 0;
+}
+
+.diagram-preview {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: auto;
+  margin: 0 0 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.diagram-edge {
+  stroke: #64748b;
+  stroke-width: 2;
+}
+
+.diagram-node {
+  fill: #ffffff;
+  stroke: #2563eb;
+  stroke-width: 2;
+}
+
+.diagram-label {
+  fill: #17202a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.diagram-preview-empty {
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+}
+
+.sample-visual {
+  margin: 0;
+}
+
+.sample-visual figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sample-visual svg {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+}
+
+.sample-image {
+  display: grid;
+  place-items: center;
+  width: min(520px, 100%);
+  aspect-ratio: 16 / 7;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(22, 163, 74, 0.18)),
+    repeating-linear-gradient(45deg, #f8fafc 0 12px, #eef2f7 12px 24px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.sample-image-label {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.generated-image {
+  margin: 0;
+}
+
+.generated-image img {
+  display: block;
+  width: min(720px, 100%);
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.generated-image img:hover {
+  border-color: var(--accent);
+}
+
+.generated-image figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+
+@media (max-width: 640px) {
+  .document-header {
+    padding-top: 28px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .report-section {
+    padding: 18px;
+  }
+}
+
+/* Public export: no review/comment UI. */
+.report-section { border-radius: 0; }
+.document-header, .document-content { max-width: none; }
+
+  </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YNNVTYJGS2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-YNNVTYJGS2");
+</script>
+</head>
+<body>
+  <header class="document-header" id="document-header">
+    <p class="eyebrow">公開レポート</p>
+    <h1>医療情報システム安全管理ガイドライン 6.0→6.1→7.0 変更追跡レポート</h1>
+    <p class="document-summary">第6.0版、第6.1版案、第7.0版案で、論点ごとの記述がどのように変わったかを具体的に横比較するレポート。作業項目は後段のチェックシートに分離。</p>
+    <p class="document-meta">Public report generated at <time>2026-05-31T21:56:20.121780+00:00</time></p>
+  </header>
+  <main id="content" class="document-content">
+<section class="report-section report-section-html" id="scope">
+<h2>この資料の読み方</h2>
+<div class="block-content">
+<style>
+
+  html, body { margin: 0 !important; padding: 0 !important; width: 100%; max-width: none !important; }
+  body > * { max-width: none !important; }
+  main, article, .container, .content, .page, .document, .public-document, .reviewable-document, .public-report { max-width: none !important; width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+  .diff-report { width: 100%; max-width: none; margin: 0; padding: 0 8px; box-sizing: border-box; }
+  .diff-report table { width: 100%; min-width: 1280px; }
+  .diff-report { overflow-x: auto; }
+  .diff-report .lead { font-size: 16px; color: #334155; }
+  .diff-report .kpi-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 12px 0 4px; }
+  .diff-report .kpi { border: 1px solid #d8dee8; border-radius: 8px; padding: 12px; background: #f8fafc; }
+  .diff-report .kpi b { display:block; font-size: 24px; color:#0f172a; line-height:1.15; }
+  .diff-report .kpi span { color:#516173; font-size: 13px; }
+  .diff-report .tag { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:600; background:#e0f2fe; color:#075985; white-space:nowrap; }
+  .diff-report .tag.high { background:#fee2e2; color:#991b1b; }
+  .diff-report .tag.medium { background:#fef3c7; color:#92400e; }
+  .diff-report .tag.low { background:#dcfce7; color:#166534; }
+  .diff-report .tag.owner { background:#eef2ff; color:#3730a3; }
+  .diff-report .note { padding: 12px 14px; border-left: 4px solid #64748b; background:#f8fafc; color:#334155; margin: 12px 0; }
+  .diff-report .must { border-left-color:#dc2626; background:#fff1f2; }
+  .diff-report .flow { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin:14px 0; }
+  .diff-report .stage { border:1px solid #d8dee8; border-radius:8px; padding:12px; background:#fff; }
+  .diff-report .stage h3 { margin:0 0 6px; font-size:16px; }
+  .diff-report .stage p { margin:0; color:#334155; }
+  .diff-report table { table-layout: fixed; }
+  .diff-report th, .diff-report td { word-break: break-word; vertical-align: top; }
+  .diff-report .nowrap { white-space: nowrap; }
+  .diff-report .small { color:#516173; font-size: 13px; }
+  .diff-report ul.checks { padding-left: 1.2rem; }
+  .diff-report ul.checks li { margin: 6px 0; }
+
+  .diff-report .part-marker { border: 1px solid #bfdbfe; border-left: 6px solid #2563eb; background:#eff6ff; padding:14px 16px; margin:18px 0 10px; }
+  .diff-report .part-marker h2 { margin:0 0 6px; font-size:20px; color:#0f172a; }
+  .diff-report .part-marker p { margin:0; color:#334155; }
+  .diff-report .part-map th:nth-child(1), .diff-report .part-map td:nth-child(1) { width:18%; }
+  .diff-report .part-map th:nth-child(2), .diff-report .part-map td:nth-child(2) { width:22%; }
+
+  .diff-report .part-marker { border: 3px solid #1d4ed8; border-left: 14px solid #1d4ed8; background:#eff6ff; padding:18px 20px; margin:26px 0 14px; }
+  .diff-report .part-marker .part-label { display:inline-block; padding:4px 10px; background:#1d4ed8; color:white; font-weight:700; border-radius:4px; margin-bottom:8px; }
+  .diff-report .part-marker .part-title { display:block; font-size:24px; font-weight:800; color:#0f172a; margin:0 0 8px; }
+  .diff-report .part-range { border:2px solid #dbeafe; background:#f8fbff; padding:12px; margin:12px 0; }
+  .diff-report .part-range b { color:#1e40af; }
+  .diff-report .part-end { border:2px dashed #94a3b8; background:#f8fafc; padding:14px 16px; margin:20px 0 26px; font-weight:700; color:#334155; }
+  .diff-report a { color:#1d4ed8; }
+  @media (max-width: 900px) { .diff-report .kpi-grid, .diff-report .flow { grid-template-columns: 1fr; } }
+</style>
+
+<div class="diff-report">
+<p class="lead">このレポートは、第6.0版、第6.1版案、第7.0版案を論点ごとに横並びで比較し、「6.0では何が書かれていたか」「6.1で何が足されたか」「7.0で何がさらに具体化されたか」が一続きで読めるように整理したもの。</p>
+<div class="kpi-grid">
+  <div class="kpi"><b>6.0</b><span>構成再編後の基準版</span></div>
+  <div class="kpi"><b>6.1案</b><span>NCO/SBOM/二要素認証等を補強</span></div>
+  <div class="kpi"><b>7.0案</b><span>実装対象・期限・委託時確認を具体化</span></div>
+</div>
+<div class="flow">
+  <div class="stage"><h3>6.0: 体系化</h3><p>概説、経営管理、企画管理、システム運用に再編。クラウド、ゼロトラスト、二要素認証、バックアップ、ログ等の基礎要求を整理。</p></div>
+  <div class="stage"><h3>6.1案: 補強</h3><p>制度・サイバーセキュリティ動向を反映。NCO、SBOM、MyJVN、リモート保守、二要素認証対象の説明が増える。</p></div>
+  <div class="stage"><h3>7.0案: 実装化</h3><p>接続方式、証明書、サーバOSログイン、ログレビュー、バックアップ復旧、保守委託時の確認事項が作業単位に近づく。</p></div>
+</div>
+
+<p class="note must">章構成は、最初に医療機関・ベンダー双方が見る共通論点を確認し、その後に医療機関側の確認・依頼事項、最後にベンダー・クラウド事業者側の対応・提出証跡へ進む構成に整理している。</p>
+<table class="part-map">
+  <thead><tr><th>部</th><th>見る人</th><th>この部の範囲</th><th>この部で判断すること</th></tr></thead>
+  <tbody>
+    <tr><td><b>第1部</b></td><td>医療機関・ベンダー双方</td><td>第1部-1「資料分解と位置づけの変化」から第1部-9「編別の変更点と確認事項（5編横断）」まで。</td><td>6.0、6.1案、7.0案で記述がどう変わり、いつから何を前提にするか。</td></tr>
+    <tr><td><b>第2部</b></td><td>医療機関</td><td>第2部-1「医療機関目線チェックシート」から第2部-3「医療機関が残す証跡」まで。</td><td>自院で何を確認し、ベンダー・クラウド事業者へ何を求め、どの証跡を受領するか。</td></tr>
+    <tr><td><b>第3部</b></td><td>ベンダー・クラウド事業者</td><td>第3部-1「事業者側対応項目」から第3部-2「クラウド事業者目線チェックシート」まで。</td><td>対応が求められるものと、医療機関へ提出する証跡をどう分けて準備するか。</td></tr>
+  </tbody>
+</table>
+
+<p class="note must">対象範囲の補足: 第32回WGで提示された第7.0版案は、概説編、経営管理編、企画管理編、システム運用編、保守委託機関編の5編。本レポートでは関連ドキュメントを全て対象にし、5編それぞれについて位置づけ、6.0→6.1案→7.0案の変化、医療機関・ベンダー側の確認事項を整理する。</p>
+<table class="part-map">
+  <thead><tr><th>第7.0版案の資料</th><th>URL</th><th>本レポートでの扱い</th></tr></thead>
+  <tbody>
+    <tr><td>資料5 改定概要</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705949.pdf">001705949.pdf</a></td><td>時系列、背景、適用時期の確認。</td></tr>
+    <tr><td>参考資料1-1 概説編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705952.pdf">001705952.pdf</a></td><td>5編構成、対象範囲、保守委託機関編の位置づけ確認。</td></tr>
+    <tr><td>参考資料1-2 経営管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705953.pdf">001705953.pdf</a></td><td>詳細差分比較の対象。経営層の責任、体制、資源確保、委託管理の変化を確認。</td></tr>
+    <tr><td>参考資料1-3 企画管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705954.pdf">001705954.pdf</a></td><td>詳細差分比較の対象。企画管理者の規程、台帳、責任分界、委託先管理、監査の変化を確認。</td></tr>
+    <tr><td>参考資料1-4 システム運用編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705955.pdf">001705955.pdf</a></td><td>本レポートの主な差分比較対象。</td></tr>
+    <tr><td>参考資料1-5 保守委託機関編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705956.pdf">001705956.pdf</a></td><td>本レポートの主な差分比較対象。6.1案で先行提示され、7.0版案では5編構成の一部。</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>資料</th><th>確認したURL</th><th>このレポートでの使い方</th></tr></thead>
+  <tbody>
+    <tr><td>第6.0版 概説編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001102570.pdf">001102570.pdf</a></td><td>6.0の4編構成、読者分解、対象範囲の出発点。</td></tr>
+    <tr><td>第6.0版 経営管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001102573.pdf">001102573.pdf</a></td><td>経営層の責任、体制、予算・人材、委託管理の出発点。</td></tr>
+    <tr><td>第6.0版 企画管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001102575.pdf">001102575.pdf</a></td><td>企画管理者の規程、責任分界、台帳、教育、監査の出発点。</td></tr>
+    <tr><td>第6.0版 システム運用編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001582980.pdf">001582980.pdf</a></td><td>技術・運用要件の出発点。</td></tr>
+    <tr><td>第6.1版(案) 概説編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001675752.pdf">001675752.pdf</a></td><td>保守委託機関編の追加、概説＋保守委託で遵守とみなす整理の確認。</td></tr>
+    <tr><td>第6.1版(案) 経営管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001675753.pdf">001675753.pdf</a></td><td>経営管理上の補強点、責任・リスク管理・委託管理の確認。</td></tr>
+    <tr><td>第6.1版(案) 企画管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001675754.pdf">001675754.pdf</a></td><td>医療情報システム等提供事業者との取決め、委託管理、台帳・監査の確認。</td></tr>
+    <tr><td>第6.1版(案) システム運用編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001675755.pdf">001675755.pdf</a></td><td>6.0からの技術・運用補強点。</td></tr>
+    <tr><td>第6.1版(案) 保守委託機関編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001675756.pdf">001675756.pdf</a></td><td>保守委託機関編の先行案。7.0案との差分比較対象。</td></tr>
+    <tr><td>第7.0版改定の概要資料</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705949.pdf">001705949.pdf</a></td><td>背景、時系列、パブコメ、適用時期の確認。</td></tr>
+    <tr><td>第7.0版(案) 概説編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705952.pdf">001705952.pdf</a></td><td>5編構成、全読者向け前提、保守委託機関編の位置づけ。</td></tr>
+    <tr><td>第7.0版(案) 経営管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705953.pdf">001705953.pdf</a></td><td>経営層が指示・管理すべき事項、投資としての資源確保、委託責任分界。</td></tr>
+    <tr><td>第7.0版(案) 企画管理編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705954.pdf">001705954.pdf</a></td><td>企画管理者の具体的管理、規程・証跡・委託先確認。</td></tr>
+    <tr><td>第7.0版(案) システム運用編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705955.pdf">001705955.pdf</a></td><td>技術・運用差分の主対象。</td></tr>
+    <tr><td>第7.0版(案) 保守委託機関編</td><td><a href="https://www.mhlw.go.jp/content/10808000/001705956.pdf">001705956.pdf</a></td><td>保守委託機関編の主対象。6.1案から対象条件、確認方法、MDS/SDS照合を整理。</td></tr>
+    <tr><td>FIPS 140-3 / CMVP</td><td><a href="https://csrc.nist.gov/pubs/fips/140-3/final">NIST FIPS 140-3</a> / <a href="https://csrc.nist.gov/Projects/cryptographic-module-validation-program/fips-140-3-standards">CMVP</a></td><td>FIPS 140-3 Level 1相当以上の意味確認。</td></tr>
+  </tbody>
+</table>
+<p class="note must">読み方: まず「版ごとの変化マップ」で全体像をつかみ、次に「論点別 6.0→6.1→7.0」で自院の作業対象を拾う。比較表では記述変化だけを確認し、実作業は後段のチェックシートと証跡一覧で確認する。</p>
+<p class="note">注意: 第7.0版は現時点で案として提示された資料に基づく。WG概要資料では第7.0版を令和8年6月の位置づけで示しているが、正式公表版で最終確認が必要。二要素認証など本文に個別期限があるものは、その期限を優先して管理する。</p>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="part-common">
+<h2>第1部: 医療機関・ベンダー双方が見る章（ここから第1部）</h2>
+<div class="block-content">
+<div class="diff-report">
+<div class="part-marker">
+<span class="part-label">第1部 ここから</span>
+<span class="part-title">医療機関・ベンダー双方が見る章</span>
+<p>まず双方で、6.0から6.1案、7.0案にかけて何が具体化され、いつから対応前提になるかを合わせる。</p>
+</div>
+<div class="part-range"><b>この部の範囲:</b> 第1部-1「資料分解と位置づけの変化」から第1部-9「編別の変更点と確認事項（5編横断）」まで。第2部の開始見出しが出る直前で第1部は終わる。</div>
+<table class="part-map">
+<thead><tr><th>見る人</th><th>章の目的</th><th>読む章</th></tr></thead>
+<tbody>
+<tr><td>医療機関</td><td>院内規程、事業者確認、システム更改計画へ反映する論点を把握する。</td><td>第1部-1〜第1部-9</td></tr>
+<tr><td>ベンダー・クラウド事業者</td><td>医療機関から求められる説明・証跡の背景を把握する。</td><td>第1部-1〜第1部-9を中心に確認</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="document-decomposition-positioning">
+<h2>第1部-1 資料分解と位置づけの変化</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">結論: 6.0では4編構成だったものが、6.1案で保守委託機関編を加えた5編構成へ移り、7.0案ではその5編構成が整理された。今回のレポートは、改定概要を含めた関連資料全体を対象にし、5編すべてを差分確認対象として扱う。</p>
+<table>
+  <thead><tr><th>版</th><th>資料の分解</th><th>各編の位置づけ</th><th>読み方の変化</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag medium">6.0</span></td><td>概説編、経営管理編、企画管理編、システム運用編の4編。</td><td>概説編が全体前提、経営管理編が経営層、企画管理編が企画管理者、システム運用編が実装・運用担当者向け。</td><td>読者類型ごとに分けた構成。保守委託は独立編ではなく、委託先管理、責任分界、システム運用の中で読む。</td></tr>
+    <tr><td><span class="tag medium">6.1案</span></td><td>4編に保守委託機関編が加わり、5編構成へ移行。</td><td>保守委託機関編は、専任のシステム担当者が不在で、セキュリティアップデートを含む保守を事業者に委託している医療機関等向けの近道として提示。</td><td>保守委託機関編の対象機関は、概説編と保守委託機関編に対応することで全体遵守とみなす、という読み替えが入る。</td></tr>
+    <tr><td><span class="tag high">7.0案</span></td><td>概説、経営管理、企画管理、システム運用、保守委託機関の5編構成として整理。</td><td>概説編は全読者向け前提、経営管理編は統制、企画管理編は安全対策の管理、システム運用編は技術的対応、保守委託機関編は保守業務を委託できている機関向け。</td><td>システム運用編だけでなく、経営層・企画管理者・保守委託機関のどの立場で読むかを先に分ける必要がある。</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>編</th><th>主な読者</th><th>6.0での位置づけ</th><th>6.1案→7.0案での変化</th><th>このレポートで見ること</th></tr></thead>
+  <tbody>
+    <tr><td><b>概説編</b></td><td>全読者</td><td>目的、対象、4編構成、参照パターンを説明。</td><td>6.1案で保守委託機関編を加えた5編構成へ広がり、7.0案で「概説＋保守委託機関編」のみで遵守とみなす対象が明確化。</td><td>どの編を読むべきか、保守委託機関編に入れる条件は何か。</td></tr>
+    <tr><td><b>経営管理編</b></td><td>経営層</td><td>経営層の責任、リスク評価、体制、委託管理、資源確保を扱う。</td><td>7.0案では安全管理をコストではなく投資と捉え、予算・人材等の資源確保を求める文脈が読みやすくなった。委託時の責任分界の可視化も前面に出る。</td><td>経営層が承認・指示・資源配分・説明責任として持つ項目。</td></tr>
+    <tr><td><b>企画管理編</b></td><td>企画管理者、安全管理責任者、管理部門</td><td>規程、責任分界、体制、文書、証跡、リスク管理、委託先管理、台帳、監査を扱う。</td><td>6.1案以降、医療情報システム等提供事業者との取決め、対応状況の定期把握、責任分界、台帳・証跡管理がより実務寄りに整理される。</td><td>院内規程、台帳、委託先確認、教育、監査、改善管理として何を整えるか。</td></tr>
+    <tr><td><b>システム運用編</b></td><td>実装・運用担当者、ベンダー実務担当</td><td>技術的な安全管理対策、認証、ネットワーク、ログ、バックアップ、暗号、電子署名等を扱う。</td><td>6.1案でNCO/SBOM/MyJVN、二要素認証、保守接続等が補強され、7.0案で対象、期限、証明書、ログレビュー、復旧要件が具体化。</td><td>技術要件・設定・証跡として何を実装し説明するか。</td></tr>
+    <tr><td><b>保守委託機関編</b></td><td>保守を事業者に委託できている医療機関、小規模医療機関等、委託先事業者</td><td>6.0では独立編なし。関連内容は委託管理・責任分界・システム運用内に散在。</td><td>6.1案で先行提示され、7.0案で5編構成に組み込まれた。MDS/SDS、約款、SLA、保守責任、二要素認証、破棄証跡等を確認する。</td><td>保守委託で代替できる範囲と、医療機関に残る確認・証跡受領責任。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="timeline-applicability">
+<h2>第1部-2 改定時系列と6.1案→7.0案の位置づけ</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">この章は、6.0、6.1案、7.0案がどういう順番と背景で出てきたかを整理する章。対応必須時期や期限の判断は、次の第1部-3「対応必須時期の整理（いつから何が必要か）」に集約する。</p>
+<table>
+  <thead><tr><th>時期</th><th>公式資料で確認できた動き</th><th>位置づけ・背景</th><th>第1部-3で期限として見るもの</th></tr></thead>
+  <tbody>
+    <tr><td>令和5年5月</td><td>第6.0版を公表。全体を概説編、経営管理編、企画管理編、システム運用編に再整理。</td><td>現行管理体系の起点。6.1案・7.0案との差分を読むための基準版。</td><td>6.0自体の新規期限ではなく、現状棚卸の基準版として扱う。</td></tr>
+    <tr><td>令和8年3月17日</td><td>第29回 医療等情報利活用WGで第6.1版案と改定概要を提示。</td><td>6.0以降の制度・医療情報システム・サイバーセキュリティ動向を反映する中間更新。SBOM、NCO、MyJVN、二要素認証対象などが先に具体化された。</td><td>6.1案単独の必須開始日ではなく、7.0対応に含める追加論点として見る。</td></tr>
+    <tr><td>令和8年5月</td><td>第6.1版は概要資料上「令和8年5月 公表予定」と記載。</td><td>その後の7.0版概要資料では、6.1を経たうえで7.0へ進んだ流れとして整理されている。</td><td>6.1を単独到達点にせず、7.0正式公表版へ統合して管理する。</td></tr>
+    <tr><td>パブリックコメント期間</td><td>第7.0版概要資料には、パブリックコメント状況として「R7.3.27-4/17」「294件」と記載。</td><td>案から正式公表版へ反映される可能性がある期間。意見は本文に適宜反映され、継続検討が必要なものは順次対応とされている。</td><td>正式公表版で、案からの反映差分を再確認する。</td></tr>
+    <tr><td>令和8年5月29日</td><td>第32回 医療等情報利活用WGで第7.0版案、改定概要、保守委託機関編を提示。</td><td>7.0案は、6.1案の微修正ではなく、外部基準との整合と保守委託機関編を含む5編構成への整理を含む更新。</td><td>7.0全体の切替時期は第1部-3で別表にする。</td></tr>
+    <tr><td>令和8年6月</td><td>第7.0版概要資料の変遷表では、第7.0版が令和8年6月の位置づけで示されている。</td><td>7.0全体の公表・切替の基準点として見る時期。ただし、このレポートは案資料に基づくため、正式公表版で最終確認が必要。</td><td>正式公表後に7.0を基準として扱う、という整理を第1部-3で見る。</td></tr>
+    <tr><td>7.0版改定後</td><td>積み残し課題は継続検討し、可及的速やかに7.1版への改定を目指すと記載。</td><td>医療機器の二要素認証など、7.0で完結しない論点が残る。</td><td>7.0対応とは別に、7.1追跡対象として第1部-3で管理する。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="mandatory-timing-summary">
+<h2>第1部-3 対応必須時期の整理（いつから何が必要か）</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">この章が、適用開始・対応必須時期を見る章。結論は、<b>6.1案は単独の必須開始日を置かず7.0対応へ統合</b>、<b>7.0全体は正式公表後に新基準として切替</b>、<b>二要素認証は令和9年度（令和9年4月1日時点）を個別期限として管理</b>、の3点。</p>
+<table>
+  <thead><tr><th>対象</th><th>いつから・いつまで</th><th>対応必須としての扱い</th><th>管理台帳・計画に書く内容</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag medium">第6.1版</span></td><td>概要資料では「令和8年5月 公表予定」。</td><td>6.1単独で「この日から必須」とは置かない。7.0案へ進んだ流れを踏まえ、6.1で追加・明確化された論点を7.0対応項目へ吸収する。</td><td>「6.1案の追加論点は7.0対応表に統合。6.1単独の必須開始日は設定しない」と書く。</td></tr>
+    <tr><td><span class="tag high">第7.0版全体</span></td><td>7.0概要資料の変遷表では「令和8年6月」の位置づけ。</td><td>正式公表後に7.0を新しい基準として扱う。案資料だけで最終文言を固定せず、正式公表版・通知で最終確認する。</td><td>「7.0正式公表後、院内規程、運用手順、委託先確認票、技術要件表を7.0基準へ切替」と書く。</td></tr>
+    <tr><td><span class="tag high">二要素認証</span></td><td>令和9年度。7.0案本文では「令和9年4月1日時点」を基準に記載。</td><td>7.0全体の公表時期とは別の個別期限。令和9年4月1日時点で稼働する見込みの医療情報システムについて、対応済・未対応・困難理由・更改予定を管理する。</td><td>「令和9年4月1日時点の稼働予定、アプリMFA、サーバOS MFA、代替措置、未対応理由、直近更改予定」を台帳化する。</td></tr>
+    <tr><td><span class="tag high">二要素認証が困難な既存システム</span></td><td>令和9年度時点までの対応が困難な場合、令和9年度以降の直近のシステム更改・新規導入まで。</td><td>免除ではなく、期限付きの経過措置として扱う。更改時に二要素認証対応済みのアプリケーション、サービス、又は同等以上の措置を選定する。</td><td>「困難理由、ベンダー回答、代替措置、令和9年度以降の直近更改・新規導入予定、対応完了予定日」を書く。</td></tr>
+    <tr><td><span class="tag medium">証明書まわり</span></td><td>7.0案の証明書脚注で、2026年6月15日以降のパブリック認証局制限に言及。</td><td>ガイドライン全体の適用開始日ではない。サーバ証明書をクライアント証明書として流用している構成がないかを確認するための別管理日。</td><td>「2026年6月15日影響確認、証明書用途分離、パブリックCA・プライベートCAの利用方針」を書く。</td></tr>
+    <tr><td><span class="tag medium">7.1追跡論点</span></td><td>7.0版改定後、可及的速やかに7.1版への改定を目指すと記載。</td><td>医療機器の二要素認証など、7.0で完結しないものは7.0対応完了条件に混ぜず、継続確認項目として管理する。</td><td>「7.1追跡欄、次回確認日、対象論点、正式改定時の再評価担当」を書く。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="mfa-scope-breakdown">
+<h2>第1部-4 二要素認証の対象分解（端末・サービス・サーバ）</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">結論: 7.0案の「クライアント端末とサーバのいずれも二要素認証」は、クライアント端末のOSログインとサーバ上アプリへの利用者ログインを一律に指しているわけではない。表14-1では、クライアント端末は「アプリケーション」、サーバは「OS」に二要素認証を求める整理になっている。</p>
+<table>
+  <thead><tr><th>切り分け</th><th>7.0案での扱い</th><th>具体的に見るログイン</th><th>対応判断</th><th>証跡として残すもの</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">クライアント端末から利用するアプリ・サービス</span></td><td>対象。電子カルテ等のアプリケーションのログイン時に二要素認証を実装すると明記。</td><td>電子カルテ、部門システム、SaaS、Webアプリ、クライアントアプリの利用者ログイン。</td><td>原則としてアプリ・サービス側でMFAを有効化する。事業者が未対応で実装不能な場合は、更新時にMFA対応サービスを選定し、令和9年度以降の直近更改・新規導入で対応する。</td><td>アプリ別MFA対応表、利用者認証方式、未対応理由、事業者ロードマップ、更改予定。</td></tr>
+    <tr><td><span class="tag medium">クライアント端末のOSログイン</span></td><td>主たる要求対象ではない。表14-1ではクライアント端末のOS欄は対象外の整理。ただし脚注で、認証情報をアプリ資格情報等と連携し、適切な権限付与が可能な場合はOS又はミドルウェアでの二要素認証を許容。</td><td>Windows/macOS等の端末OSログイン、VDIログイン、端末管理基盤ログイン。</td><td>端末OSだけでMFAを入れても、アプリの権限付与と連携していなければ代替にならない。OSで一要素、アプリで一要素の足し算は不可。</td><td>OS/MW認証とアプリ権限の連携仕様、SSO/IdP連携図、権限付与の証跡、代替扱いの理由。</td></tr>
+    <tr><td><span class="tag high">サーバのOSログイン</span></td><td>対象。医療情報を格納するサーバは、アプリケーションを介さずDBへアクセス可能なため、OSログイン時の二要素認証が合理的と説明。</td><td>サーバOSへの管理者ログイン、保守ログイン、RDP/SSH、DBやファイルへ直接到達できる管理経路。</td><td>原則としてサーバOSログインにMFAを実装する。困難な場合は、踏み台端末経由・別ドメイン・RDP/SSH限定・踏み台OSのMFA又はEDR/VPN等の同等以上措置を満たす必要がある。</td><td>サーバOS MFA設定、踏み台構成図、RDP/SSH制限、EDR/VPN設定、管理者権限制限、OS更新状況、共通パスワード不使用の確認。</td></tr>
+    <tr><td><span class="tag medium">サーバ上のアプリへ利用者がログインする場合</span></td><td>「サーバだからサーバOS要件」とは扱わない。利用者がブラウザやクライアントからサーバ上の医療情報アプリへログインする場合は、アプリケーション又はサービスの利用者認証として見る。</td><td>Web電子カルテ、SaaS、院内Webシステム、部門システムの利用者ログイン。</td><td>利用者向けログインはアプリ・サービス側MFAとして管理する。サーバOS MFAは、利用者ではなく管理者・保守者がサーバへ入る経路の話として別管理する。</td><td>利用者ログインMFA設定、IdP/SSO設定、アプリ権限管理、管理者・保守者ログイン経路との分離図。</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>版</th><th>記述の変化</th><th>読み取り</th></tr></thead>
+  <tbody>
+    <tr><td>6.0</td><td>令和9年度時点で稼働する医療情報システムを新規導入又は更新する際、二要素認証を採用する方向性を示す。端末ごとの追加実装負担や物理区域管理との組合せも説明。</td><td>対象の粒度はまだ粗く、端末・サーバ・アプリの分解は限定的。</td></tr>
+    <tr><td>6.1案</td><td>クライアント端末はアプリケーションログイン、サーバはOSログインという表14-1の整理、踏み台端末等の代替措置が具体化。</td><td>「クライアント端末」と「サーバ」を同じログイン種別で見るのではなく、対象レイヤを分ける必要が出た。</td></tr>
+    <tr><td>7.0案</td><td>遵守事項で「クライアント端末では電子カルテ等のアプリケーションのログイン時」「サーバについてはOSでの二要素認証」と明記。さらに、OS又はミドルウェアで代替する場合の脚注条件が追加。</td><td>対応表は、アプリ利用者ログイン、端末OSログイン代替、サーバOS管理ログイン、踏み台同等措置を分けて作る。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="version-evolution-map">
+<h2>第1部-5 版ごとの変化マップ</h2>
+<div class="block-content">
+<div class="diff-report">
+<table>
+  <thead><tr><th>観点</th><th>6.0</th><th>6.1案</th><th>7.0案</th><th>読み取り</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag medium">改定の位置づけ</span></td><td>令和5年5月に全体構成を再編した基準版。</td><td>6.0以降の制度・システム・サイバーセキュリティ動向を反映する中間更新。</td><td>外部基準との整合、5編構成の整理、二要素認証対象明確化、保守委託機関編の実務化まで含む更新。</td><td>6.0で体系化、6.1で補強、7.0で実装・委託時確認へ進んだ。</td></tr>
+
+    <tr><td><span class="tag high">資料構成</span></td><td>概説、経営管理、企画管理、システム運用の4編構成。</td><td>保守委託機関編を加えた5編構成へ移行。対象機関は概説編＋保守委託機関編で遵守とみなす整理を提示。</td><td>5編構成を整理し、保守委託機関編を「セキュリティアップデートを含むサーバの保守を全て委託できている医療機関等」向けとして明確化。</td><td>最初に自院が通常の4編ルートか、概説＋保守委託機関編ルートかを判定する。</td></tr>
+    <tr><td><span class="tag medium">経営管理</span></td><td>経営層の責任、説明責任、リスク評価、体制、委託管理、資源確保を整理。</td><td>6.0の構成を維持しつつ、サイバー攻撃の高度化や委託先管理を踏まえた見直し。</td><td>安全管理を「コスト」ではなく「投資」と捉え、予算・人材等の資源確保、通常時から非常時を想定した体制、責任分界の書面化を明確化。</td><td>経営層の承認・指示・予算化・説明責任が実務タスクになる。</td></tr>
+    <tr><td><span class="tag medium">企画管理</span></td><td>規程、責任分界、体制、文書、証跡、リスク管理、教育、委託先管理、監査を整理。</td><td>医療情報システム等提供事業者との取決め、委託先対応状況の把握、責任分界を補強。</td><td>規程・台帳・証跡・委託先確認をシステム運用担当者へ指示、管理する役割として整理。</td><td>院内の管理台帳、委託先確認票、規程、教育、監査記録へ落とす。</td></tr>    <tr><td><span class="tag high">ネットワーク接続</span></td><td>IP-VPN、IPsec+IKE、SSL-VPN、TLS等の安全な接続方式を整理。</td><td>リモート保守やOS二要素認証等の管理策がより具体化。</td><td>専用線、IP-VPN、IPsec+IKEv2、PSK認証除外、SSL-VPNクライアント型、TLS接続範囲を明確化。</td><td>方式名だけでなく、IKEv2、PSK不使用、クライアント型、TLS設定まで証跡化する段階。</td></tr>
+    <tr><td><span class="tag high">証明書</span></td><td>TLSやクライアント証明書による接続保護を要求。</td><td>証明書利用時の注意はあるが、案文上は文言揺れが残る。</td><td>サーバ証明書のクライアント用途流用禁止、パブリックCA制限、プライベートCA検討を明記。</td><td>証明書を「何に使っているか」で棚卸する必要が出た。</td></tr>
+    <tr><td><span class="tag high">二要素認証</span></td><td>令和9年度時点の新規導入・更新で二要素認証採用を求める方向性。物理区域管理等との組合せも説明。</td><td>令和9年4月1日時点、クライアント端末、サーバOSログイン、踏み台端末等の代替措置が具体化。</td><td>クライアント端末はアプリケーションログイン、サーバはOSログインとして整理。令和9年度時点で稼働するシステム、新規導入・機器入替を伴う更改、困難時の直近更改対応として整理。</td><td>「アプリ利用者ログイン」「端末OS代替」「サーバOS管理ログイン」「踏み台同等措置」「期限」「困難時の更改時対応」を台帳で管理する。</td></tr>
+    <tr><td><span class="tag medium">脆弱性管理</span></td><td>NISC等の情報源を参照。</td><td>NCO、IPA、JPCERT/CC、MyJVN、SBOMに基づく安全性確認が加わる。</td><td>VPN機器・保守経路・外部接続点を含め、ベンダ確認とログ・責任分界まで実務化。</td><td>資産台帳、SBOM、脆弱性通知、保守契約をつなげて管理する。</td></tr>
+    <tr><td><span class="tag medium">ログ</span></td><td>アクセスログ収集と定期チェックを求める。</td><td>ログ管理や保守時ログの重要性を維持。</td><td>全件目視ではなく、監視・閾値・スクリーニング後レビュー、外部接続点の一元管理を明確化。</td><td>ログを集めるだけでなく、検知条件と確認記録が必要。</td></tr>
+    <tr><td><span class="tag high">バックアップ・復旧</span></td><td>バックアップ、BCP、切離し、訓練の考え方を提示。</td><td>ランサムウェア等を意識したバックアップ・復旧管理の方向性を維持。</td><td>3世代以上、複数方式、書き込み不可、復旧時の再侵害防止、ID・パスワード無効化を整理。</td><td>バックアップ設計だけでなく、復旧前チェックと復旧後監視まで手順化する。</td></tr>
+    <tr><td><span class="tag medium">保守委託</span></td><td>委託先との責任分界や保守接続の安全確保を求める。</td><td>リモート保守の管理策、OS二要素認証、脆弱な製品・ポート等を具体化。</td><td>保守委託機関編を追加し、委託時に医療機関が確認すべき事項を独立して整理。</td><td>委託しているから終わりではなく、委託先回答と年次確認が必要。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="what-changed">
+<h2>第1部-6 記述が最終的にどう具体化されたか</h2>
+<div class="block-content">
+<div class="diff-report">
+<table>
+  <thead><tr><th>領域</th><th>6.0の記述の出発点</th><th>6.1案で足された記述</th><th>7.0案での具体化</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">13章 ネットワーク</span></td><td>安全な接続方式としてIP-VPN、IPsec+IKE、SSL-VPN、TLS等を整理。</td><td>リモート保守でのOS二要素認証、脆弱性のある製品・ポート、ネットワーク構成、保守委託先管理を補強。</td><td>管理インターフェイス、ログインページ、管理ポートの外部露出防止、TLS接続の対象拡張、mutual TLS、IPsec+IKEv2、PSK認証除外まで明記。</td></tr>
+    <tr><td><span class="tag high">14章 認証</span></td><td>令和9年度時点の医療情報システムについて、新規導入・更新時の二要素認証採用を求める方向性。</td><td>令和9年4月1日時点、クライアント端末のアプリログイン、サーバOSログイン、踏み台端末等の説明を追加。</td><td>令和9年度時点で稼働するシステム、新規導入・機器入替を伴う更改、困難時は令和9年度以降の直近更改で対応という書き方に整理。</td></tr>
+    <tr><td><span class="tag high">17章 ログ</span></td><td>アクセスログを収集し、定期的にチェックするという表現。</td><td>ログ管理、保守ログ、委託先との取り決めを維持。</td><td>全ログ目視を目指すのではなく、システム監視や運用上の閾値でスクリーニングしたログを確認する記述へ変更。</td></tr>
+    <tr><td><span class="tag high">18章 バックアップ/復旧</span></td><td>バックアップ、BCP、切離し、訓練の必要性を記載。</td><td>ランサムウェア等を踏まえたバックアップ・復旧管理の方向性を維持。</td><td>少なくとも3世代、3世代目以降のネットワーク的または論理的な書き込み不可、バックドアを残さない復旧を明記。</td></tr>
+    <tr><td><span class="tag medium">保守委託</span></td><td>委託先管理、責任分界、保守接続の安全確保を求める。</td><td>リモート保守の認証・脆弱性・ポート・ネットワーク構成・委託先管理を補強。</td><td>6.1案で保守委託機関編を先行提示し、7.0版案では5編構成の一部として、委託している場合の医療機関側の確認事項を整理。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="versioned-before-after">
+<h2>第1部-7 編・論点別 6.0→6.1→7.0 記述の変化</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">この表は、5編すべてを対象にした代表論点の整理表。どの資料・どの編の章かが分かるように、資料・編と章/位置を分けている。章番号だけで参照すると編を取り違えやすいため、システム運用編の13章、14章なども編名付きで示す。</p>
+<table>
+  <thead><tr><th>資料・編</th><th>章/位置</th><th>論点</th><th>6.0の記述</th><th>6.1案の記述</th><th>7.0案の記述</th><th>記述の変化</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">概説編</span></td><td>3章 構成・読み方</td><td>資料分解</td><td>概説、経営管理、企画管理、システム運用の4編構成。読者類型ごとに読む編を分ける。</td><td>保守委託機関編を加えた5編構成へ移行。保守委託機関編の対象機関は概説編と保守委託機関編で遵守とみなす整理を提示。</td><td>5編構成として整理。概説編は全読者向け前提、経営管理、企画管理、システム運用、保守委託機関の各編の役割を明確化。</td><td>4編の読者分解から、保守委託機関編を含む5編構成へ変わった。最初に自院が通常ルートか保守委託機関ルートかを判定する必要がある。</td></tr>
+    <tr><td><span class="tag high">概説編</span></td><td>2章 対象</td><td>保守委託機関編の対象</td><td>保守委託機関編は独立していない。委託・クラウド利用は各編の責任分界やシステム運用で読む。</td><td>小規模医療機関等、クラウドサービスや保守契約により保守を事業者へ委託する機関を想定。</td><td>セキュリティアップデートを含むサーバの保守を事業者に全て委託できている医療機関等は、概説編と保守委託機関編のみで遵守できているものとみなす整理。</td><td>「委託先管理の一部」から「読む編を変える条件」へ格上げされた。契約・約款・SLAで保守責任を確認する必要がある。</td></tr>
+    <tr><td><span class="tag medium">経営管理編</span></td><td>冒頭・1章</td><td>経営層の責任と資源確保</td><td>経営層が遵守・判断すべき事項、担当部署へ指示・管理すべき事項、予算・人材等の資源確保を示す。</td><td>サイバー攻撃の高度化や被害拡大を踏まえ、経営責任・法的責任・インシデント対応の重要性を維持。</td><td>安全管理対策をコストではなく投資と捉え、質の高い医療提供等に不可欠なものとして資源確保を求める文脈が明確化。</td><td>経営層の役割が「理解する」だけでなく、投資判断、体制整備、説明責任、通常時から非常時を想定した準備へ具体化された。</td></tr>
+    <tr><td><span class="tag medium">経営管理編</span></td><td>1.3章 / 5.3章</td><td>委託・責任分界</td><td>委託先事業者との責任分界、役割分担、委託契約や体制管理を求める。</td><td>委託における責任、第三者提供、責任分界管理を維持し、サイバーリスクを踏まえた管理へ補強。</td><td>委託する内容、役割分担等の責任分界を明確にし、認識齟齬が生じないよう書面等で可視化・保管することを明確化。</td><td>責任分界が抽象的な管理事項から、書面化・保管・通常時からの準備という監査可能な管理事項になった。</td></tr>
+    <tr><td><span class="tag medium">企画管理編</span></td><td>2章 責任分界</td><td>事業者との取決め</td><td>委託と第三者提供における責任分界、複数事業者が関与する場合の責任分界を整理。</td><td>医療情報システム等提供事業者との取決めにおける留意点が追加され、契約・約款・サービス仕様の確認がより実務寄りになる。</td><td>同趣旨を維持し、企画管理者がシステム関連事業者の対応状況を把握し、責任分界を管理する前提を明確化。</td><td>企画管理者が、事業者との取決め、責任範囲、再委託、未対応項目を台帳・契約・確認票へ落とす必要が出た。</td></tr>
+    <tr><td><span class="tag medium">企画管理編</span></td><td>3〜10章</td><td>体制・規程・証跡・台帳・監査</td><td>企画管理者の設置、運用管理規程、証跡、リスク管理、委託先管理、情報機器台帳、監査を整理。</td><td>安全管理体制、委託等における体制、監査責任者、資産管理状況の報告などを維持・補強。</td><td>企画管理者が規程、証跡、委託先確認、教育、監査を具体的に管理し、システム運用担当者へ指示・管理する役割として整理。</td><td>技術要件を現場任せにせず、管理台帳、運用管理規程、教育記録、監査記録、改善管理に接続する必要が明確になった。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>13章 ネットワーク</td><td>管理面の露出</td><td>ネットワーク機器やVPN、外部接続の安全対策を求めるが、管理画面・管理ポートの露出禁止は中心論点ではない。</td><td>リモート保守の認証、脆弱性、ネットワーク構成、委託先管理が表形式で具体化。</td><td>管理インターフェイス、ログインページ、管理ポートに、許可されていない機器が外部からアクセスできないようにする記述を追加。</td><td>「安全な接続を使う」から「管理画面・管理ポートを外部に露出させない」へ、公開面の制御が明文化された。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>13章 ネットワーク</td><td>TLS・VPN方式</td><td>IP-VPN、IPsec+IKE、SSL-VPN、HTTPS/TLSなどを安全な接続方式として整理。</td><td>TLS1.3、TLS1.2例外、クライアント証明書、リモート保守接続の対策が補強される。</td><td>HTTPSだけでなくFTPS等を含むTLS接続、TLSクライアント認証、mutual TLS、専用線、IP-VPN、IPsec+IKEv2、PSK認証除外を明記。</td><td>方式名の列挙から、プロトコル、認証方式、PSK除外、SSL-VPNの型まで判定できる記述へ進んだ。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>13章 ネットワーク</td><td>証明書用途</td><td>TLSやクライアント証明書による端末識別・認証を求める。</td><td>証明書利用の考え方は維持されるが、案文上はクライアント証明書周辺に文言揺れがある。</td><td>2026年以降のパブリック認証局による制限に触れ、公的認証局発行のサーバ証明書をクライアント証明書に使ってはならないと明記。</td><td>「証明書を使う」から「サーバ証明書とクライアント証明書の用途を分ける」へ、証明書の使い方そのものが管理対象になった。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>14章 認証・認可</td><td>二要素認証の対象</td><td>令和9年度時点で稼働する医療情報システムを新規導入・更新する際、二要素認証を採用するシステムを選定する方向性。</td><td>令和9年4月1日時点を明記し、クライアント端末は電子カルテ等のアプリログイン、サーバはOSログインで二要素認証を実装する記述を追加。</td><td>令和9年度時点で稼働するシステムの新規導入又は機器入替等を伴う更改時に、クライアント端末とサーバのいずれも二要素認証を要するという整理。</td><td>「導入・更新時に採用」から「令和9年4月1日時点、クライアントアプリ、サーバOS、更改時対応」へ対象と時点が具体化された。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>14章 認証・認可</td><td>サーバOS代替措置</td><td>二要素認証を推進しつつ、現場制約や相当措置に触れる。</td><td>サーバOSログイン時の二要素認証、踏み台端末のOSログイン、EDR、VPN経由などの代替措置が説明される。</td><td>踏み台端末、別ドメイン、RDP/SSH限定、EDR、VPN経由、管理者権限禁止、共通パスワード禁止を同等以上措置として整理。</td><td>サーバOSで直接二要素認証できない場合の説明が、抽象的な相当措置から具体的な組合せ条件へ変わった。</td></tr>
+    <tr><td><span class="tag medium">システム運用編</span></td><td>8章/10章</td><td>SBOM・脆弱性情報</td><td>脆弱性情報源としてNISC等を参照する記述。</td><td>NCO、IPA、JPCERT/CCを参照先にし、保守時などにSBOMの提供またはSBOMに基づく安全性確認を得る記述を追加。MyJVN利用にも触れる。</td><td>7.0案でも脆弱性情報・保守経路・委託先確認の文脈で、資産と外部接続を継続的に把握する方向へつながる。</td><td>情報源の更新に加え、脆弱性管理が「公開情報を見る」から「SBOMや資産登録に基づき確認する」記述へ広がった。</td></tr>
+    <tr><td><span class="tag medium">システム運用編</span></td><td>15章 電子署名等</td><td>FIPS 140-3 / タイムスタンプ</td><td>電子署名、鍵管理、真正性確保、鍵の安全な保管を求める。</td><td>電子署名要件と鍵格納機器の要件が中心。FIPS表記に揺れがある。</td><td>作成時刻・変更時刻を証明する必要がある場合のタイムスタンプ、共通鍵・秘密鍵を格納する機器や媒体のFIPS 140-3 Level 1相当以上を整理。</td><td>電子署名中心の記述から、時刻証明、検証手順、鍵格納機器の規格根拠まで確認する形へ広がった。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>17章/18章</td><td>ログレビュー・バックアップ復旧</td><td>アクセスログを収集し、定期的にチェックする。バックアップ、BCP、切離し、訓練を求める。</td><td>ログ管理、保守ログ、委託先との取り決め、ランサムウェア等を踏まえたバックアップ管理の方向性を維持。</td><td>全ログ目視ではなく閾値でスクリーニングしたログ確認、少なくとも3世代、3世代目以降の書き込み不可、復旧時の再侵害防止を整理。</td><td>「集める・取る」から「検知条件、確認記録、世代数、書き込み不可、復旧前後の再侵害防止」へ実務化された。</td></tr>
+    <tr><td><span class="tag high">保守委託機関編</span></td><td>対象判定・2章</td><td>保守委託時の確認</td><td>独立編なし。委託先管理、責任分界、保守接続の安全確保を各編で求める。</td><td>保守委託機関編を先行提示。リモート保守の認証、脆弱性、ポート、ネットワーク構成、委託先管理を補強。</td><td>5編構成の一部として、保守委託を前提に、MDS/SDS、約款、SLA、二要素認証、ログ、バックアップ、破棄証跡を確認する整理。</td><td>委託先管理がシステム運用編内の一項目から、委託している医療機関向けの独立した確認ルートへ移った。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="fips-140-3-level1-explainer">
+<h2>第1部-8 FIPS 140-3 Level 1相当以上とは何か</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">7.0案の「FIPS 140-3 Level 1相当以上の対応」は、鍵を保存する媒体や機器について、暗号モジュールとして最低限の標準的な安全要件を満たすものを使う、または同等の根拠を示せるものを使う、という意味で読む。単に「暗号化している」と言うだけでは足りず、製品・モジュール・運用の根拠確認が必要。</p>
+<table>
+  <thead><tr><th>観点</th><th>具体的な意味</th><th>確認すべきこと</th><th>医療機関または事業者が残す証跡</th></tr></thead>
+  <tbody>
+    <tr><td>対象</td><td>共通鍵、秘密鍵、電子署名鍵などを格納し、暗号処理に使うハードウェア、ソフトウェア、ファームウェアの暗号モジュール。</td><td>鍵がどの製品・機能・モジュールに保存され、どの暗号処理で使われるか。</td><td>鍵管理台帳、対象製品一覧、暗号モジュール名、バージョン、利用箇所。</td></tr>
+    <tr><td>Level 1の位置づけ</td><td>FIPS 140-3の4段階のうち最も基礎的なレベル。高度な耐タンパ筐体まで必須とする趣旨ではなく、標準化された暗号モジュール要件に沿うことを求める水準。</td><td>Level 1以上の認証・評価・同等性根拠があるか。Level 2以上であればLevel 1相当以上として扱いやすい。</td><td>FIPS 140-3証明書、CMVP登録情報、製品仕様書、ベンダ回答。</td></tr>
+    <tr><td>満たすべき中身</td><td>暗号モジュールの仕様、インターフェイス、役割・サービス、ソフトウェア/ファームウェア、動作環境、物理セキュリティ、鍵などの重要パラメータ管理、セルフテスト、ライフサイクル保証などの領域で要件を満たすこと。</td><td>製品が承認済み暗号機能を使い、鍵生成・保存・利用・破棄の方法が説明できるか。</td><td>セキュリティポリシー、暗号方式一覧、鍵生成・保管・破棄手順、セルフテスト仕様。</td></tr>
+    <tr><td>「相当以上」の扱い</td><td>正式なFIPS 140-3検証済みモジュールが最も説明しやすいが、ガイドライン文言は「相当以上」なので、同等の第三者認証や製品仕様で同等性を説明する余地がある。</td><td>同等と判断する根拠が、社内判断だけでなく第三者認証、製品仕様、監査資料、ベンダ保証で説明できるか。</td><td>同等性説明書、第三者認証、ベンダ保証書、監査報告、リスク受容記録。</td></tr>
+    <tr><td>NGになりやすい例</td><td>平文鍵を一般ファイルに保存、鍵を設定ファイルや環境変数に固定保存、暗号ライブラリ名だけでモジュール境界や鍵管理を説明できない、古い独自暗号を使う。</td><td>鍵が復元可能な形で広く読める場所にないか。暗号処理の境界と責任者が不明ではないか。</td><td>設定点検結果、秘密情報スキャン結果、アクセス権限一覧、改善計画。</td></tr>
+    <tr><td>クラウド/SaaSでの確認</td><td>クラウド事業者がKMS、HSM、署名基盤、暗号ライブラリを提供している場合、その暗号モジュールがFIPS 140-3 Level 1相当以上か確認する。</td><td>KMS/HSM等のFIPSモード、対象リージョン、対象サービス、除外機能、鍵管理責任分界を確認する。</td><td>クラウド事業者のFIPS対応資料、KMS/HSM仕様、責任分界表、設定スクリーンショット、ベンダ回答。</td></tr>
+  </tbody>
+</table>
+<p class="note">根拠: NISTのFIPS 140-3は暗号モジュールの安全な設計・実装・運用に関する標準で、4段階のセキュリティレベルを持つ。CMVPはFIPS 140-3の検証制度で、ISO/IEC 19790/24759に基づく要件・試験方法を用いる。</p>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="volume-specific-impacts">
+<h2>第1部-9 編別の変更点と確認事項（5編横断）</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">この章は、5編を同じ粒度で並べ、各編で何が変わり、誰が何を確認するかを整理したもの。保守委託機関編は独立章として切り出さず、概説編、経営管理編、企画管理編、システム運用編と同列に扱う。</p>
+<table>
+  <thead><tr><th>編</th><th>6.0での位置づけ</th><th>6.1案での変化</th><th>7.0案での位置づけ</th><th>医療機関が確認すること</th><th>ベンダー・クラウド事業者が準備すること</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">概説編</span></td><td>目的、対象、4編構成、読者類型ごとの参照パターンを示す全体前提。</td><td>保守委託機関編を加えた5編構成へ広がり、保守委託機関編の対象機関は概説編と保守委託機関編で遵守とみなす整理が入る。</td><td>5編構成の入口。全読者が、どの編を読むべきか、保守委託機関編に該当するかを判断する。</td><td>自院が通常の経営管理・企画管理・システム運用ルートか、概説＋保守委託機関編ルートかを判定する。サーバ保守責任が事業者にあることを文書で確認する。</td><td>サービス形態、保守責任範囲、SaaS/オンプレ保守の分担、対象外範囲を説明できる資料を用意する。</td></tr>
+    <tr><td><span class="tag high">経営管理編</span></td><td>経営層が認識・判断・指示すべき責任、リスク評価、体制、委託管理、資源確保を扱う。</td><td>サイバー攻撃の高度化や委託先管理を踏まえ、経営責任・法的責任・インシデント対応の重要性を維持・補強。</td><td>安全管理をコストではなく投資と捉え、予算・人材等の資源確保、通常時から非常時を想定した体制、責任分界の書面化を明確にする。</td><td>経営会議で7.0対応方針、予算、人員、委託範囲、リスク受容、説明責任を承認する。責任分界を可視化・保管する。</td><td>経営層が判断できる粒度で、費用影響、未対応リスク、対応ロードマップ、SLA変更要否、責任分界を提示する。</td></tr>
+    <tr><td><span class="tag high">企画管理編</span></td><td>企画管理者が、規程、責任分界、体制、文書、証跡、リスク管理、教育、委託先管理、台帳、監査を扱う。</td><td>医療情報システム等提供事業者との取決め、対応状況の定期把握、責任分界、台帳・証跡管理がより実務寄りに整理される。</td><td>企画管理者が規程、証跡、委託先確認、教育、監査を管理し、システム運用担当者へ指示・管理する役割として整理される。</td><td>運用管理規程、責任分界表、委託先一覧、資産台帳、教育記録、監査計画、改善管理を7.0対応版に更新する。</td><td>MDS/SDS、サービス仕様適合開示書、責任分界表、定期報告、未対応項目の理由、改善予定を提出できるようにする。</td></tr>
+    <tr><td><span class="tag high">システム運用編</span></td><td>医療情報システムの実装・運用担当者向けに、ネットワーク、認証、ログ、バックアップ、暗号、電子署名等の技術的対応を扱う。</td><td>NCO/SBOM/MyJVN、二要素認証、リモート保守、脆弱性管理、証明書、ログ、バックアップの記述が補強される。</td><td>管理面の外部露出防止、TLS/mTLS、証明書用途、二要素認証の対象、サーバOS代替措置、ログレビュー、3世代バックアップ、復旧時の再侵害防止が具体化。</td><td>システム・接続・証明書・認証・ログ・バックアップ・復旧・脆弱性管理を棚卸し、設定値と証跡を台帳化する。</td><td>設定資料、構成図、ログ仕様、MFA仕様、TLS/証明書台帳、バックアップ設計、復旧試験結果、脆弱性対応方針を提出する。</td></tr>
+    <tr><td><span class="tag high">保守委託機関編</span></td><td>独立編なし。保守委託に関する内容は、委託先管理、責任分界、保守接続、システム運用の中で扱う。</td><td>保守委託機関編を先行提示。クラウドSaaSや保守契約により、セキュリティアップデートを含む保守管理を事業者へ委託する医療機関を想定。</td><td>5編構成の一部。サーバ保守責任を事業者に全て委託できている医療機関等が、概説編と本編を参照することで遵守できているものとみなす整理。</td><td>契約書、約款、SLAで保守責任を確認する。MDS/SDS、約款、SLA、二要素認証、ログ、バックアップ、再委託、契約終了・破棄証跡を照合する。</td><td>保守責任範囲、対象外範囲、MDS/SDS、保守接続ログ、保守作業記録、バックアップ復元支援、破棄証跡、再委託先情報を提出する。</td></tr>
+  </tbody>
+</table>
+<p class="note">読み方: 第1部-7の論点表で細かい記述変化を確認し、この章で編ごとの責任者・確認事項へ落とす。医療機関側の実作業は第2部、ベンダー・クラウド事業者側の提出物は第3部で確認する。</p>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="part-common-end">
+<h2>第1部はここまで</h2>
+<div class="block-content">
+<div class="diff-report"><div class="part-end">第1部はここまで。次の「第2部」からは、医療機関が実際に確認・依頼・保管する章。</div></div>
+</div>
+</section>
+<section class="report-section report-section-html" id="part-medical">
+<h2>第2部: 医療機関が見る章（ここから第2部）</h2>
+<div class="block-content">
+<div class="diff-report">
+<div class="part-marker">
+<span class="part-label">第2部 ここから</span>
+<span class="part-title">医療機関が見る章</span>
+<p>医療機関側で実行する確認、ベンダー・クラウド事業者へ依頼する事項、受領・保管する証跡を整理する。</p>
+</div>
+<div class="part-range"><b>この部の範囲:</b> 第2部-1「漏れ防止チェックシート（医療機関目線）」から第2部-3「医療機関が残す監査・説明のための証跡」まで。第3部の開始見出しが出る直前で第2部は終わる。</div>
+<table class="part-map">
+<thead><tr><th>見る人</th><th>章の目的</th><th>読む章</th></tr></thead>
+<tbody>
+<tr><td>医療機関</td><td>自院の棚卸、対応計画、ベンダー確認、監査証跡の保管までを漏れなく進める。</td><td>第2部-1〜第2部-3</td></tr>
+<tr><td>ベンダー・クラウド事業者</td><td>医療機関から質問される項目と、提出を求められる資料を先読みする。</td><td>第2部-2</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="medical-institution-checklist">
+<h2>第2部-1 漏れ防止チェックシート（医療機関目線）</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">医療機関側は、7.0対応を「自院で実装するもの」と「事業者に対応・証跡提出を求めるもの」に分けて管理する。特にクラウド/SaaS利用時は、事業者に任せた範囲も責任分界と証跡確認が必要。</p>
+<table>
+  <thead><tr><th>優先</th><th>医療機関側の対応項目</th><th>確認対象</th><th>事業者へ求めるもの</th><th>完了条件</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">P0</span></td><td>経営層の承認・資源確保を明確にする。</td><td>経営管理編を根拠に、7.0対応をコストではなく医療提供継続に必要な投資として扱い、予算・人材・委託範囲を決める。</td><td>必要に応じて見積、対応ロードマップ、未対応リスク、SLA変更案を求める。</td><td>経営会議資料、承認記録、予算、体制図、責任者任命記録が残っている。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>企画管理者の台帳・規程を更新する。</td><td>企画管理編を根拠に、責任分界、委託先、資産、証跡、教育、監査、改善管理を7.0対応版へ更新する。</td><td>責任分界表、委託範囲、MDS/SDS、定期報告、未対応項目の理由を求める。</td><td>運用管理規程、責任分界表、委託先一覧、資産台帳、教育記録、監査計画が更新済み。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>医療情報システム、サーバ、端末、VPN、クラウド、外部接続、保守経路を棚卸する。</td><td>全システム、ネットワーク図、構成図、保守契約</td><td>サービス構成、管理対象範囲、保守対象、責任分界の回答。</td><td>棚卸表に所有者、接続先、認証方式、ログ、バックアップ、委託範囲が入っている。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>7.0全体と個別期限を分けて対応計画を作る。</td><td>6.1/7.0公表時期、二要素認証、証明書、システム更改予定</td><td>令和9年度対応可否、未対応機能のロードマップ、証明書制限への対応状況。</td><td>7.0正式公表後対応、令和9年4月1日時点、直近更改時対応が台帳で分かる。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>管理インターフェイス、ログインページ、管理ポートの外部露出をなくす。</td><td>VPN装置、ルータ、FW、NAS、クラウド管理画面</td><td>管理面の公開範囲、ACL、FW設定、踏み台経由、外部到達性確認。</td><td>許可元制限またはVPN/踏み台経由になっており、外部到達性確認が残っている。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>VPNとTLS接続を7.0案の区分で判定する。</td><td>専用線、IP-VPN、IPsec、SSL-VPN、HTTPS、FTPS、API</td><td>TLS設定、mTLS対応、IPsec+IKEv2、PSK不使用、SSL-VPN型、例外理由。</td><td>方式、TLSバージョン、暗号設定、クライアント証明書、例外理由が記録されている。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>令和9年度時点の二要素認証対応計画を作る。</td><td>電子カルテ、部門システム、SaaS、サーバOS、踏み台端末</td><td>アプリログインMFA、管理者MFA、保守要員MFA、未対応時の更改対応予定。</td><td>アプリログインとサーバOSログインの対応可否、更改期限、代替措置が決まっている。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>バックアップをランサムウェア前提で見直す。</td><td>重要データ、DB、ファイル、設定、クラウドバックアップ</td><td>バックアップ対象、頻度、世代数、隔離、書き込み不可、復旧試験結果。</td><td>3世代以上、複数方式、隔離、書き込み不可、復旧テスト、復旧優先順位が確認済み。</td></tr>
+    <tr><td><span class="tag high">P1</span></td><td>ログレビューを「収集」から「検知・抽出・確認」へ変更する。</td><td>アクセスログ、認証ログ、VPNログ、保守ログ、クラウドログ</td><td>ログ仕様、保持期間、提供形式、時刻同期、改ざん防止、アラート条件。</td><td>閾値、アラート、月次確認、緊急確認、ログ保護、時刻同期が手順化されている。</td></tr>
+    <tr><td><span class="tag high">P1</span></td><td>クラウド・保守事業者へ確認票を出す。</td><td>責任分界、MDS/SDS、SLA、内部通信、WAF、ログ、脆弱性対応</td><td>MDS/SDS、サービス仕様適合開示書、SLA、認証証跡、脆弱性対応方針。</td><td>回答がSLA、仕様書、責任分界表、事業者確認票に反映されている。</td></tr>
+    <tr><td><span class="tag medium">P1</span></td><td>証明書用途を棚卸し、サーバ証明書のクライアント用途流用をなくす。</td><td>端末証明書、サーバ証明書、プライベートCA、パブリックCA</td><td>証明書用途台帳、CA種別、mTLS対応、2026年6月15日影響。</td><td>用途、発行元、有効期限、影響、移行計画が整理済み。</td></tr>
+    <tr><td><span class="tag medium">P1</span></td><td>FIPS 140-3 Level 1相当以上の鍵格納機器・媒体を確認する。</td><td>電子署名鍵、秘密鍵、HSM、KMS、USBトークン、暗号ライブラリ</td><td>FIPS証明書、CMVP登録、KMS/HSM仕様、同等性説明、ベンダ保証。</td><td>製品・モジュール・利用箇所・同等性根拠が台帳化されている。</td></tr>
+    <tr><td><span class="tag medium">P2</span></td><td>タイムスタンプ運用を定義する。</td><td>電子署名対象文書、作成時刻、変更時刻、TSA、検証情報</td><td>タイムスタンプ仕様、TSA情報、保存期間中の検証可能性。</td><td>付与対象、付与時点、検証手順、保存期間中の検証可能性が文書化されている。</td></tr>
+    <tr><td><span class="tag medium">P2</span></td><td>復旧時の再侵害防止手順をBCPに入れる。</td><td>復旧手順、脆弱性修正、ID無効化、EDR、ログ、バックドア確認</td><td>インシデント時支援範囲、復旧手順、ログ提供、認証情報リセット手順。</td><td>訓練で、復旧前チェックと復旧後監視が実行されている。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="vendor-questionnaire">
+<h2>第2部-2 医療機関からベンダー・クラウド事業者への確認項目</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">医療機関がベンダー・クラウド事業者へ確認するための質問票。回答だけでなく、設定資料・SLA・ログ仕様などの証跡提出まで求める前提で使う。</p>
+<table>
+  <thead><tr><th>カテゴリ</th><th>質問</th><th>回答で確認する証跡</th></tr></thead>
+  <tbody>
+    <tr><td>ネットワーク</td><td>接続方式は専用線、IP-VPN、IPsec+IKEv2、SSL-VPN、TLS接続のどれか。PSK認証を使っていないか。</td><td>ネットワーク構成図、VPN設定、暗号設定</td></tr>
+    <tr><td>TLS/証明書</td><td>TLS1.3またはTLS1.2高セキュリティ型か。クライアント証明書はサーバ証明書と分離されているか。</td><td>TLS設定、証明書台帳、CA種別</td></tr>
+    <tr><td>管理面</td><td>管理ポート、ログインページ、管理インターフェイスは外部から直接到達できないか。</td><td>ACL、FW設定、公開面スキャン結果</td></tr>
+    <tr><td>クラウド内部</td><td>クラウド事業者内部通信は暗号化されているか。WAF等の対策はあるか。</td><td>サービス仕様、SLA、セキュリティホワイトペーパー</td></tr>
+    <tr><td>認証</td><td>利用者向けアプリ・サービスログイン、端末OSログインを代替にする場合の連携、サーバOS管理ログイン、踏み台同等措置に分けて二要素認証に対応しているか。</td><td>MFA機能仕様、IdP/SSO連携、サーバOS MFA又は踏み台構成、未対応時のロードマップ</td></tr>
+    <tr><td>サーバ管理</td><td>踏み台端末経由、別ドメイン、RDP/SSH限定、EDR、VPN経由、管理者権限禁止を満たすか。</td><td>管理経路図、端末設定、EDR設定</td></tr>
+    <tr><td>ログ</td><td>認証ログ、アクセスログ、保守ログをどの粒度・期間・形式で提供できるか。</td><td>ログ仕様、保管期間、提供手順、監査対応</td></tr>
+    <tr><td>バックアップ</td><td>バックアップ対象、頻度、世代、方式、保管場所、隔離、書き込み不可化、復旧テストを説明できるか。</td><td>バックアップ仕様、復旧試験結果、SLA</td></tr>
+    <tr><td>脆弱性</td><td>VPN機器、サーバ、ミドルウェア、アプリの脆弱性情報をどう検知し、何日以内に対応するか。</td><td>脆弱性管理手順、通知実績、パッチ方針</td></tr>
+    <tr><td>タイムスタンプ</td><td>タイムスタンプを付与する対象、タイミング、検証方法、保存期間中の検証可能性を説明できるか。</td><td>タイムスタンプ仕様、検証手順、TSA情報</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="artifacts">
+<h2>第2部-3 医療機関が残す監査・説明のための証跡</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">医療機関側で保管する証跡。自院で作る記録と、ベンダー・クラウド事業者から受領した資料を分けて台帳化する。</p>
+<table>
+  <thead><tr><th>証跡</th><th>最低限入れる項目</th><th>関係する章</th></tr></thead>
+  <tbody>
+    <tr><td>システム・資産棚卸表</td><td>システム名、所有者、ベンダ、接続先、認証方式、ログ、バックアップ、重要度</td><td>4, 8, 14, 17, 18</td></tr>
+    <tr><td>ネットワーク適合性判定表</td><td>接続方式、TLS/VPN方式、証明書、管理面露出、暗号設定、例外理由</td><td>13</td></tr>
+    <tr><td>二要素認証対応表</td><td>令和9年度稼働有無、アプリ・サービスログイン、端末OS代替の連携可否、サーバOS管理ログイン、踏み台同等措置、更改期限</td><td>14</td></tr>
+    <tr><td>ログ運用手順</td><td>ログ種別、収集先、保管期間、アクセス制限、閾値、レビュー頻度、アラート</td><td>17</td></tr>
+    <tr><td>バックアップ・復旧設計</td><td>対象、世代、方式、隔離、書き込み不可化、復旧順序、復旧テスト、BCP連携</td><td>11, 12, 18</td></tr>
+    <tr><td>事業者確認票</td><td>責任分界、SLA、ログ提供、クラウド内部通信、WAF、脆弱性対応、保守時アクセス</td><td>3, 10, 13, 17</td></tr>
+    <tr><td>タイムスタンプ運用手順</td><td>対象文書、付与タイミング、TSA、検証方法、検証情報の保全、保存期間</td><td>15</td></tr>
+    <tr><td>インシデント復旧手順</td><td>隔離、証拠保全、復旧前チェック、脆弱性修正、ID無効化、復旧後監視</td><td>18</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="part-medical-end">
+<h2>第2部はここまで</h2>
+<div class="block-content">
+<div class="diff-report"><div class="part-end">第2部はここまで。次の「第3部」からは、ベンダー・クラウド事業者側で対応し、医療機関へ提出する証跡を準備する章。</div></div>
+</div>
+</section>
+<section class="report-section report-section-html" id="part-vendor">
+<h2>第3部: ベンダー・クラウド事業者が見る章（ここから第3部）</h2>
+<div class="block-content">
+<div class="diff-report">
+<div class="part-marker">
+<span class="part-label">第3部 ここから</span>
+<span class="part-title">ベンダー・クラウド事業者が見る章</span>
+<p>事業者側で対応が求められるものと、医療機関へ提出する証跡を分けて準備する。</p>
+</div>
+<div class="part-range"><b>この部の範囲:</b> 第3部-1「ベンダー・クラウド事業者側として対応が求められる項目」から第3部-2「漏れ防止チェックシート（クラウド事業者目線）」まで。第3部-2がレポート末尾。</div>
+<table class="part-map">
+<thead><tr><th>見る人</th><th>章の目的</th><th>読む章</th></tr></thead>
+<tbody>
+<tr><td>ベンダー・クラウド事業者</td><td>サービス仕様、責任分界、認証、ログ、バックアップ、脆弱性管理などを提出可能な資料に落とす。</td><td>第3部-1〜第3部-2</td></tr>
+<tr><td>医療機関</td><td>事業者がどの資料を提出できるべきかを確認する。</td><td>第3部-1</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="cloud-provider-obligations">
+<h2>第3部-1 ベンダー・クラウド事業者側として対応が求められる項目</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">この章は、医療機関がクラウドサービスを利用する場合に、クラウド事業者・SaaS事業者側で対応が求められる項目と、医療機関へ提出することが求められる証跡を分けて整理したもの。7.0案では医療機関側が事業者に確認する形で書かれているため、事業者側では「対応済みであること」と「証跡を提出できること」の両方が必要になる。</p>
+<table>
+  <thead><tr><th>項目</th><th>6.0での記述</th><th>6.1案での記述</th><th>7.0案での記述</th><th>クラウド事業者側で対応が求められるもの</th><th>医療機関へ提出することが求められる証跡</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">経営・企画管理向け資料提供</span></td><td>事業者情報、責任分界、委託契約、SLAを医療機関が確認する考え方。</td><td>医療情報システム等提供事業者との取決め、対応状況の把握、責任分界を補強。</td><td>経営管理編・企画管理編でも、医療機関が経営層承認・企画管理・委託先監督に使える資料を事業者から得る前提になる。</td><td>医療機関の経営層・企画管理者が判断できる粒度で、責任分界、費用影響、未対応リスク、対応時期、運用範囲を説明する。</td><td>経営層向け説明資料、責任分界表、対応ロードマップ、未対応リスク一覧、SLA、契約条項案、定期報告書</td></tr>
+    <tr><td><span class="tag high">責任分界</span></td><td>SaaSでは利用者側と事業者側の管理対象範囲を分け、契約やSLAで責任分界を定める記述。</td><td>事業者からサービス仕様適合開示書などの情報提供を受け、責任分界を含む運用を取り決める記述。</td><td>保守委託機関編で、契約書、約款、SLA等にセキュリティアップデート責任が事業者にある場合のみ保守委託機関編の対象と整理。</td><td>医療機関、クラウド事業者、再委託先、接続サービス事業者の責任範囲を項目単位で定める。障害時、保守時、インシデント時、契約終了時の役割も分ける。</td><td>責任分界表、SLA、約款、保守範囲表、再委託先一覧、障害時・インシデント時の役割分担表</td></tr>
+    <tr><td><span class="tag high">MDS/SDS・仕様開示</span></td><td>事業者から技術的対策等の情報を収集し、正確性を確認する記述。</td><td>サービス仕様適合開示書など必要な情報提供を受ける記述が維持。</td><td>保守委託機関編で、事業者からMDS/SDSや約款等を提出させ、別紙の遵守事項対応状況と照合する記述。</td><td>医療情報システム・サービスの安全管理対策、対応済み項目、未対応項目、責任範囲を開示できる状態にする。</td><td>MDS/SDS、サービス仕様適合開示書、セキュリティホワイトペーパー、遵守事項対応表、更新履歴</td></tr>
+    <tr><td><span class="tag high">認証・第三者認証</span></td><td>事業者の実施能力、信頼性、契約条件を確認する考え方。</td><td>外部保存やクラウド利用時に事業者の安全管理状況を確認する流れを維持。</td><td>外部保存の委託先選定で、プライバシーマーク、ISMS又は同等規格、ISMAP等の認証・安全管理方針・体制・バックアップ状況を確認する記述。</td><td>適用範囲が医療情報を扱うサービスに及ぶ認証・監査を維持し、対象外範囲や例外を明確にする。</td><td>ISMS、プライバシーマーク、ISMAP等の登録・認証証跡、適用範囲、監査報告、例外範囲一覧</td></tr>
+    <tr><td><span class="tag high">クラウド内部通信</span></td><td>医療機関とクラウド間の通信経路暗号化を重視。</td><td>クラウドサービス事業者内部で用いる通信についても、暗号化等十分な安全性を講じていることを求める記述。</td><td>7.0案でも、クラウドサービス事業者内部での通信は医療機関側から保証されないため、内部通信の安全性を求める記述が維持。</td><td>医療機関との通信だけでなく、クラウド内部のサービス間通信、管理プレーン通信、保守通信を暗号化・認証する。</td><td>内部通信暗号化方針、通信経路図、サービス間認証方式、鍵管理方針、例外通信一覧</td></tr>
+    <tr><td><span class="tag high">TLS・証明書</span></td><td>TLSやクライアント証明書による通信経路の安全確保。</td><td>TLS1.3、TLS1.2例外、クライアント証明書の考え方を補強。</td><td>TLSクライアント認証、mutual TLS、2026年以降のパブリック認証局制限、サーバ証明書のクライアント証明書流用禁止を明記。</td><td>TLS1.3を基本にし、TLS1.2例外を管理する。mTLSまたは同等の端末識別を提供し、サーバ証明書をクライアント証明書として流用しない。</td><td>TLS設定一覧、暗号スイート、mTLS対応資料、証明書用途台帳、CA種別、有効期限・更新手順</td></tr>
+    <tr><td><span class="tag high">WAF・外部アクセス防御</span></td><td>クラウドサービスの安全性を事業者情報で確認する考え方。</td><td>クラウドサービス事業者がWAF等を用いる対策に触れる。</td><td>外部からの不正アクセス防止の観点で、WAFを用いる対策を講じている事業者を選択すると安全性が向上する記述。</td><td>外部公開されるWeb/API/管理面にWAF等の防御を適用し、管理画面や管理ポートの露出を制限する。</td><td>WAF適用範囲、ルール更新方針、検知・遮断ログ、管理画面アクセス制限、DDoS対策資料</td></tr>
+    <tr><td><span class="tag high">ログ提供・監査証跡</span></td><td>運用報告、ログ、実施状況を事業者に求める記述。</td><td>事業者との間でログの管理方法や提供等を明確にする記述。</td><td>7.0案では、アクセスログの記録・保護・時刻精度・アラートに加え、委託時はログ管理方法や提供を明確にする記述。</td><td>認証ログ、アクセスログ、管理操作ログ、保守ログを取得・保護し、医療機関の監査やインシデント調査時に提供できるようにする。</td><td>ログ仕様、保持期間、提供形式、時刻同期方式、改ざん防止措置、インシデント時ログ提供SLA</td></tr>
+    <tr><td><span class="tag high">バックアップ・復旧</span></td><td>外部保存を委託している場合、バックアップ対象、頻度、復旧世代、方法、保存場所をSLA等で明らかにする記述。</td><td>同趣旨を維持し、サイバー攻撃時のバックアップ影響や複数方式の必要性を補強。</td><td>7.0案では少なくとも3世代、3世代目以降の書き込み不可、復旧時の再侵害防止を明確化。保守委託機関編ではバックアップ復元等を事業者に依頼する想定も記載。</td><td>バックアップ対象、頻度、世代、隔離、書き込み不可、復旧手順、復旧時の再侵害防止を運用として実装する。</td><td>バックアップ設計、世代数、隔離・書き込み不可設定、RTO/RPO、復旧試験結果、マルウェア混入時の復旧手順</td></tr>
+    <tr><td><span class="tag high">脆弱性・アップデート</span></td><td>OS、ソフトウェア、機器の脆弱性情報を収集し、事業者に対応可否を確認する記述。</td><td>NCO、IPA、JPCERT/CC、SBOM、MyJVN等により脆弱性管理を補強。</td><td>保守委託機関編では、サーバのセキュリティアップデートを含む保守責任が事業者にあることを契約に含める記述。VPN機器等の脆弱性対応も保守契約範囲を明確化。</td><td>OS、ミドルウェア、アプリ、VPN・ネットワーク機器の脆弱性を把握し、パッチ適用・緊急対応・顧客通知を運用する。</td><td>パッチ方針、適用期限、緊急対応フロー、SBOM、脆弱性通知実績、保守対象機器一覧、自動アップデート設定</td></tr>
+    <tr><td><span class="tag high">二要素認証対応</span></td><td>令和9年度時点で新規導入・更新時に二要素認証を採用する方向性。</td><td>クライアント端末のアプリログイン、サーバOSログインの二要素認証を具体化。</td><td>保守委託機関編でも、令和9年度までのアプリログイン二要素認証、オンプレサーバOSログイン二要素認証、困難時は対応可能な事業者選定という記述。</td><td>利用者向けアプリ・サービスログイン、管理者ログイン、保守要員ログイン、サーバOS管理経路を分けて、二要素認証または同等以上措置を提供する。</td><td>利用者向けMFA機能仕様、IdP/SSO連携、管理者MFA設定、保守要員MFA設定、サーバOS MFA又は踏み台構成、未対応機能の対応予定</td></tr>
+    <tr><td><span class="tag medium">再委託・契約終了</span></td><td>再委託先の実施状況報告、事業者間の責任分界、契約やSLAでの取決めを求める記述。</td><td>責任分界と事業者からの情報収集を維持。</td><td>保守委託機関編で、再委託時の事前情報提供と承認、契約終了時の医療情報返却方法、破棄証跡の提出を契約に含める記述。</td><td>再委託先を管理し、医療機関への事前情報提供・承認、契約終了時の返却・削除・破棄を運用する。</td><td>再委託先一覧、承認フロー、データ返却手順、削除・破棄証跡、契約終了時の移行支援範囲</td></tr>
+    <tr><td><span class="tag medium">サービス監視・SLA</span></td><td>通常時・非常時の運用責任を事業者と調整し、SLA等で明らかにする考え方。</td><td>クラウド保守では保守対象時間や影響範囲を事業者に確認する記述。</td><td>保守委託機関編で、パフォーマンス管理、死活監視を委託契約に含まれるSLAで明確にする記述。</td><td>稼働監視、性能監視、死活監視、メンテナンス通知、障害通知、復旧目標をSLAとして運用する。</td><td>SLA、監視項目、通知条件、メンテナンス通知手順、障害報告テンプレート、RTO/RPO</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="cloud-provider-checklist">
+<h2>第3部-2 漏れ防止チェックシート（クラウド事業者目線）</h2>
+<div class="block-content">
+<div class="diff-report">
+<p class="note must">クラウド事業者側は、医療機関から確認された時に「対応済みであること」と「証跡を提出できること」を分けて準備する。以下は医療機関へ提出する回答パッケージのチェックリストとして使う。</p>
+<table>
+  <thead><tr><th>優先</th><th>クラウド事業者側の対応項目</th><th>対応内容</th><th>医療機関へ提出する証跡</th><th>完了条件</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tag high">P0</span></td><td>責任分界を明文化する。</td><td>医療機関、クラウド事業者、再委託先、接続サービス事業者の役割を通常時・保守時・障害時・契約終了時で分ける。</td><td>責任分界表、SLA、約款、保守範囲表、再委託先一覧。</td><td>医療機関が自院責任と事業者責任を項目単位で判断できる。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>MDS/SDS・仕様開示を提出できる状態にする。</td><td>安全管理対策、対応済み項目、未対応項目、責任範囲、例外を整理する。</td><td>MDS/SDS、サービス仕様適合開示書、遵守事項対応表、更新履歴。</td><td>医療機関の確認票に対して資料ベースで回答できる。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>TLS・証明書・管理面露出を7.0水準で管理する。</td><td>TLS1.3を基本とし、mTLSまたは端末識別を提供する。管理画面・管理ポートの公開範囲を制限する。</td><td>TLS設定一覧、mTLS対応資料、証明書用途台帳、管理面アクセス制限、外部到達性確認。</td><td>サーバ証明書をクライアント証明書として流用していないことを示せる。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>二要素認証を提供する。</td><td>利用者向けアプリ・サービスログイン、管理者ログイン、保守要員ログイン、サーバOS管理経路でMFAまたは同等以上措置を提供する。</td><td>利用者向けMFA機能仕様、IdP/SSO連携、サーバOS MFA又は踏み台構成、管理者MFA証跡、未対応機能の対応予定。</td><td>令和9年度対応可否と未対応時の更改計画を説明できる。</td></tr>
+    <tr><td><span class="tag high">P0</span></td><td>バックアップ・復旧をランサムウェア前提で運用する。</td><td>3世代以上、隔離、書き込み不可、複数方式、復旧時の再侵害防止を運用する。</td><td>バックアップ設計、世代数、隔離・書き込み不可設定、RTO/RPO、復旧試験結果。</td><td>復旧可能性と復旧時の再侵害防止策を医療機関へ提示できる。</td></tr>
+    <tr><td><span class="tag high">P1</span></td><td>ログ提供・監査対応を整備する。</td><td>認証ログ、アクセスログ、管理操作ログ、保守ログを取得・保護し、提供条件を決める。</td><td>ログ仕様、保持期間、提供形式、時刻同期方式、改ざん防止措置、ログ提供SLA。</td><td>医療機関の監査・インシデント調査時に必要ログを提出できる。</td></tr>
+    <tr><td><span class="tag high">P1</span></td><td>クラウド内部通信とWAFを説明できる状態にする。</td><td>サービス間通信、管理プレーン通信、保守通信を暗号化・認証し、外部公開面にWAF等を適用する。</td><td>内部通信暗号化方針、通信経路図、WAF適用範囲、検知・遮断ログ、DDoS対策資料。</td><td>医療機関とクラウド間だけでなく事業者内部通信の安全性を示せる。</td></tr>
+    <tr><td><span class="tag high">P1</span></td><td>脆弱性・アップデート運用を明文化する。</td><td>OS、ミドルウェア、アプリ、VPN・ネットワーク機器の脆弱性を把握し、パッチ適用・通知を行う。</td><td>パッチ方針、適用期限、緊急対応フロー、SBOM、脆弱性通知実績、保守対象一覧。</td><td>セキュリティアップデート責任が契約・SLA上明確になっている。</td></tr>
+    <tr><td><span class="tag medium">P1</span></td><td>FIPS 140-3 Level 1相当以上の根拠を用意する。</td><td>KMS、HSM、署名基盤、暗号ライブラリ等の暗号モジュールについてLevel 1相当以上の根拠を示す。</td><td>FIPS証明書、CMVP登録、KMS/HSM仕様、同等性説明、ベンダ保証、対象サービス一覧。</td><td>鍵格納・暗号処理の製品、モジュール、バージョン、利用範囲を説明できる。</td></tr>
+    <tr><td><span class="tag medium">P2</span></td><td>再委託・契約終了時対応を整える。</td><td>再委託先管理、医療機関への事前情報提供、契約終了時の返却・削除・破棄を運用する。</td><td>再委託先一覧、承認フロー、データ返却手順、削除・破棄証跡、移行支援範囲。</td><td>医療機関が契約終了時のデータ取扱いを確認できる。</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="report-section report-section-html" id="part-vendor-end">
+<h2>第3部はここまで</h2>
+<div class="block-content">
+<div class="diff-report"><div class="part-end">第3部はここまで。これで共通論点、医療機関側、ベンダー・クラウド事業者側の確認範囲は完了。</div></div>
+</div>
+</section>
+  </main>
+</body>
+</html>
