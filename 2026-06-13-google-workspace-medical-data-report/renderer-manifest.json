@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "renderer_version": "0.1.0",
+  "generated_at": "2026-06-13T11:46:07.844688+00:00",
+  "input": {
+    "path": "/Users/u1/agent/tmp/reports/google-drive-medical-data-html/document-model.json",
+    "sha256": "b5568998c8bb760ccadf4c2ae59b0a778a4bdef49d439885dc5df1738b663f83"
+  },
+  "document": {
+    "id": "google-drive-medical-data-report",
+    "title": "Google Workspaceで患者データ本体を扱う場合の利用可否評価"
+  },
+  "outputs": {
+    "index": "index.html",
+    "assets": [
+      "assets/style.css",
+      "assets/review-comments.js"
+    ],
+    "diagrams": [],
+    "images": []
+  },
+  "diagrams": [],
+  "review_blocks": [
+    {
+      "id": "document-header",
+      "type": "header",
+      "review_required": false
+    },
+    {
+      "id": "final-conclusion",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "issue-separation",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "scope",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "appi-required-actions",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "who-documents",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "consent-distinction",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "medical-remaining-issues",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "medical-guideline-history-rationale",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "medical-risk-details",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "plan-assessment",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "allowed-scope",
+      "type": "html",
+      "review_required": true
+    },
+    {
+      "id": "final-decision",
+      "type": "callout",
+      "review_required": true
+    },
+    {
+      "id": "sources",
+      "type": "html",
+      "review_required": true
+    }
+  ]
+}

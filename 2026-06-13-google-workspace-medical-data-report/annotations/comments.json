@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "document_id": "google-drive-medical-data-report",
+  "comments": [
+    {
+      "id": "cmt_mqbyyjrg",
+      "document_id": "google-drive-medical-data-report",
+      "block_id": "domestic-residency",
+      "selected_text": "患者データを常に日本国内リージョンに保存しなければならない、とは定めていない。国外取扱いは一律禁止ではない。",
+      "prefix": "\n国内閉じ込め要件の評価\n個人情報保護法は、",
+      "suffix": "しかし、医療情報外部保存として見ると、要求はかなり強い。厚労省ガイドラインは、外部保存の委託先選",
+      "anchor": {
+        "start": 22,
+        "end": 76
+      },
+      "comment": "どう定めていて､どうすればokになるのかを明示して｡そしてそれに対してどこが医療情報だと変わるのかを原文を踏まえて説明して",
+      "status": "resolved",
+      "created_at": "2026-06-13T06:23:17.644Z",
+      "replies": [
+        {
+          "id": "reply_cmt_mqbyyjrg_applied",
+          "author": "codex",
+          "role": "agent",
+          "kind": "implementation_note",
+          "body": "反映済み。個人情報保護法上の国外クラウド利用でOKにする二つの道筋と、医療情報外部保存で追加される保存場所・国内法・国外法・委託先管理の要件を原文に沿って追記しました。",
+          "created_at": "2026-06-13T06:33:10.256352+00:00"
+        }
+      ]
+    },
+    {
+      "id": "cmt_mqbyz8tr",
+      "document_id": "google-drive-medical-data-report",
+      "block_id": "domestic-residency",
+      "selected_text": "Google Driveは採用しない。",
+      "prefix": "が日本国内法の適用を受けることを確認できない。国内閉じ込めを強く求める医療情報外部保存先として、",
+      "suffix": "\n",
+      "anchor": {
+        "start": 351,
+        "end": 370
+      },
+      "comment": "採用しない､ではなくて採用出来ないという文言に全体的に直す",
+      "status": "resolved",
+      "created_at": "2026-06-13T06:23:50.127Z",
+      "replies": [
+        {
+          "id": "reply_cmt_mqbyz8tr_applied",
+          "author": "codex",
+          "role": "agent",
+          "kind": "implementation_note",
+          "body": "反映済み。結論文を「採用しない」中心ではなく「採用できない」「利用できない」に寄せて、要件を満たせない評価であることが分かる表現に変更しました。",
+          "created_at": "2026-06-13T06:33:10.256352+00:00"
+        }
+      ]
+    },
+    {
+      "id": "cmt_mqbz00we",
+      "document_id": "google-drive-medical-data-report",
+      "block_id": "cloud-exception",
+      "selected_text": "Google DPA",
+      "prefix": "のである。Google Drive / Workspace Driveでは、この整理を採らない。",
+      "suffix": "は、GoogleがCustomer Personal Dataの処理者であると定める。Googl",
+      "anchor": {
+        "start": 123,
+        "end": 133
+      },
+      "comment": "Google WorkspaceではなくてGoogleなの? だとしたらGoogle Cloudも駄目になるのだが",
+      "status": "resolved",
+      "created_at": "2026-06-13T06:24:26.510Z",
+      "replies": [
+        {
+          "id": "reply_cmt_mqbz00we_applied",
+          "author": "codex",
+          "role": "agent",
+          "kind": "implementation_note",
+          "body": "反映済み。対象はGoogle Cloud全体ではなくGoogle Drive / Google Workspace Driveであることを明記し、Google Cloud Storage等は別評価としました。",
+          "created_at": "2026-06-13T06:33:10.256352+00:00"
+        }
+      ]
+    },
+    {
+      "id": "cmt_mqbz0hr0",
+      "document_id": "google-drive-medical-data-report",
+      "block_id": "appi-assessment",
+      "selected_text": "Googleまたは復処理者が外国にある第三者として個人データを取り扱うため、法28条の整理が残る",
+      "prefix": "扱いの委託先として整理することはできる。この場合、国内の第三者提供同意は不要になり得る。しかし、",
+      "suffix": "。本人同意を取らない場合、提供先が個人情報取扱事業者が講ずべき措置に相当する措置を継続的に講ずる",
+      "anchor": {
+        "start": 133,
+        "end": 181
+      },
+      "comment": "ここをより具体的に記載して",
+      "status": "resolved",
+      "created_at": "2026-06-13T06:24:48.348Z",
+      "replies": [
+        {
+          "id": "reply_cmt_mqbz0hr0_applied",
+          "author": "codex",
+          "role": "agent",
+          "kind": "implementation_note",
+          "body": "反映済み。委託先・復処理者が外国にある場合に、所在国制度の把握、安全管理措置、本人の知り得る状態、法28条の情報提供・同意または基準適合体制が必要になる流れを具体化しました。",
+          "created_at": "2026-06-13T06:33:10.256352+00:00"
+        }
+      ]
+    },
+    {
+      "id": "cmt_mqbz11a0",
+      "document_id": "google-drive-medical-data-report",
+      "block_id": "appi-assessment",
+      "selected_text": "Google WorkspaceのDPAや復処理者情報は、この説明の材料にはなる。しかし、Driveのプラン選択だけでこの説明が完了するわけではない。",
+      "prefix": "継続的監督を行うこと、本人の求めに応じて情報提供できることを、医療機関側で文書化する必要がある。",
+      "suffix": "本件前提では、本人同意がなく、患者データ本体をDriveに置く設計であるため、法28条の説明負荷",
+      "anchor": {
+        "start": 241,
+        "end": 316
+      },
+      "comment": "なぜなのかの説明がなく唐突",
+      "status": "resolved",
+      "created_at": "2026-06-13T06:25:13.656Z",
+      "replies": [
+        {
+          "id": "reply_cmt_mqbz11a0_applied",
+          "author": "codex",
+          "role": "agent",
+          "kind": "implementation_note",
+          "body": "反映済み。DPAや復処理者情報が材料にとどまり、Driveのプラン選択だけでは国の特定、対象外データの処理場所、復処理者変更、CSE対象外データ、サポート時アクセス、削除・返却・監査手順まで確定しない理由を追記しました。",
+          "created_at": "2026-06-13T06:33:10.256352+00:00"
+        }
+      ]
+    }
+  ]
+}
