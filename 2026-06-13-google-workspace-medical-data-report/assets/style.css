@@ -264,13 +264,25 @@ h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(
 }
 .prose h2 .sec-no { font-family: var(--font-mono); font-size: 14px; color: var(--ink-faint); font-weight: 500; margin-right: 10px; }
 .prose h3 { font-size: var(--fs-h3); font-weight: 650; margin: var(--sp-5) 0 0; letter-spacing: .01em; }
-.prose p { margin: 0; max-width: 72ch; text-wrap: pretty; }
+.prose p {
+  margin: 0;
+  max-width: none;
+  text-wrap: pretty;
+  line-break: strict;
+  overflow-wrap: break-word;
+}
 .prose a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
 .prose a:hover { color: var(--brand); text-decoration-thickness: 2px; }
 .prose a.ref { color: var(--brand); text-decoration: none; font-weight: 550; }
 .prose a.ref:hover { text-decoration: underline; }
 .prose sup.cite { font-size: 10px; color: var(--brand); font-weight: 700; font-family: var(--font-mono); vertical-align: super; margin-left: 1px; }
-.prose ul, .prose ol { margin: 0; padding-left: 22px; max-width: 72ch; }
+.prose ul,
+.prose ol {
+  margin: 0;
+  padding-left: 22px;
+  max-width: none;
+  line-break: strict;
+}
 .prose li + li { margin-top: 6px; }
 .prose strong { font-weight: 650; }
 .prose p:has(> strong:only-child) {
@@ -322,7 +334,7 @@ h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(
   font-size: var(--fs-caption);
 }
 .document-summary {
-  max-width: 60ch;
+  max-width: none;
   margin: 0 0 var(--sp-4);
   color: var(--ink-2);
   font-size: var(--fs-lead);
@@ -330,13 +342,15 @@ h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(
   text-wrap: pretty;
 }
 
-.review-block {
+.review-block,
+.content-block {
   position: relative;
   margin: 0 0 var(--block-gap);
   padding: var(--pad-card) 0 0;
   border-top: 1px solid var(--line-1);
 }
-.review-block:first-child {
+.review-block:first-child,
+.content-block:first-child {
   padding-top: 0;
   border-top: 0;
 }
@@ -347,7 +361,8 @@ h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(
 .review-block.has-review-replies {
   border-left-color: var(--reply);
 }
-.review-block h2 {
+.review-block h2,
+.content-block h2 {
   font-family: var(--font-serif);
   font-size: var(--fs-h2);
   font-weight: 700;
@@ -358,7 +373,8 @@ h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(
   border-bottom: 1px solid var(--line-1);
   scroll-margin-top: 72px;
 }
-.review-block h3 {
+.review-block h3,
+.content-block h3 {
   font-size: var(--fs-h3);
   font-weight: 650;
   letter-spacing: .01em;
@@ -387,7 +403,7 @@ h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(
   border-right: 1px solid var(--line-1);
   text-align: left;
   vertical-align: top;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
 }
 .block-content th {
