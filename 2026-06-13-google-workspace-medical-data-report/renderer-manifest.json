@@ -13,83 +13,10 @@
   "outputs": {
     "index": "index.html",
     "assets": [
-      "assets/style.css",
-      "assets/review-comments.js"
+      "assets/style.css"
     ],
     "diagrams": [],
     "images": []
   },
-  "diagrams": [],
-  "review_blocks": [
-    {
-      "id": "document-header",
-      "type": "header",
-      "review_required": false
-    },
-    {
-      "id": "final-conclusion",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "issue-separation",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "scope",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "appi-required-actions",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "who-documents",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "consent-distinction",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "medical-remaining-issues",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "medical-guideline-history-rationale",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "medical-risk-details",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "plan-assessment",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "allowed-scope",
-      "type": "html",
-      "review_required": true
-    },
-    {
-      "id": "final-decision",
-      "type": "callout",
-      "review_required": true
-    },
-    {
-      "id": "sources",
-      "type": "html",
-      "review_required": true
-    }
-  ]
+  "diagrams": []
 }
