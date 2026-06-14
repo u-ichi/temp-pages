@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ja" data-density="compact">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医療データのGWS保存: 適合/不適合の二択からリスクベース評価へ</title>
+<style>
+:root { --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", "Yu Gothic UI", Meiryo, sans-serif; --font-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", "Yu Gothic UI", Meiryo, sans-serif; --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
+    "Liberation Mono", monospace; --fs-caption: 12px; --fs-small: 13px; --fs-meta: 13px; --fs-body: 15px; --fs-lead: 17px; --fs-h3: 16px; --fs-h2: 21px; --fs-h1: 30px; --fs-display: 34px; --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px; --r-xs: 2px; --r-sm: 4px; --r-md: 6px; --r-lg: 8px; --r-pill: 999px; --line: 1.72; --block-gap: 22px; --pad-card: 18px; --row-pad: 11px 14px; --bg-app: #efece5; --bg-rail: #f4f2ec; --paper: #fdfcf9; --paper-2: #f7f5f0; --ink: #232019; --ink-2: #5f5b51; --ink-3: #8d887d; --ink-faint: #b3aea3; --line-1: #e6e2d8; --line-2: #d6d1c5; --line-3: #c4bdae; --brand: #2f6093; --brand-soft: #e8eff7; --open: #2f6fb0; --open-bg: #e9f1f9; --open-line: #bcd6ee; --reply: #a9772a; --reply-bg: #f7efdc; --reply-line: #e6cf9b; --resolved: #3f8a5c; --resolved-bg: #e9f1ea; --resolved-line: #bcd9c5; --code-bg: #1d2127; --code-bg-2: #23282f; --code-ink: #d7d3c8; --code-ink-2: #8b9099; --code-line: #2f343c; --code-blue: #82b4e6; --code-green: #8fce9b; --code-amber: #e6c074; --code-pink: #e08fa8; --sh-1: 0 1px 2px rgba(40,36,28,.06), 0 0 0 1px rgba(40,36,28,.04); --sh-2: 0 2px 6px rgba(40,36,28,.08), 0 1px 2px rgba(40,36,28,.05); --sh-3: 0 8px 24px rgba(30,26,20,.16), 0 2px 6px rgba(30,26,20,.10); --focus-ring: 0 0 0 3px color-mix(in srgb, var(--brand) 28%, transparent); }
+[data-density="compact"] { --line: 1.55; --block-gap: 15px; --pad-card: 13px; --row-pad: 7px 12px; --fs-body: 14px; }
+[data-theme="dark"] { --bg-app: #131519; --bg-rail: #171a1f; --paper: #1c1f24; --paper-2: #20242a; --ink: #e7e3da; --ink-2: #a6a299; --ink-3: #7d7a72; --ink-faint: #5b5851; --line-1: #2c2f35; --line-2: #393d44; --line-3: #4a4e56; --brand: #6ea4dc; --brand-soft: #1f2d3c; --open: #6ea4dc; --open-bg: #1c2c3b; --open-line: #355472; --reply: #d6a85a; --reply-bg: #352c18; --reply-line: #604c25; --resolved: #6dba88; --resolved-bg: #1c2e23; --resolved-line: #345240; --code-bg: #15181d; --code-bg-2: #1b1f25; --code-line: #262b32; --sh-1: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.04); --sh-2: 0 2px 8px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05); --sh-3: 0 10px 30px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.4); --focus-ring: 0 0 0 3px color-mix(in srgb, var(--brand) 40%, transparent); }
+*, ::before, ::after { box-sizing: border-box; }
+html, body { margin: 0px; padding: 0px; }
+body { font-family: var(--font-sans); font-size: var(--fs-body); line-height: var(--line); color: var(--ink); background: var(--bg-app); -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; }
+:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--r-sm); }
+::selection { background: color-mix(in srgb, var(--brand) 24%, transparent); }
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.topbar { position: sticky; top: 0px; z-index: 60; display: flex; align-items: center; gap: var(--sp-4); height: 52px; padding: 0 var(--sp-5); background: color-mix(in srgb, var(--bg-app) 86%, transparent); backdrop-filter: saturate(1.2) blur(8px); border-bottom: 1px solid var(--line-2); }
+.brand-mark { display: flex; align-items: center; gap: var(--sp-3); min-width: 0px; }
+.brand-glyph { width: 26px; height: 26px; flex: 0 0 auto; border-radius: var(--r-sm); background: var(--ink); color: var(--paper); display: grid; place-items: center; font-weight: 700; font-size: 13px; font-family: var(--font-mono); letter-spacing: -0.5px; }
+.brand-name { font-weight: 650; font-size: 14px; letter-spacing: 0.1px; white-space: nowrap; }
+.brand-sub { color: var(--ink-3); font-size: var(--fs-caption); white-space: nowrap; }
+.topbar-spacer { flex: 1 1 0%; }
+.toolset { display: flex; align-items: center; gap: var(--sp-2); }
+.icon { width: 14px; height: 14px; display: inline-block; vertical-align: -2px; }
+.tool-label { font-size: var(--fs-caption); color: var(--ink-3); margin: 0px 2px 0px 6px; }
+.chip-select { appearance: none; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-size: var(--fs-caption); font-weight: 550; color: var(--ink); background-attachment: ; background-origin: ; background-clip: ; background-color: ; border: 1px solid var(--line-2); border-radius: var(--r-md); padding: 6px 26px 6px 10px; cursor: pointer; background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+                    linear-gradient(135deg, var(--ink-3) 50%, transparent 50%); background-position: calc(100% - 14px) 13px, calc(100% - 9px) 13px; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+.canvas { flex: 1 1 0%; overflow-y: auto; }
+.view { display: none; }
+.view.active { display: block; }
+.doc-shell { max-width: 1600px; margin: 0px auto; padding: var(--sp-7) var(--sp-6) var(--sp-8); }
+.doc-grid { display: grid; grid-template-columns: 232px minmax(0px, 1fr) 332px; column-gap: var(--sp-6); align-items: start; }
+.toc { position: sticky; top: 76px; font-size: var(--fs-small); }
+.toc-h { font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 var(--sp-3); font-weight: 650; }
+.toc ol { list-style: none; margin: 0px; padding: 0px; border-left: 2px solid var(--line-2); }
+.toc li a { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; text-decoration: none; color: var(--ink-2); padding: 5px 12px; margin-left: -2px; border-left: 2px solid transparent; }
+.toc li a:hover { color: var(--ink); }
+.toc li a.current { color: var(--ink); border-left-color: var(--brand); font-weight: 600; }
+.toc .toc-flag { font-size: 10px; font-family: var(--font-mono); color: var(--ink-faint); }
+.toc-list > li.toc-h2 { font-weight: 600; margin-top: var(--sp-2); }
+.toc-list > li.toc-h2 > ol { font-weight: 400; margin-left: var(--sp-3); font-size: 0.9em; }
+.toc-meta { margin-top: var(--sp-5); padding-top: var(--sp-4); border-top: 1px solid var(--line-1); color: var(--ink-3); font-size: var(--fs-caption); line-height: 1.6; }
+.doc-main { min-width: 0px; }
+.paper { background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-lg); box-shadow: var(--sh-1); padding: var(--sp-7) var(--sp-7) var(--sp-8); }
+.cmt-rail { position: relative; min-width: 0px; }
+.cmt-rail-h { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-caption); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); font-weight: 650; margin-bottom: var(--sp-2); }
+.cmt-rail-count { font-family: var(--font-mono); letter-spacing: 0px; }
+.cmt-layer { position: relative; }
+.doc-breadcrumb { display: flex; align-items: center; gap: 7px; font-size: var(--fs-small); color: var(--ink-3); margin-bottom: var(--sp-4); flex-wrap: wrap; }
+.doc-breadcrumb a { color: var(--ink-3); text-decoration: none; }
+.doc-breadcrumb a:hover { color: var(--ink-2); text-decoration: underline; }
+.doc-breadcrumb .sep { color: var(--ink-faint); }
+.doc-headrow { display: flex; align-items: flex-start; gap: var(--sp-4); flex-wrap: wrap; }
+.doc-status { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; font-size: var(--fs-caption); font-weight: 600; padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink-2); }
+.doc-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--reply); }
+.doc-status.in-review .dot { background: var(--open); }
+.eyebrow { font-size: var(--fs-caption); font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
+h1.doc-title { font-family: var(--font-serif); font-weight: 700; font-size: var(--fs-h1); line-height: 1.18; letter-spacing: -0.02em; margin: 0 0 var(--sp-3); color: var(--ink); text-wrap: balance; }
+.doc-deck { font-size: var(--fs-lead); line-height: 1.55; color: var(--ink-2); margin: 0px; max-width: 60ch; text-wrap: pretty; }
+.byline { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-4); font-size: var(--fs-small); color: var(--ink-2); flex-wrap: wrap; }
+.agent-badge { display: inline-flex; align-items: center; gap: 7px; background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--r-pill); padding: 3px 11px 3px 4px; font-weight: 550; }
+.agent-avatar { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(140deg, var(--brand), #6a4f9c); color: rgb(255, 255, 255); display: grid; place-items: center; font-size: 10px; font-weight: 700; font-family: var(--font-mono); }
+.byline .muted { color: var(--ink-3); }
+.meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); border: 1px solid var(--line-1); border-radius: var(--r-md); overflow: hidden; background: var(--paper-2); margin: var(--sp-5) 0; }
+.meta-cell { padding: 12px 14px; border-right: 1px solid var(--line-1); border-bottom: 1px solid var(--line-1); }
+.meta-key { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+.meta-val { font-size: var(--fs-small); font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.meta-val .mono { font-family: var(--font-mono); font-weight: 500; font-size: 12px; }
+.confidence { display: inline-flex; gap: 3px; align-items: center; }
+.confidence .bar { width: 5px; height: 11px; border-radius: 1px; background: var(--line-3); }
+.confidence .bar.fill { background: var(--resolved); }
+.prose { color: var(--ink); }
+.prose > * + * { margin-top: var(--block-gap); }
+.prose h2 { font-family: var(--font-serif); font-weight: 700; font-size: var(--fs-h2); line-height: 1.25; margin: var(--sp-7) 0 0; letter-spacing: -0.015em; padding-bottom: 10px; border-bottom: 1px solid var(--line-1); scroll-margin-top: 72px; }
+.prose h2 .sec-no { font-family: var(--font-mono); font-size: 14px; color: var(--ink-faint); font-weight: 500; margin-right: 10px; }
+.prose h3 { font-size: var(--fs-h3); font-weight: 650; margin: var(--sp-5) 0 0; letter-spacing: 0.01em; }
+.review-block > h3 { font-size: var(--fs-h3); font-weight: 650; letter-spacing: 0.01em; margin: var(--sp-5) 0 var(--sp-3); padding-bottom: var(--sp-2); border-bottom: 1px solid var(--line-1); }
+.review-block > h3 .sec-no { font-family: var(--font-mono); font-size: 13px; color: var(--ink-faint); font-weight: 500; margin-right: 8px; }
+.review-block > h4 { font-size: var(--fs-body); font-weight: 600; margin: var(--sp-4) 0 var(--sp-2); }
+.review-block > h4 .sub-sec-no, .block-content h4 .sub-sec-no { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); font-weight: 500; margin-right: 6px; }
+.prose.autonum { counter-reset: h2 0 h3 0 h4 0; }
+.prose.autonum .review-block:has(> h2) { counter-increment: h2 1; counter-reset: h3 0 h4 0; }
+.prose.autonum .review-block:has(> h3) { counter-increment: h3 1; counter-reset: h4 0; }
+.prose.autonum .review-block > h4, .prose.autonum .block-content h4 { counter-increment: h4 1; }
+.prose.autonum .sec-no, .prose.autonum .sub-sec-no { display: none; }
+.prose.autonum .review-block > h2::before { content: counter(h2) "."; font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--brand); margin-right: 12px; letter-spacing: 0px; }
+.prose.autonum .review-block > h3::before { content: counter(h2) "." counter(h3); font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--ink-2); margin-right: 9px; letter-spacing: 0px; }
+.prose.autonum .review-block > h4::before, .prose.autonum .block-content h4::before { content: counter(h2) "." counter(h3) "." counter(h4); font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--ink-3); margin-right: 8px; letter-spacing: 0px; }
+.prose p { margin: 0px; max-width: none; text-wrap: pretty; }
+.prose a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
+.prose a:hover { color: var(--brand); text-decoration-thickness: 2px; }
+.prose a.ref { color: var(--brand); text-decoration: none; font-weight: 550; }
+.prose a.ref:hover { text-decoration: underline; }
+.prose sup.cite { font-size: 10px; color: var(--brand); font-weight: 700; font-family: var(--font-mono); vertical-align: super; margin-left: 1px; }
+.prose ul, .prose ol { margin: 0px; padding-left: 22px; max-width: none; }
+.prose li + li { margin-top: 6px; }
+.prose strong { font-weight: 650; }
+.prose p:has(> strong:only-child) { font-weight: 580; line-height: 1.82; }
+.prose p:has(> strong:only-child) strong { font-weight: inherit; }
+.block-content > p:has(> strong:only-child) { border-left: 3px solid var(--line-2); padding-left: var(--sp-4); margin-top: var(--sp-4); }
+.prose code:not(pre code) { font-family: var(--font-mono); font-size: 0.86em; background: var(--paper-2); border: 1px solid var(--line-1); border-radius: var(--r-xs); padding: 1px 5px; color: color-mix(in srgb, var(--ink) 88%, var(--brand)); }
+.lead-note { font-size: var(--fs-lead); line-height: 1.55; color: var(--ink-2); }
+.decision-panel { border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-left: 3px solid var(--brand); border-radius: var(--r-md); background: var(--paper-2); padding: var(--pad-card) var(--sp-5); margin: var(--sp-5) 0; }
+.decision-panel > :first-child { margin-top: 0px; }
+.decision-panel > :last-child { margin-bottom: 0px; }
+.lead { font-size: var(--fs-lead); line-height: 1.55; }
+.lead strong { font-weight: inherit; }
+.document-header { margin-bottom: var(--sp-6); border-bottom: 1px solid var(--line-1); padding-bottom: var(--sp-5); }
+.doc-head-main { flex: 1 1 0%; min-width: 260px; }
+.doc-meta, .document-meta { margin: var(--sp-3) 0 0; color: var(--ink-3); font-family: var(--font-mono); font-size: var(--fs-caption); }
+.document-summary { max-width: 60ch; margin: 0 0 var(--sp-4); color: var(--ink-2); font-size: var(--fs-lead); line-height: 1.55; text-wrap: pretty; }
+.review-block { position: relative; margin: 0 0 var(--block-gap); padding: var(--pad-card) 0 0; border-top: 1px solid var(--line-1); }
+.review-block:first-child { padding-top: 0px; border-top: 0px; }
+.review-block.has-review-comments { border-left: 3px solid var(--open); padding-left: var(--sp-4); }
+.review-block.has-review-replies { border-left-color: var(--reply); }
+.review-block h2 { font-family: var(--font-serif); font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.015em; line-height: 1.25; margin: 0 0 var(--sp-4); padding-bottom: 10px; border-bottom: 1px solid var(--line-1); scroll-margin-top: 72px; }
+.block-content h3 { font-size: var(--fs-h3); font-weight: 650; letter-spacing: 0.01em; margin: var(--sp-5) 0 var(--sp-3); }
+.block-content h4 { font-size: var(--fs-body); font-weight: 600; margin: var(--sp-4) 0 var(--sp-2); }
+.block-content { max-width: 100%; margin: 0px; overflow-x: auto; }
+.block-content > :first-child { margin-top: 0px; }
+.block-content > :last-child { margin-bottom: 0px; }
+.block-content table { width: 100%; min-width: 720px; border-collapse: separate; border-spacing: 0px; table-layout: fixed; font-size: var(--fs-small); }
+.block-content th, .block-content td { padding: var(--row-pad); border-bottom: 1px solid var(--line-1); border-right: 1px solid var(--line-1); text-align: left; vertical-align: top; overflow-wrap: anywhere; word-break: normal; }
+.block-content th { position: sticky; top: 0px; z-index: 2; background: var(--paper-2); border-top: 1px solid var(--line-1); color: var(--ink-2); font-size: 11px; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; }
+.block-content th:first-child, .block-content td:first-child { position: sticky; left: 0px; z-index: 1; min-width: 168px; background: var(--paper); border-left: 1px solid var(--line-1); border-right: 1px solid var(--line-2); box-shadow: 1px 0 0 var(--line-1); font-weight: 600; }
+.block-content th:first-child { z-index: 3; background: var(--paper-2); }
+.block-content pre, .diagram-source { overflow-x: auto; margin: 0px; padding: 14px 16px; background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-line); border-radius: var(--r-md); }
+.block-content pre code, .diagram-source code { color: rgb(248, 250, 252); font-family: var(--font-mono); font-size: 12.5px; }
+.block-content.callout { display: block; }
+.review-block-callout .block-content.callout { border-left-color: var(--reply); background: var(--reply-bg); }
+.summary { border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: var(--r-md); background: linear-gradient(var(--paper-2), var(--paper-2)) padding-box; padding: var(--pad-card) var(--sp-5); margin: var(--sp-5) 0; border-left: 3px solid var(--brand); }
+.summary-h { display: flex; align-items: center; gap: 8px; font-size: var(--fs-caption); letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); font-weight: 700; margin-bottom: 10px; }
+.summary p { margin: 0px; }
+.summary ul { margin: 8px 0px 0px; padding-left: 20px; }
+.callout { display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: start; border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-left-color: ; border-left-style: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-left-width: 3px; border-radius: var(--r-md); padding: 14px var(--sp-4); background: var(--paper-2); }
+.callout .co-ico { width: 22px; height: 22px; border-radius: var(--r-sm); display: grid; place-items: center; color: rgb(255, 255, 255); font-weight: 700; font-size: 13px; margin-top: 1px; }
+.callout .co-title { font-weight: 650; font-size: var(--fs-small); margin-bottom: 3px; }
+.callout .co-body { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.6; }
+.callout .co-body p { margin: 0px; }
+.callout.info { border-left-color: var(--open); background: var(--open-bg); }
+.callout.info .co-ico { background: var(--open); }
+.callout.warn { border-left-color: var(--reply); background: var(--reply-bg); }
+.callout.warn .co-ico { background: var(--reply); }
+.callout.success { border-left-color: var(--resolved); background: var(--resolved-bg); }
+.callout.success .co-ico { background: var(--resolved); }
+[data-theme="dark"] .callout.info .co-title, [data-theme="dark"] .callout.warn .co-title, [data-theme="dark"] .callout.success .co-title { color: var(--ink); }
+.reco { border: 1px solid var(--resolved-line); background: var(--resolved-bg); border-radius: var(--r-md); padding: var(--sp-4) var(--sp-5); }
+.reco .reco-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--resolved); margin-bottom: 8px; }
+.table-wrap { border: 1px solid var(--line-2); border-radius: var(--r-md); overflow: hidden; background: var(--paper); }
+.table-cap { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line-1); background: var(--paper-2); font-size: var(--fs-caption); color: var(--ink-3); flex-wrap: wrap; }
+.table-cap .t-no { font-family: var(--font-mono); font-weight: 600; color: var(--ink-2); }
+.table-cap .t-title { color: var(--ink); font-weight: 600; font-size: var(--fs-small); }
+.table-scroll { overflow-x: auto; }
+table.cmp { border-collapse: separate; border-spacing: 0px; width: 100%; font-size: var(--fs-small); min-width: 720px; }
+table.cmp th, table.cmp td { padding: var(--row-pad); text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-1); }
+table.cmp thead th { position: sticky; top: 0px; z-index: 2; background: var(--paper-2); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); font-weight: 650; border-bottom: 2px solid var(--line-2); white-space: nowrap; }
+table.cmp th.axis, table.cmp td.axis { position: sticky; left: 0px; z-index: 1; background: var(--paper); font-weight: 600; color: var(--ink); border-right: 1px solid var(--line-2); min-width: 168px; box-shadow: 1px 0 0 var(--line-1); }
+table.cmp thead th.axis { z-index: 3; background: var(--paper-2); }
+table.cmp tbody tr:hover td { background: color-mix(in srgb, var(--brand) 4%, transparent); }
+table.cmp tbody tr:hover td.axis { background: color-mix(in srgb, var(--brand) 6%, var(--paper)); }
+table.cmp tbody tr:last-child td { border-bottom: 0px; }
+table.cmp col.pick, table.cmp .pick { background: color-mix(in srgb, var(--resolved) 8%, var(--paper)); }
+table.cmp th.pick { background: color-mix(in srgb, var(--resolved) 14%, var(--paper-2)); color: var(--resolved); }
+table.cmp td.pick { background: color-mix(in srgb, var(--resolved) 7%, var(--paper)); }
+.axis-sub { display: block; font-weight: 400; color: var(--ink-3); font-size: 11px; margin-top: 2px; }
+.rate { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.rate .pips { display: inline-flex; gap: 2px; }
+.rate .pip { width: 6px; height: 6px; border-radius: 50%; background: var(--line-3); }
+.rate.r5 .pip:nth-child(-n+5), .rate.r4 .pip:nth-child(-n+4), .rate.r3 .pip:nth-child(-n+3), .rate.r2 .pip:nth-child(-n+2), .rate.r1 .pip:nth-child(-n+1) { background: var(--rate-c); }
+.rate.good { --rate-c: var(--resolved); }
+.rate.mid { --rate-c: var(--reply); }
+.rate.low { --rate-c: #b65b4a; }
+.tag-yes { color: var(--resolved); font-weight: 600; }
+.tag-no { color: var(--ink-3); }
+.tag-cell-note { display: block; color: var(--ink-3); font-size: 11px; margin-top: 3px; }
+.num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 12px; }
+.code { background: var(--code-bg); border: 1px solid var(--code-line); border-radius: var(--r-md); overflow: hidden; font-family: var(--font-mono); color: var(--code-ink); }
+.code-bar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--code-bg-2); border-bottom: 1px solid var(--code-line); font-size: var(--fs-caption); }
+.code-bar .dots { display: flex; gap: 5px; }
+.code-bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: rgb(74, 79, 87); display: block; }
+.code-bar .fname { color: var(--code-ink-2); font-size: 12px; }
+.code-bar .lang { margin-left: auto; color: var(--code-ink-2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+.code-body { margin: 0px; padding: 14px 0px; font-size: 12.5px; line-height: 1.65; overflow-x: auto; }
+.code-body .ln { display: block; padding: 0px 16px 0px 56px; position: relative; white-space: pre; }
+.code-body .ln::before { content: attr(data-n); position: absolute; left: 0px; width: 40px; text-align: right; color: rgb(86, 92, 100); }
+.code-body .ln.hl { background: rgba(130, 180, 230, 0.1); box-shadow: inset 2px 0 0 var(--code-blue); }
+.tok-k { color: var(--code-pink); }
+.tok-f { color: var(--code-blue); }
+.tok-s { color: var(--code-green); }
+.tok-c { color: var(--code-ink-2); font-style: italic; }
+.tok-n { color: var(--code-amber); }
+.code.log .code-body { font-size: 12px; }
+.log-line { display: block; padding: 1px 16px; white-space: pre-wrap; word-break: break-word; }
+.log-line .ts { color: rgb(95, 101, 109); }
+.lvl { font-weight: 700; }
+.lvl.info { color: var(--code-blue); }
+.lvl.ok { color: var(--code-green); }
+.lvl.warn { color: var(--code-amber); }
+.lvl.err { color: var(--code-pink); }
+.log-line.is-warn { background: rgba(230, 192, 116, 0.07); }
+.log-line.is-err { background: rgba(224, 143, 168, 0.09); }
+.diagram-fallback { border: 1px dashed var(--line-3); border-radius: var(--r-md); background: var(--paper-2); padding: var(--sp-5); position: relative; }
+.diagram-fallback .df-head { display: flex; align-items: center; gap: 8px; font-size: var(--fs-caption); color: var(--ink-3); font-family: var(--font-mono); margin-bottom: var(--sp-4); }
+.diagram-fallback .df-badge { background: var(--reply-bg); color: var(--reply); border: 1px solid var(--reply-line); border-radius: var(--r-xs); padding: 1px 6px; font-weight: 600; letter-spacing: 0.04em; }
+.flow { display: flex; align-items: stretch; gap: 0px; flex-wrap: wrap; font-size: var(--fs-small); }
+.node { background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: 10px 14px; text-align: center; min-width: 96px; box-shadow: var(--sh-1); }
+.node .n-t { font-weight: 600; }
+.node .n-s { color: var(--ink-3); font-size: 11px; font-family: var(--font-mono); }
+.node.accent { border-color: var(--brand); background: var(--brand-soft); }
+.arrow { align-self: center; color: var(--ink-faint); font-family: var(--font-mono); padding: 0px 10px; font-size: 16px; }
+.df-cap { margin-top: var(--sp-4); font-size: var(--fs-caption); color: var(--ink-3); }
+.df-raw { margin-top: 12px; font-size: 11px; color: var(--ink-faint); font-family: var(--font-mono); }
+.figure { margin: var(--sp-5) 0; }
+.gen-image { position: relative; border: 1px solid var(--line-2); border-radius: var(--r-md); aspect-ratio: 16 / 8.5; overflow: hidden; background-color: var(--paper-2); background-image: repeating-linear-gradient(135deg,
+    transparent 0, transparent 9px,
+    color-mix(in srgb, var(--ink) 5%, transparent) 9px,
+    color-mix(in srgb, var(--ink) 5%, transparent) 10px); display: grid; place-items: center; }
+.gen-image .gi-tag { position: absolute; top: 10px; left: 10px; font-family: var(--font-mono); font-size: 11px; background: color-mix(in srgb, var(--paper) 88%, transparent); color: var(--ink-2); border: 1px solid var(--line-2); border-radius: var(--r-xs); padding: 2px 7px; }
+.gen-image .gi-center { text-align: center; color: var(--ink-3); font-family: var(--font-mono); font-size: var(--fs-small); padding: 10px 16px; }
+.gen-image .gi-center .gi-dim { display: block; font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+figcaption { margin-top: 8px; font-size: var(--fs-caption); color: var(--ink-3); display: flex; gap: 8px; }
+figcaption .fc-no { font-family: var(--font-mono); font-weight: 600; color: var(--ink-2); }
+.cx { border-radius: var(--r-xs); padding: 0px 1px; cursor: pointer; transition: background 0.12s; position: relative; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.cx[data-state="open"] { background: var(--open-bg); border-bottom: 2px solid var(--open); }
+.cx[data-state="reply"] { background: var(--reply-bg); border-bottom: 2px solid var(--reply); }
+.cx[data-state="resolved"] { background: transparent; border-bottom: 1px dashed var(--resolved-line); color: inherit; }
+.code .cx[data-state="open"], .code .cx[data-state="reply"], .diagram-source .cx[data-state="open"], .diagram-source .cx[data-state="reply"] { color: rgb(29, 33, 39); }
+[data-theme="dark"] .code .cx[data-state="open"], [data-theme="dark"] .code .cx[data-state="reply"], [data-theme="dark"] .diagram-source .cx[data-state="open"], [data-theme="dark"] .diagram-source .cx[data-state="reply"] { color: var(--code-ink); }
+.cx:hover { filter: brightness(0.97); }
+[data-theme="dark"] .cx:hover { filter: brightness(1.25); }
+.cx.is-active { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px currentColor; }
+.cx[data-state="open"].is-active { color: var(--open); }
+.cx[data-state="reply"].is-active { color: var(--reply); }
+.cx[data-state="resolved"].is-active { color: var(--resolved); }
+.cx .cx-num { font-family: var(--font-mono); font-size: 9px; font-weight: 700; line-height: 1; vertical-align: super; padding: 1px 3px; border-radius: var(--r-pill); margin-left: 2px; color: rgb(255, 255, 255); }
+.cx[data-state="open"] .cx-num { background: var(--open); }
+.cx[data-state="reply"] .cx-num { background: var(--reply); }
+.cx[data-state="resolved"] .cx-num { background: var(--resolved); }
+.filter-open [data-state="reply"].cx { background: var(--reply-bg); }
+.hide-resolved [data-cstate="resolved"] { display: none !important; }
+.only-open [data-cstate="reply"], .only-open [data-cstate="resolved"] { display: none !important; }
+.only-open .cx[data-state="reply"], .only-open .cx[data-state="resolved"] { background: transparent; border-bottom: 0px; }
+.hide-resolved .cx[data-state="resolved"] { background: transparent; border-bottom: 0px; cursor: default; }
+.is-focus .doc-grid { grid-template-columns: minmax(0px, 1fr); }
+.is-focus .toc, .is-focus .cmt-rail { display: none; }
+.is-focus .doc-shell { max-width: 1480px; }
+.is-focus .paper { padding: var(--sp-7) clamp(28px, 5vw, 76px) var(--sp-8); }
+.is-focus .prose p, .is-focus .prose ul, .is-focus .prose ol, .is-focus .doc-deck { max-width: none; }
+.is-focus .table-wrap, .is-focus .code, .is-focus .figure, .is-focus .diagram-fallback, .is-focus .summary, .is-focus .meta-grid { max-width: none; }
+.is-focus .cx { background: transparent; border-bottom: 0px; cursor: default; }
+.is-focus .cx .cx-num { display: none; }
+#focusToggle[aria-pressed="true"] { background: var(--brand-soft); color: var(--brand); }
+.is-published .topbar { display: none; }
+.is-published .doc-grid { grid-template-columns: minmax(0px, 1fr); }
+.is-published .toc, .is-published .cmt-rail { display: none; }
+.is-published .doc-shell { max-width: 1180px; padding-top: var(--sp-7); }
+.is-published .paper { padding: var(--sp-7) clamp(28px, 5vw, 64px) var(--sp-8); }
+.is-published .prose p, .is-published .prose ul, .is-published .prose ol, .is-published .doc-deck { max-width: none; }
+.is-published .canvas.is-focus .doc-shell { max-width: 1480px; }
+.is-published .canvas.is-focus .prose p, .is-published .canvas.is-focus .prose ul, .is-published .canvas.is-focus .prose ol, .is-published .canvas.is-focus .doc-deck { max-width: none; }
+.is-published .table-wrap, .is-published .code, .is-published .figure, .is-published .diagram-fallback, .is-published .summary, .is-published .meta-grid { max-width: none; }
+.is-published .cx { background: transparent; border-bottom: 0px; cursor: default; color: inherit; }
+.is-published .cx .cx-num { display: none; }
+.is-published .doc-status, .is-published .byline, .is-published .toc-flag { display: none; }
+.is-published .review-comments-root { display: none; }
+.is-published .review-comments-utility { display: none; }
+.pub-exit { display: none; position: fixed; bottom: var(--sp-5); left: 50%; transform: translateX(-50%); z-index: 80; background: rgb(28, 31, 36); color: rgb(231, 227, 218); border-radius: var(--r-pill); padding: 6px 6px 6px 18px; gap: 8px; align-items: center; font-size: var(--fs-small); box-shadow: var(--sh-3); }
+.is-published .pub-exit { display: flex; }
+.pub-exit > * { flex: 0 0 auto; }
+.pub-exit .pe-label { font-weight: 550; min-width: 0px; flex: 0 1 auto; overflow: hidden; }
+@media (max-width: 760px) {
+  .pub-exit .pe-label { display: none; }
+}
+.pub-exit .pe-w, .pub-exit .pe-btn { white-space: nowrap; }
+.pub-exit .pe-label b { font-weight: 700; }
+.pub-exit .pe-seg { display: inline-flex; background: rgba(255, 255, 255, 0.14); border-radius: var(--r-pill); padding: 2px; }
+.pub-exit .pe-seg .pe-w { padding: 4px 12px; border-radius: var(--r-pill); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.pub-exit .pe-seg .pe-w.on { background: var(--paper); color: var(--ink); }
+.pub-exit .pe-btn { padding: 6px 14px; border-radius: var(--r-pill); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: rgba(255, 255, 255, 0.14); color: inherit; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.pub-exit .pe-btn.primary { background: var(--brand); color: rgb(255, 255, 255); }
+.pub-exit .pe-btn:hover { filter: brightness(0.94); }
+.pub-exit .pe-btn .icon { width: 14px; height: 14px; }
+.pub-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(12px); background: rgb(28, 31, 36); color: rgb(231, 227, 218); padding: 10px 18px; border-radius: var(--r-pill); font: var(--fs-small)/1.4 var(--font-sans); box-shadow: var(--sh-3); z-index: 90; opacity: 0; transition: opacity 0.24s, transform 0.24s; display: flex; align-items: center; gap: 8px; }
+.pub-toast .icon { width: 14px; height: 14px; }
+.pub-toast.show { opacity: 1; transform: translateX(-50%) translateY(0px); }
+.cmt { background: var(--paper); border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: var(--r-md); box-shadow: var(--sh-1); padding: var(--pad-card); font-size: var(--fs-small); border-left: 3px solid var(--ink-3); transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s; }
+.doc-grid .cmt { position: absolute; left: 0px; right: 0px; width: 100%; }
+.cmt[data-cstate="open"] { border-left-color: var(--open); }
+.cmt[data-cstate="reply"] { border-left-color: var(--reply); }
+.cmt[data-cstate="resolved"] { border-left-color: var(--resolved); opacity: 0.78; }
+.cmt.is-active { box-shadow: var(--sh-3); border-color: var(--line-3); transform: translateX(-3px); z-index: 5; opacity: 1; }
+.cmt-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.av { width: 26px; height: 26px; border-radius: 50%; flex: 0 0 auto; display: grid; place-items: center; color: rgb(255, 255, 255); font-size: 11px; font-weight: 700; font-family: var(--font-mono); }
+.av.u1 { background: rgb(77, 106, 154); }
+.av.u2 { background: rgb(138, 106, 62); }
+.av.u3 { background: rgb(90, 125, 90); }
+.av.u4 { background: rgb(132, 86, 111); }
+.cmt-who { min-width: 0px; }
+.cmt-name { font-weight: 650; font-size: var(--fs-small); line-height: 1.2; }
+.cmt-time { font-size: 11px; color: var(--ink-3); }
+.cmt-state { margin-left: auto; flex: 0 0 auto; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; padding: 3px 8px; border-radius: var(--r-pill); display: inline-flex; align-items: center; gap: 4px; }
+.cmt-state .sdot { width: 6px; height: 6px; border-radius: 50%; background: currentcolor; }
+.cmt[data-cstate="open"] .cmt-state { color: var(--open); background: var(--open-bg); }
+.cmt[data-cstate="reply"] .cmt-state { color: var(--reply); background: var(--reply-bg); }
+.cmt[data-cstate="resolved"] .cmt-state { color: var(--resolved); background: var(--resolved-bg); }
+.cmt-quote { font-size: 12px; color: var(--ink-3); border-left: 2px solid var(--line-2); padding-left: 8px; margin: 0px 0px 8px; font-style: italic; }
+.cmt-body { color: var(--ink); line-height: 1.55; }
+.cmt-body p { margin: 0px; }
+.cmt-thread { margin-top: 10px; border-top: 1px solid var(--line-1); padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+.reply { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: start; }
+.reply .av { width: 22px; height: 22px; font-size: 9px; }
+.reply-name { font-weight: 650; font-size: 12px; }
+.reply-name .role { font-weight: 500; color: var(--ink-3); margin-left: 6px; font-size: 11px; }
+.reply-time { font-size: 10px; color: var(--ink-3); margin-left: 6px; }
+.reply-body { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; margin-top: 2px; }
+.reply.from-agent .av { background: linear-gradient(140deg, var(--brand), #6a4f9c); }
+.cmt-resolved-by { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; color: var(--resolved); font-weight: 600; }
+.cmt-foot { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+textarea.cmt-input, input.cmt-input { flex: 1 1 0%; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-size: 12.5px; background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: 7px 10px; color: var(--ink); min-width: 0px; resize: vertical; }
+.cmt-input::placeholder { color: var(--ink-faint); }
+.btn { appearance: none; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: var(--r-sm); padding: 7px 12px; border: 1px solid var(--line-2); background: var(--paper-2); color: var(--ink); line-height: 1; white-space: nowrap; }
+.btn:hover { border-color: var(--line-3); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: rgb(255, 255, 255); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--ink-2); padding: 7px 8px; }
+.btn.ghost:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.btn.resolve { color: var(--resolved); }
+.btn.reopen { color: var(--reply); }
+.btn .icon { width: 13px; height: 13px; }
+.m-thread { margin: 12px 0px; border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-bottom-width: ; border-left-color: ; border-left-style: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-left-width: 3px; border-radius: var(--r-md); background: var(--paper-2); overflow: hidden; }
+.m-thread[data-cstate="open"] { border-left-color: var(--open); }
+.m-thread[data-cstate="reply"] { border-left-color: var(--reply); }
+.m-thread[data-cstate="resolved"] { border-left-color: var(--resolved); }
+.m-thread-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; }
+.m-thread-head .cmt-state { margin-left: auto; }
+.m-thread-head .m-count { font-size: 11px; color: var(--ink-3); font-family: var(--font-mono); }
+.m-thread-body { padding: 0px 12px 12px; display: none; }
+.m-thread.open-state .m-thread-body { display: block; }
+.m-chev { transition: transform 0.15s; color: var(--ink-3); }
+.m-thread.open-state .m-chev { transform: rotate(90deg); }
+.m-fab { position: absolute; right: 14px; bottom: 14px; z-index: 25; background: var(--brand); color: rgb(255, 255, 255); border-radius: var(--r-pill); padding: 10px 16px; font-size: 12px; font-weight: 650; box-shadow: var(--sh-2); display: inline-flex; align-items: center; gap: 7px; }
+.m-fab .badge-n { background: rgba(255, 255, 255, 0.25); border-radius: var(--r-pill); padding: 1px 6px; font-family: var(--font-mono); }
+.cmt-empty { color: var(--ink-faint); font-size: var(--fs-small); padding: var(--sp-4); border: 1px dashed var(--line-2); border-radius: var(--r-md); text-align: center; }
+@media (max-width: 1180px) {
+  .doc-grid { grid-template-columns: minmax(0px, 1fr) 320px; }
+  .toc { display: none; }
+}
+@media (max-width: 900px) {
+  .doc-shell { padding: var(--sp-5) var(--sp-4) var(--sp-7); }
+  .doc-grid { grid-template-columns: minmax(0px, 1fr); }
+  .cmt-rail { display: none; }
+  .paper { padding: var(--sp-5) var(--sp-4) var(--sp-6); }
+  .inline-thread-host { display: block; }
+}
+@media (min-width: 901px) {
+  .inline-thread-host { display: none; }
+}
+.kbd { font-family: var(--font-mono); font-size: 11px; background: var(--paper-2); border-top-color: ; border-top-style: ; border-top-width: ; border-right-color: ; border-right-style: ; border-right-width: ; border-bottom-color: ; border-bottom-style: ; border-left-color: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-bottom-width: 2px; border-radius: var(--r-sm); padding: 1px 6px; }
+.mono { font-family: var(--font-mono); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); }
+.review-comments-root { position: absolute; inset: 0px auto auto 0px; z-index: 80; font-size: var(--fs-small); line-height: 1.45; }
+.review-comments-root [hidden] { display: none !important; }
+.review-comments-toolbar, .review-comments-composer, .review-comments-thread-popover { position: absolute; box-shadow: var(--sh-3); }
+.review-comments-toolbar { display: flex; align-items: center; padding: 6px; background: var(--code-bg); border: 1px solid var(--code-line); border-radius: var(--r-md); }
+.review-comments-toolbar button, .review-comments-composer-actions button, .review-comments-thread-actions button, .review-comments-utility button, .review-comments-import { display: inline-flex; align-items: center; min-height: 30px; padding: 6px 10px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--r-sm); font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-weight: 600; cursor: pointer; }
+.review-comments-toolbar button { color: var(--code-ink); background: var(--code-bg-2); border-color: var(--code-line); }
+.review-comments-composer, .review-comments-thread-popover { width: min(340px, -32px + 100vw); max-height: calc(-32px + 100vh); overflow-y: auto; padding: var(--pad-card); color: var(--ink); background: var(--paper); border: 1px solid var(--line-2); border-radius: var(--r-md); }
+.review-comments-composer textarea, .review-comments-thread-popover textarea, .review-comment-status-row select { width: 100%; resize: vertical; padding: 8px 10px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--r-sm); font: inherit; }
+.review-comments-composer-actions, .review-comments-thread-actions { display: flex; justify-content: flex-end; gap: var(--sp-2); margin-top: var(--sp-2); }
+.review-comments-thread-actions [data-thread-delete] { min-height: auto; padding: 0px; color: var(--ink-3); background: transparent; border: 0px; }
+.review-comments-import input { display: none; }
+.review-comments-utility { position: fixed; right: var(--sp-4); bottom: var(--sp-4); display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2); background: color-mix(in srgb, var(--paper) 94%, transparent); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: var(--sh-2); }
+.review-comments-status, .review-comment-author, .review-comments-thread-popover blockquote { color: var(--ink-3); font-size: var(--fs-caption); }
+.review-comments-thread-header { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-2); }
+.review-comments-thread-header button { width: 28px; height: 28px; color: var(--ink-3); background: transparent; border: 0px; cursor: pointer; }
+.review-comments-thread-popover blockquote { margin: 6px 0px; padding-left: var(--sp-2); border-left: 3px solid var(--line-2); }
+.review-comments-thread-popover p { margin: 6px 0px; }
+.review-comment-replies { display: grid; gap: var(--sp-2); margin: var(--sp-2) 0; padding: 0px; list-style: none; }
+.review-comment-author { margin: var(--sp-2) 0 3px; font-weight: 650; }
+.review-comment-body { padding: 6px 0px; white-space: pre-wrap; }
+.review-comment-main-body { cursor: text; }
+.review-comment-main-body:hover { background: var(--paper-2); border-radius: var(--r-sm); }
+.review-comment-highlight { padding: 0px 2px; color: inherit; background: var(--open-bg); border-bottom: 2px solid var(--open); border-radius: var(--r-xs); }
+.review-comment-highlight.has-review-replies { background: var(--reply-bg); border-bottom-color: var(--reply); }
+.review-comment-highlight.is-review-resolved { background: transparent; border-bottom: 1px dashed var(--resolved-line); }
+.review-comment-badge { position: absolute; top: 10px; right: 10px; min-height: 28px; padding: 4px 8px; color: var(--open); background: var(--open-bg); border: 1px solid var(--open-line); border-radius: var(--r-pill); font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-size: var(--fs-caption); cursor: pointer; }
+.review-comment-badge.has-review-replies { color: var(--reply); background: var(--reply-bg); border-color: var(--reply-line); }
+.review-comment-badge.is-review-resolved { color: var(--resolved); background: var(--resolved-bg); border-color: var(--resolved-line); }
+@media (max-width: 640px) {
+  .topbar { height: auto; min-height: 52px; align-items: flex-start; padding: var(--sp-3) var(--sp-4); }
+  .brand-sub, .brand-name { white-space: normal; }
+  .toolset { flex-wrap: wrap; justify-content: flex-end; }
+  .review-comments-utility { position: static; flex-wrap: wrap; margin: var(--sp-4); }
+}
+
+/* published export overrides */
+html,body{background:var(--bg-app);}
+.canvas{overflow:visible;height:auto;min-height:100vh;}
+@media(prefers-color-scheme:dark){:root{--bg-app:#131519;--bg-rail:#171a1f;--paper:#1c1f24;--paper-2:#20242a;--ink:#e7e3da;--ink-2:#a6a299;--ink-3:#7d7a72;--ink-faint:#5b5851;--line-1:#2c2f35;--line-2:#393d44;--line-3:#4a4e56;--brand:#6ea4dc;--brand-soft:#1f2d3c;--open:#6ea4dc;--open-bg:#1c2c3b;--open-line:#355472;--reply:#d6a85a;--reply-bg:#352c18;--reply-line:#604c25;--resolved:#6dba88;--resolved-bg:#1c2e23;--resolved-line:#345240;--code-bg:#15181d;--code-bg-2:#1b1f25;--code-line:#262b32;--sh-1:0 1px 2px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);--sh-2:0 2px 8px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05);--sh-3:0 10px 30px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.4);--focus-ring:0 0 0 3px color-mix(in srgb,var(--brand) 40%,transparent);}}
+</style>
+</head>
+<body class="is-published">
+<main class="canvas is-focus">
+<div class="doc-shell">
+        <div class="doc-grid">
+          
+          <article class="doc-main">
+            <div class="paper">
+              <header class="doc-headrow document-header" id="document-header">
+                <div class="doc-head-main">
+                  <p class="eyebrow">Reviewable HTML Workbench</p>
+                  <h1 class="doc-title">医療データのGWS保存: 適合/不適合の二択からリスクベース評価へ</h1>
+                  
+                </div>
+              </header>
+              
+              
+              <p class="doc-meta document-meta">Source generated at <time>2026-06-14T11:59:21.221727+09:00</time></p>
+              
+              <div class="prose autonum document-content" id="content">
+<section class="review-block" id="intro">
+<h2>本文書の位置づけ</h2>
+<div class="block-content"><p>既存の公開レポート（<a href="https://u-ichi.github.io/temp-pages/2026-06-13-google-workspace-medical-data-report">GWS医療データ評価レポート</a>）では、医療情報安全管理ガイドラインの遵守事項を文言通りに0/1で判定し、3要件（保存場所・国内法適用・国外法リスク）が全プランで未解消と結論した。</p>
+<p>しかし、3省2ガイドライン自体が第6.0版でリスクベースアプローチに転換している。本文書は、前回の0/1判定を<strong>リスクベース評価に切り替え</strong>、3要件に対する具体的な判断の道筋を示すことを目的とする。</p>
+<p>分析は以下の3層で構成する。各層の詳細な法令分析・認証データ・原文対比は参考章に収録し、本文では評価結果と判断の論理を中心に記述する。</p>
+<table>
+<thead><tr><th>層</th><th>問い</th><th>対象</th><th>結論の方向</th></tr></thead>
+<tbody>
+<tr><td><strong>第1層: 法律</strong></td><td>GWSに法的障壁はあるか</td><td>個人情報保護法、医療法、刑法、各業法 等</td><td>法的障壁なし</td></tr>
+<tr><td><strong>第2層: ガイドライン</strong></td><td>残る論点は何か、どう評価するか</td><td>3省2GL v6.0、省令、通知、ISMAP</td><td>リスクベースで評価可能</td></tr>
+<tr><td><strong>第3層: あるべき姿</strong></td><td>医療データ保護はどうあるべきか</td><td>HIPAA、GDPR、日本の制度構造</td><td>能力ベースへの展望</td></tr>
+</tbody>
+</table>
+<p>第1層で法的な障壁がないことを確認し、第2層で残る3要件をリスクベースで評価して補完措置と判断フレームワークを提示し、第3層で国際比較を通じて制度の方向性を考察する。最終的に、医療機関が採用判断に至る具体的な道筋を示す。</p>
+<p><strong>本文書の範囲</strong>: 本文書はGWSが医療情報の外部保存先として採用可能かどうかの評価に焦点を当てている。採用可能と判断した場合に必要となる実装面の設計 — データ分類と保存ポリシー、アクセス制御設計、暗号化方式の選定、運用手順の策定、患者への説明方針、インシデント対応体制の構築、既存システムからの移行計画など — は本文書の対象外であり、別途の設計・実装フェーズで取り組むべき重い作業として存在する。</p></div>
+Comment 3</section>
+<section class="review-block" id="executive-summary">
+<h2>全体サマリー</h2>
+<div class="block-content"><p>本文書は分量が多いため、全体の論理展開と結論を先に要約する。</p><h3>第1層: 法律 — 法的障壁はない</h3><p>医療情報のクラウド外部保存に関係しうる日本の法令を網羅的に洗い出し（個人情報保護法、医療法、刑法、各業法等）、GWSが各法令の要件を充足しているかを確認した。<strong>結論として、GWSの利用に法律上の障壁は認められない。</strong>個人情報保護法上は「委託」（第27条5項1号）として整理でき、基準適合体制（施行規則第11条の2）を備えれば外国提供の同意も不要。守秘義務規定も、正当な委託であれば漏示にあたらない。</p><h3>第2層: ガイドライン — 残る3要件はリスクベースで「条件付き受容」</h3><p>法的に問題がない一方、3省2ガイドライン v6.0 が求める3要件（保存場所の確認・国内法適用の確認・国外法リスクの評価）はGWSの現行構成では形式的に充足できない。ただし、これらは法令ではなくガイドライン固有の要件であり、v6.0のリスクベースアプローチに則って評価すべき対象である。</p><p>GWSが取得しているISMAP登録をベースラインに、医療GL固有の差分を評価した結果、GWSは<strong>「条件付き受容」</strong>に該当する。具体的には、CSE（クライアントサイド暗号化）の導入、契約条項の整備（準拠法・裁判管轄・監査権）、経営層による明示的なリスク受容を条件として、医療情報の外部保存先として利用可能と評価できる。</p><h3>第3層: あるべき姿 — 場所ベースから能力ベースへ</h3><p>日本のガイドラインが保存場所を重視する背景には、HIPAAのような強力な執行メカニズム（BAA・高額罰金・漏えい通知義務）がないことがある。HIPAAはデータの保存場所を規制せず、「どこに置いても違反すれば高額の罰則が科される」仕組みで担保している。日本は執行力の不足を場所で補償する構造になっている。</p><p>短期的にはリスクベースで「条件付き受容」として利用を進めつつ、中長期的にはクラウド事業者への法定契約義務や罰則強化など、能力ベースの制度整備が望ましい。</p></div>
+</section>
+<section class="review-block" id="layer1-header">
+<h2>第1層: 法律 — GWSに法的障壁はあるか</h2>
+<div class="callout info"><div class="co-ico">i</div><div><div class="co-body"><p>医療情報のクラウド外部保存に関係しうる日本の法令を網羅的に洗い出し、各法令でGWSが要件を充足しているかを確認する。結論として、GWSの利用に法律上の障壁はない。</p></div></div></div>
+</section>
+<section class="review-block" id="legal-survey">
+<h3>対象法令の全体像</h3>
+<div class="block-content"><p>医療情報をクラウドで外部保存する際に関係しうる法令を4つのカテゴリに分類した。各法令について、GWSでの充足状況を評価した結果、GWSをシステムとして利用すること自体に法的障壁は認められなかった。ただし、これは利用さえすれば何でも許容されるという意味ではない。各法令の要件を充足するためには、適切なライセンスの選定（データリージョン設定やCSEに対応するEnterprise Standard以上等）と、委託先監督・アクセス制御・監査ログ管理等の運用体制の構築が前提となる。</p>
+<table>
+<thead><tr><th>カテゴリ</th><th>法令</th><th>主な関連条文</th><th>関係の度合い</th><th>GWS充足</th></tr></thead>
+<tbody>
+<tr><td rowspan="3"><strong><a href="#legal-appi">個人情報・データ保護</a></strong></td><td>個人情報保護法</td><td>第27条5項1号（委託）、第28条（外国提供）</td><td>直接</td><td>充足</td></tr>
+<tr><td>マイナンバー法</td><td>第11条（委託先監督）、第12条（安全管理）</td><td>条件付き</td><td>充足（注1）</td></tr>
+<tr><td>次世代医療基盤法</td><td>匿名加工医療情報</td><td>非該当</td><td>—</td></tr>
+<tr><td rowspan="4"><strong><a href="#legal-medical-act">医療・保存義務</a></strong></td><td>医療法</td><td>管理義務、施行規則第14条第2項</td><td>直接</td><td>充足（注2）</td></tr>
+<tr><td>医師法</td><td>第24条（診療録5年保存）</td><td>直接</td><td>充足</td></tr>
+<tr><td>e-文書法</td><td>電子保存の法的根拠</td><td>直接</td><td>充足</td></tr>
+<tr><td>療担規則</td><td>第9条（帳簿保存）</td><td>直接</td><td>充足</td></tr>
+<tr><td rowspan="3"><strong><a href="#legal-criminal-duty">守秘義務</a></strong></td><td>刑法</td><td>第134条（秘密漏示罪）</td><td>直接</td><td>充足</td></tr>
+<tr><td>保健師助産師看護師法 等</td><td>各業法の守秘義務規定</td><td>直接</td><td>充足</td></tr>
+<tr><td>民法</td><td>第644条（善管注意義務）</td><td>間接</td><td>充足</td></tr>
+<tr><td rowspan="8"><strong><a href="#legal-other">個別医療分野</a></strong></td><td>感染症法</td><td>第73条・第74条（守秘義務）</td><td>間接</td><td>充足</td></tr>
+<tr><td>がん登録推進法</td><td>第25条（安全管理）、第34条（秘密保持）</td><td>間接</td><td>充足</td></tr>
+<tr><td>精神保健福祉法</td><td>第53条（秘密保持）</td><td>間接</td><td>充足</td></tr>
+<tr><td>難病法</td><td>第27条の5（安全管理）</td><td>間接</td><td>充足</td></tr>
+<tr><td>労働安全衛生法</td><td>第104条（情報取扱）、第105条（秘密保持）</td><td>直接</td><td>充足</td></tr>
+<tr><td>介護保険法</td><td>第205条（秘密保持）</td><td>間接</td><td>充足</td></tr>
+<tr><td>障害者総合支援法</td><td>第11条の2（秘密保持）</td><td>間接</td><td>充足</td></tr>
+<tr><td>臓器移植法</td><td>第13条（秘密保持）</td><td>間接</td><td>充足</td></tr>
+</tbody>
+</table>
+<p><strong>注1</strong>: マイナンバー（個人番号）自体は通常の医療情報には含まれない。マイナンバーを含むファイルをGWSに保存する場合は、第11条の委託先監督義務に基づく追加措置（取扱規程、アクセス制限等）が必要だが、GWSの機能で技術的に対応可能。</p>
+<p><strong>注2</strong>: 施行規則第14条第2項は「サイバーセキュリティ確保に必要な措置」を義務付けるが、保存場所・国内法適用・国外法リスクの3要件は同条の直接的な射程外。この点は第2層で分析する。</p></div>
+</section>
+<section class="review-block" id="legal-conclusion">
+<h3>第1層の結論: 法的障壁はない</h3>
+<div class="callout info"><div class="co-ico">i</div><div><div class="co-body"><p>18の関連法令を調査した結果、GWSを医療情報のクラウド外部保存に利用することに法律上の障壁は認められない。個人情報保護法は委託・基準適合体制ルートで対処可能、守秘義務は適切な業務委託契約で充足可能、電子保存はe-文書法で適法、各個別法にもクラウド保存を禁止する規定はない。残る論点は法律ではなくガイドラインの領域にある。</p></div></div></div>
+</section>
+<section class="review-block" id="layer2-header">
+<h2>第2層: ガイドライン — 残る3要件をリスクベースで評価する</h2>
+<div class="callout info"><div class="co-ico">i</div><div><div class="co-body"><p>第1層で法的障壁がないことを確認した。本層では、3省2ガイドライン v6.0が求める3要件（保存場所・国内法適用・国外法リスク）がガイドライン固有の論点であることを示し、v6.0のリスクベースアプローチに則って評価する。</p></div></div></div>
+</section>
+<section class="review-block" id="ordinance-gl-bridge">
+<h3>省令からガイドラインへの法的連鎖</h3>
+<div class="block-content"><h4>医療法施行規則第14条第2項の射程</h4>
+<p>令和5年改正で新設された医療法施行規則第14条第2項は、病院等の管理者に「サイバーセキュリティを確保するために必要な措置を講じなければならない」と義務付ける。</p>
+<h4>通知による橋渡し</h4>
+<p>同条項の具体的内容を示す通知「産情発0310第2号」（令和5年3月10日付）の第4留意事項には、以下の記載がある。</p>
+<blockquote>安全管理ガイドラインを参照の上、サイバー攻撃に対する対策を含めセキュリティ対策全般について適切な対応を行うこと</blockquote>
+<p>この文言は「サイバー攻撃に対する対策」に限定せず、「セキュリティ対策全般」としてガイドライン全体を参照している。</p>
+<h4>3要件は省令の直接的な射程に入るか</h4>
+<p>ここで重要な問いが生じる。ガイドラインの3要件（保存場所・国内法適用・国外法リスク）は、省令が求める「サイバーセキュリティ」の範囲に含まれるか。</p>
+<table>
+<thead><tr><th>概念</th><th>定義・内容</th><th>3要件との関係</th></tr></thead>
+<tbody>
+<tr><td><strong>サイバーセキュリティ</strong>（基本法第2条）</td><td>情報の漏えい・滅失・毀損の防止、情報システムの安全性・信頼性の確保</td><td>情報セキュリティの問題であり、データの物理的所在・法的管轄を直接扱わない</td></tr>
+<tr><td><strong>3要件</strong>（ガイドライン）</td><td>保存場所の確認、国内法適用の確認、国外法リスクの確認</td><td>データ主権・法域（jurisdiction）の問題であり、サイバーセキュリティとは異なる概念</td></tr>
+</tbody>
+</table>
+<p>3要件は「サイバーセキュリティ」の問題ではなく「データ主権・法域」の問題である。したがって、省令第14条第2項の直接的な射程には入らない可能性が高い。ただし、通知が「セキュリティ対策全般」としてガイドライン全体を参照しているため、行政指導の根拠としてはガイドライン全体が参照される。</p>
+<h4>法的強制力の構造</h4>
+<table>
+<thead><tr><th>規範</th><th>法的性質</th><th>強制力</th></tr></thead>
+<tbody>
+<tr><td>医療法施行規則第14条第2項</td><td>省令（法規命令）</td><td>法的拘束力あり</td></tr>
+<tr><td>通知（産情発0310第2号）</td><td>行政通知</td><td>法的拘束力なし（行政指導の根拠）</td></tr>
+<tr><td>3省2ガイドライン v6.0</td><td>ガイドライン</td><td>法的拘束力なし（推奨・指針）</td></tr>
+</tbody>
+</table>
+<p>3要件への不適合は、直ちに法令違反とはならない。ただし、立入検査での行政指導の根拠にはなりうる。</p></div>
+</section>
+<section class="review-block" id="checklist-positioning">
+<h3>立入検査チェックリストの位置づけ</h3>
+<div class="block-content"><h4>チェックリストの法的性質</h4>
+<p>「医療機関におけるサイバーセキュリティ対策チェックリスト」は、医療法第25条に基づく立入検査で使用される確認項目リストである。事務連絡として各都道府県等に発出されており、法的拘束力を持つ文書ではない。</p>
+<h4>3要件の包含有無</h4>
+<p>チェックリストの項目を精査した結果、<strong>保存場所・国内法適用・国外法リスクの3論点に該当する項目は含まれていない</strong>。チェックリストはサイバーセキュリティ対策（バックアップ、リモート保守、インシデント対応、MDS/SDS提出等）に特化しており、データ主権・法域の問題は対象外である。</p>
+<h4>エスカレーション経路</h4>
+<p>立入検査で不適合が指摘された場合のエスカレーション経路は以下のとおり。</p>
+<ol>
+<li><strong>立入検査での指摘</strong>: 医療法第25条に基づく。チェックリストの確認項目に沿って実施される。</li>
+<li><strong>行政指導</strong>: 法的強制力なし。改善を求める助言・指導。従わなくても直接の罰則はないが、不利益処分の前提となりうる。</li>
+<li><strong>措置命令</strong>: 医療法第24条の2に基づく。「特に必要がある場合」に、管理者に対して期限を定めて改善のために必要な措置をとるべきことを命ずることができる。</li>
+</ol>
+<h4>実務上の意味 — 3要件のガイドライン内での位置づけ</h4>
+<p><strong>3要件は立入検査チェックリストに含まれていない。</strong>ガイドラインの遵守事項には「Must（義務）」と「Should（推奨）」の<a href="#guideline-positioning">濃淡</a>があり、立入検査チェックリストは行政が実地で確認する重点項目を絞り込んだものである。3要件がチェックリストから外れているという事実は、行政がこれらを「全医療機関に一律に即時対応を求める最優先事項」としては位置づけていないことを示唆する。</p>
+<p>実際、チェックリストが重点を置くのはアクセス制御・バックアップ・インシデント対応・BCP等の基本的な安全管理措置であり、保存場所や外国法リスクといった論点はこれらと比較して<strong>優先度が劣後する</strong>扱いになっている。医療機関がGWSを採用した場合でも、定期立入検査の場で保存場所や国外法リスクについて直接問われる蓋然性は高くない。</p>
+<p>ただし、ガイドライン全体が行政指導の根拠となる以上、チェックリスト外の論点について指導がなされる可能性は排除できない。特に医療事故や漏えい事案が発生した場合には、チェックリストの有無にかかわらずガイドライン全体に照らした調査が行われうる。3要件は「対応不要」ではなく、「一律の即時対応が求められる性質ではないが、リスク評価の上で考慮すべき論点」と位置づけるのが適切である。</p></div>
+</section>
+<section class="review-block" id="risk-based-foundation">
+<h3>前提: 3省2ガイドラインのリスクベースアプローチへの転換</h3>
+<div class="block-content"><p>本文書の分析の大前提として、<strong>3省2ガイドラインが第6.0版（令和5年）でリスクベースアプローチへ転換した</strong>ことを整理する。</p><h4>従来のアプローチ（〜第5.2版）</h4><p>遵守事項を具体的に列挙し、各項目について「適合しているか否か」を判定する方式。要件の充足が二値（適合/不適合）で評価されていた。</p><h4>リスクベースアプローチ（第6.0版〜）</h4><p>第6.0版では、ガイドラインの構成自体が「概説編」「経営管理編」「企画管理編」「システム運用編」に再編され、医療機関が<strong>自らの環境・脅威・リスクを分析し、必要な安全管理措置を選択・実装し、残存リスクを管理する</strong>アプローチへ転換した。経営層のリスク判断と責任を明確に位置づけ、「全項目を一律に0/1で判定する」のではなく、<strong>リスクの大きさと対策の十分性で判断する</strong>ことを前提としている。</p><p>3省2ガイドラインの事業者側（総務省・経産省GL）も同時に改定され、事業者側のリスクベースの情報提供と、医療機関との<strong>合意形成プロセス</strong>を重視する構成になった。</p><h4>本文書への意味</h4><p>ガイドライン自体がリスクベースの評価を前提としている以上、外部保存の委託先選定においても「遵守事項の文言に形式的に適合するか」だけでなく「遵守事項が保護しようとしているリスクに対して、どの程度の低減措置が講じられているか」で評価することは、ガイドラインの枠組みの中での判断である。「リスクベースで評価する」ことはガイドラインを迂回する行為ではなく、ガイドラインが意図した判断方式である。</p></div>
+</section>
+<section class="review-block" id="ismap-eval-summary">
+<h3>GWSの認証状況とISMAP評価の概要</h3>
+<div class="block-content"><p>GWSが取得している認証のうち、医療情報の外部保存に関するリスクを最も幅広くカバーするのがISMAP（政府情報システムのためのセキュリティ評価制度）登録である。ISMAP登録の詳細な分析は<a href="#ismap-registration">参考章</a>に収録しているが、ここでは評価結果の要点を示す。</p>
+
+<h4>ISMAPが医療GLと重なる領域</h4>
+<p>ISMAP管理基準は、技術的安全管理（暗号化・アクセス制御・監査ログ）、組織的安全管理（ガバナンス・方針・責任体制）、運用管理（BCP・インシデント対応）、委託先管理（サプライチェーン）を包括的に評価する。これらは医療GLが求める安全管理措置の大半と重なっており、GWSはISMAP登録をはじめとする<a href="#certifications">各種認証</a>によって医療GLの要求の相当部分を既に充足している。</p>
+
+<table>
+<thead><tr><th>評価観点</th><th>ISMAP管理基準</th><th>医療GL要件</th><th>カバー状況</th></tr></thead>
+<tbody>
+<tr><td>ガバナンス・責任体制</td><td>情報セキュリティ体制</td><td>経営層・委員会・委託先管理</td><td>重なり</td></tr>
+<tr><td>アクセス制御・認証</td><td>ID管理・特権管理・ログ監視</td><td>利用者登録・認証・権限設定</td><td>重なり</td></tr>
+<tr><td>暗号化・通信保護</td><td>暗号化要件・鍵管理</td><td>保存時・通信時の暗号化</td><td>重なり</td></tr>
+<tr><td>インシデント対応・BCP</td><td>対応手順・事業継続</td><td>非常時対応・復旧手順</td><td>重なり</td></tr>
+<tr><td><strong>保存場所の国内限定</strong></td><td>要件なし</td><td>国内保存の確認を要求</td><td><strong>差異</strong></td></tr>
+<tr><td><strong>国内法の適用確認</strong></td><td>要件なし</td><td>委託先への国内法適用を確認</td><td><strong>差異</strong></td></tr>
+<tr><td><strong>外国法リスクの排除</strong></td><td>要件なし</td><td>外国政府アクセスの可能性を確認</td><td><strong>差異</strong></td></tr>
+</tbody>
+</table>
+
+<h4>ISMAPではカバーされない3要件</h4>
+<p>ISMAPの管理基準と医療GLの遵守事項を<a href="#comparison-matrix">対比</a>すると、セキュリティの技術的・組織的管理に関しては大部分が重複しているが、<strong>保存場所・国内法適用・外国法リスクの3要件だけが医療GL固有</strong>の要求として残る。これら3点はISMAPの評価対象に含まれておらず、GWSがISMAP登録済みであっても自動的には充足されない。3要件それぞれの原文対比は参考章の詳細分析（<a href="#deep-dive-location">保存場所</a>・<a href="#deep-dive-domestic-law">国内法</a>・<a href="#deep-dive-foreign-law">国外法</a>）を参照。ISMAPが各論点に対して提供する<a href="#ismap-risk-hedge">リスクヘッジ効果</a>と<a href="#overlap-coverage">認証で達成済みと見なせる範囲</a>も参考章に収録している。</p></div>
+</section>
+<section class="review-block" id="structural-gap-summary">
+<h3>3要件が残る理由 — 事実確認型要件の構造</h3>
+<div class="block-content"><p>前節のISMAP評価で示したとおり、セキュリティの技術的・組織的管理はISMAPと医療GLで大きく重なるが、保存場所・国内法適用・外国法リスクの<a href="#three-categories">3要件</a>だけがISMAPでカバーされない。なぜこの3点だけが残るのか。</p>
+
+<p>これは、3要件の性質がガイドラインの他の要件と根本的に異なるためである。ガバナンスやアクセス制御の要件は「リスクの大きさに応じて対策を選ぶ」タイプであり、ISMAPのようなセキュリティ評価で代替できる。一方、3要件は<strong>「事実としてそうなっているか」を確認する</strong>タイプの要件である。</p>
+
+<ul>
+<li><strong>保存場所</strong>: データが国内に保存されているか — 事実の確認</li>
+<li><strong>国内法の適用</strong>: 委託先が国内法の下で管理義務を負っているか — 法域の確認</li>
+<li><strong>外国法のリスク</strong>: 外国政府によるデータアクセスの可能性があるか — 法制度の確認</li>
+</ul>
+
+<p>この違いの背景には制度目的の違いがある。ISMAPは政府が自らの情報を預ける先を評価する制度であり、リスクの大きさを判断して受容する裁量がある。一方、医療GLは患者から預かった情報に対する保護義務を定めており、行政監督の実効性を確保する目的から、場所・法域・外国法について確認可能な事実を求めている。</p>
+
+<p>GWSの場合、ISMAPの管理策は全て満たしている。しかし医療GLが求める事実確認に対しては、日本国内への保存を保証できず、国内法適用の確認が困難であり、米国CLOUD Actの適用を排除できない。<strong>残存リスクの核心は、行政調査の実効性が保証されないことと、患者データへの外国政府アクセスを制度的に排除できないこと</strong>にある。</p>
+
+<p>このギャップは、セキュリティの技術的水準の問題ではなく、制度設計の構造に由来する。次節では、この事実確認型の要件を0/1で形式的に適用した場合に生じる問題を指摘し、リスクベースの評価枠組みの中でどう扱うべきかを検討する。</p></div>
+</section>
+<section class="review-block" id="risk-based-reframing">
+<h3>0/1判定からリスク評価へ — なぜ転換が必要か</h3>
+<div class="block-content"><p>前節まででガイドラインが省令義務の具体化基準として事実上の強制力を有する一方、3省2ガイドライン自体がリスクベースアプローチを採用していることを確認した。また、ISMAPでカバーされない3要件が事実確認型の要件であり、0/1での形式判定を前提としていることを示した。</p><p>ここからは、この3要件をどう評価し、実務上の判断に落とし込むかを段階的に組み立てる。まず本節で0/1判定の問題点を指摘してリスクベース評価への転換を論じた上で、続く節で具体的な判定基準（3段階）、残存リスクに対する補完措置、補完措置の組み合わせ方（階層モデル）、そしてこれらを統合した判断フレームワークを示し、最後にGWSへ適用した評価結果を提示する。</p><h4>0/1判定が生む逆説</h4><p>保存場所・国内法適用・国外法リスクの3点を文言通りの0/1で判定すると、以下のような結論になる。</p><ul><li>ISMAP・ISO 27001・SOC 2・FedRAMP等を取得し、世界最高水準のセキュリティ体制を持つ外資系クラウド → <strong>不適合</strong>（保存場所が日本でない）</li><li>外部認証を一切取得しておらず、セキュリティ監査実績もない<a href="#domestic-paradox">国内事業者が国内DCで運用</a> → <strong>適合</strong>（保存場所が日本でDC所在地が確認できる）</li></ul><p>この結論は、患者データの安全性という本来の目的に照らして明らかに不合理である。ガイドラインの趣旨は「患者データを安全に管理すること」であり、「国内にさえあればよい」ではない。</p><h4>リスク評価に基づく判断への転換</h4><p>3省2ガイドラインが第6.0版でリスクベースアプローチに転換したことを踏まえれば、実務上の判断は以下の構造で行うべきである。</p><ol><li>ガイドラインの各要件が<strong>何を守ろうとしているか</strong>（保護目的）を特定する</li><li>候補サービスが保護目的に対して<strong>どの程度のリスク低減を達成しているか</strong>を評価する（外部認証はこのリスク低減の証拠になる）</li><li>残存リスクが、サービス利用による<strong>ベネフィット</strong>（業務効率、可用性、コスト、セキュリティ水準）に対して許容可能かを経営判断する</li><li>許容する場合は、その判断根拠と補完措置を<strong>文書化</strong>する</li></ol><p>この判断プロセス自体が、第6.0版のリスクベースアプローチに沿ったものである。</p></div>
+</section>
+<section class="review-block" id="three-tier-judgment">
+<h3>3段階判定基準</h3>
+<div class="block-content"><p>前節でリスクベースの判断プロセスを示したが、実務で運用するには判定の目安が必要になる。ここでは、外部保存先の条件を3段階に分類し、それぞれの受容判断と必要な対応を整理する。</p><ul><li><strong>受容しやすい</strong>: 日本リージョンまたは日本国内データセンター、契約主体・準拠法・裁判管轄が明確、再委託先とサポート経路が列挙済み、ISMAP等の第三者評価あり、医療機関側で契約・監査・終了手順を持てる</li><li><strong>条件付き受容</strong>: 外資系または国外親会社の影響があるが、CSE/HYOK、顧客管理鍵、国外アクセス制御、法的請求通知、データ最小化、仮名化により残リスクを経営層が明示的に受容できる</li><li><strong>原則不受容</strong>: 保存場所・バックアップ・ログ・再委託先が不明、事業者が医療情報を平文復号可能、国外法に基づく開示時の通知・異議申立て・最小化手順がない、終了時返却・破棄証跡がない</li></ul><h4>GWSの判定</h4><p>GWSは上記3段階のうち<strong>「条件付き受容」</strong>に該当する。理由: (1) ISMAP登録済みで第三者評価があること、(2) 日本法準拠の契約締結とGoogle合同会社を契約主体にできること、(3) CSE/CMEKによる暗号化強化が可能なこと、から「原則不受容」の条件には該当しない。一方、(4) 米国法域の影響（CLOUD Act）が構造的に排除不能なこと、(5) 日本国内DCの指定ができないこと、から「受容しやすい」の条件も満たさない。したがって、CSE導入・契約条項の強化・経営層による明示的リスク受容を前提とした「条件付き受容」が妥当な判定となる。</p></div>
+</section>
+<section class="review-block" id="supplementary-measures">
+<h3>補完措置の選択肢と有効性評価</h3>
+<div class="block-content"><p>前節の3段階判定で「条件付き受容」に分類されたサービスは、補完措置によって残存リスクを低減できる。以下に主な補完措置の有効性と限界を整理する。</p><table><thead><tr><th>補完措置</th><th>有効性</th><th>効くリスク</th><th>限界</th></tr></thead><tbody><tr><td>契約条項（保存地域・準拠法・裁判管轄・監査権・返却・破棄）</td><td>中〜高</td><td>不明確な責任分界、無断移転、終了時混乱</td><td>外国法に基づく強制命令を契約だけで無効化することはできない</td></tr><tr><td>法的請求条項（通知・異議申立て・開示最小化・透明性報告）</td><td>中</td><td>当局請求時の不透明性</td><td>通知禁止命令がある場合は即時通知できない</td></tr><tr><td>CSEまたはHYOK（クライアントサイド暗号化）</td><td>高</td><td>事業者・国外当局が事業者経由で平文コンテンツにアクセスするリスク</td><td>メタデータ・ログ・可用性・共有設定・端末側漏えいには効かない</td></tr><tr><td>BYOK（Bring Your Own Key）</td><td>中</td><td>鍵ライフサイクル管理</td><td>事業者が実行時に復号できる構成では強制開示対策としては限定的</td></tr><tr><td>仮名化・トークナイズ・データ最小化</td><td>高</td><td>国外処理・ログ・分析時の患者識別リスク</td><td>対応表管理が甘いと効果が落ちる</td></tr><tr><td>DLP・CASB・アクセス監視</td><td>中</td><td>内部不正、誤共有、異常アクセス</td><td>法域リスクそのものは下げない</td></tr><tr><td>運用統制（JIT特権・MFA・職務分離・緊急アクセスレビュー）</td><td>高</td><td>運用者アクセス、サポートアクセス</td><td>サービス設計上の復号可能性は別途評価が必要</td></tr><tr><td>TIA類似の法域影響評価</td><td>中〜高</td><td>国外法適用可能性の見落とし</td><td>評価だけでは防止策にならず、技術・契約措置と組み合わせる</td></tr></tbody></table><h4>GWSへの推奨優先順位</h4><p>GWSで残存リスクを効果的に低減するには、以下の優先順位で補完措置を導入することを推奨する。</p><ol><li><strong>CSEの導入</strong>（効果: 高）: 事業者・国外当局が事業者経由で医療情報の平文にアクセスするリスクを構造的に排除する。最も費用対効果が高い単一施策</li><li><strong>契約条項の整備</strong>（効果: 中〜高）: 保存地域・準拠法・裁判管轄・監査権・返却・破棄条項を明記し、責任分界を法的に確保する</li><li><strong>法的請求条項</strong>（効果: 中）: 政府からのアクセス要求に対する通知・異議申立て・最小化手順を契約に含める</li><li><strong>組織的対策</strong>（効果: 基盤）: TIA類似の法域影響評価を実施し、経営層が残存リスクを理解した上で承認する体制を構築する</li></ol></div>
+</section>
+<section class="review-block" id="tier-model">
+<h3>補完措置の階層モデル</h3>
+<div class="block-content"><p>上記の補完措置は単独ではなく、組み合わせて段階的に導入することで効果が高まる。以下の4層モデルは、認証を起点に契約・技術・組織の措置を積み上げていく実装順序を示す。</p><table><thead><tr><th>階層</th><th>構成</th><th>効果</th></tr></thead><tbody><tr><td>第1層: 認証のみ</td><td>ISMAP登録を委託先選定の証拠に使う</td><td>技術・運用の第三者評価として有効。保存場所・法域リスクは未解決</td></tr><tr><td>第2層: 認証 + 契約</td><td>保存地域・準拠法・裁判管轄・監査権・返却・破棄条項を契約に明記</td><td>責任分界を明確化。外国法の強制命令は契約で無効化できない</td></tr><tr><td>第3層: 認証 + 契約 + 技術</td><td>CSE/HYOK、仮名化、DLP、JIT特権を導入</td><td>事業者経由の平文開示リスクを大幅低減。メタデータ・ログは残る</td></tr><tr><td>第4層: 認証 + 契約 + 技術 + 組織</td><td>TIA類似の法域影響評価、経営層承認、患者説明、定期エクスポート試験</td><td>残存リスクを明示的に受容し説明責任を果たす構成</td></tr></tbody></table><h4>GWSへの推奨階層</h4><p>GWSを医療情報の外部保存に利用する場合、<strong>第3層（認証 + 契約 + 技術）を最低ラインとし、第4層（+ 組織）を目標水準</strong>とすることを推奨する。第1層（認証のみ）や第2層（認証 + 契約）では、事業者が医療情報を平文で復号可能な状態が残り、CLOUD Actによる開示リスクに対する技術的防御がない。第3層でCSE/HYOKを導入することで事業者経由の平文開示リスクを大幅に低減でき、第4層でTIA・経営層承認・患者説明を加えることで、残存リスクの明示的受容と説明責任を果たす構成となる。</p></div>
+</section>
+<section class="review-block" id="framework-procedure">
+<h3>判断フレームワーク: 評価手順</h3>
+<div class="block-content"><ol><li><strong>認証による充足確認</strong>: 利用予定サービスのISMAP登録、対象サービス名、対象リージョン、対象機能、認証範囲を確認する。重なる観点については「第三者評価済み」の証拠として整理する</li><li><strong>差異観点の個別確認</strong>: 医療情報・ログ・メタデータ・バックアップ等をデータ種別ごとに分解し、各データ種別について保存場所・処理場所・バックアップ・障害時移転・運用者アクセス・再委託先を一覧化する。<a href="#qualitative-axes">定性7軸</a>・<a href="#quantitative-indicators">定量9指標</a>で評価する</li><li><strong>補完措置の設計</strong>: 差異観点のリスクレベルに応じて、契約条項・技術的対策（CSE/HYOK/仮名化等）・組織的対策（法域影響評価・経営層承認・患者説明等）を組み合わせる（階層モデルを参照）</li><li><strong>残存リスクの判定</strong>: 「受容しやすい」「条件付き受容」「原則不受容」の3段階で判定する。条件付き受容の場合は、経営層が明示的にリスクを受容し、その判断根拠を記録する</li><li><strong>文書化と継続管理</strong>: 委託先管理台帳、リスク受容記録、補完措置の実施記録、定期的な再評価計画を文書化する。サービス仕様適合開示書・JAHIS MDS/SDSとの照合も行う</li></ol></div>
+</section>
+<section class="review-block" id="gws-application">
+<h3>Google Workspaceへの適用 — 残存リスクとベネフィットの比較評価</h3>
+<div class="block-content"><h4>残存リスクの整理</h4><table><thead><tr><th>論点</th><th>ISMAPで解消済み</th><th>残存リスク</th><th>補完措置による低減</th></tr></thead><tbody><tr><td>保存場所</td><td>保管国の通知体制あり（米国/欧州と明示）</td><td>日本国内DCを指定できない</td><td>CSE導入で保存場所の意味を大幅に変える（事業者が平文を持たない）。定期エクスポートで国内にもコピーを保持</td></tr><tr><td>国内法適用</td><td>日本法準拠の契約締結可能、Google合同会社を契約主体に日本の裁判管轄を指定可能</td><td>情報機器の物理的法域が日本外</td><td>行政調査対応はエクスポートデータで対応可能。契約上の準拠法で当事者間の救済は確保</td></tr><tr><td>国外法リスク</td><td>リスク評価済み、透明性報告あり、通知・異議申立て方針あり</td><td>CLOUD Actの適用可能性は構造的に排除不能</td><td>CSE/HYOKで平文開示を技術的に阻止。法的請求条項で通知・最小化を契約化</td></tr></tbody></table><h4>ベネフィットの整理</h4><p>リスクは単独で評価するものではなく、そのサービスを利用することで得られるベネフィットとの比較で判断する。</p><table><thead><tr><th>ベネフィット</th><th>内容</th><th>代替手段との比較</th></tr></thead><tbody><tr><td>セキュリティ水準</td><td>ISMAP, ISO 27001/17/18, SOC 2, FedRAMP High等の第三者評価済み</td><td>同等の認証を取得している国内医療向けクラウドは限定的</td></tr><tr><td>可用性</td><td>SLA 99.9%以上、地理的冗長、24/365監視</td><td>国内中小事業者では同等のSLA提供が困難な場合がある</td></tr><tr><td>機能統合</td><td>メール、カレンダー、ドキュメント、ビデオ会議、チャットが統合</td><td>個別ツールの組み合わせは運用・セキュリティ管理の複雑性を増す</td></tr><tr><td>コスト</td><td>ユーザー単価が明確、インフラ運用不要</td><td>オンプレミスや国内クラウドは初期投資・運用人件費が加算</td></tr><tr><td>継続的改善</td><td>脆弱性対応、機能更新が自動適用</td><td>自前運用ではパッチ適用の遅延リスク</td></tr></tbody></table><h4>判断の構造</h4><p>残存リスクの核心は「日本国外に保存される」「CLOUD Actが存在する」という<strong>構造的事実</strong>である。これらは補完措置で影響を限定できるが、事実自体は消えない。</p><p>一方、このリスクを回避するために認証水準の低い国内事業者を選択すれば、保存場所・法域の要件は満たすが、セキュリティ・可用性・運用管理の面で別のリスクを抱える。</p><p>最終的な判断は、<strong>「保存場所・法域の残存リスク」と「セキュリティ水準・可用性・運用効率のベネフィット」を比較し、補完措置を含めた総合リスクが許容可能かどうか</strong>を経営層が判断する構成になる。この判断は「ガイドライン違反かどうか」ではなく「患者データの安全性を総合的に最大化できるか」という本来の目的に基づくべきである。</p></div>
+</section>
+<section class="review-block" id="layer3-header">
+<h2>第3層: あるべき姿 — 能力ベースアプローチへの展望</h2>
+<div class="callout info"><div class="co-ico">i</div><div><div class="co-body"><p>第2層で残る3要件をリスクベースで評価した。本層では、諸外国（特にHIPAA）との比較を通じて、医療データ保護が「どこに置くか」ではなく「どう守るか」で評価される方向性を考察する。</p></div></div></div>
+</section>
+<section class="review-block" id="hipaa-perspective">
+<h3>HIPAAの視点 — 能力ベースアプローチの全体像</h3>
+<div class="block-content"><p>米国のHIPAA（Health Insurance Portability and Accountability Act）は、医療データ保護に関する連邦法であり、日本の3省2ガイドラインとは根本的に異なるアプローチをとる。HIPAAは医療データの保存場所を規制せず、データを<strong>どう保護するか（能力）</strong>で評価する。法的強制力を持つ連邦法であるため、日本のガイドラインとは位置づけが異なるが、医療データ保護の設計思想として重要な参照点になる。</p><h4>HIPAAの基本構造</h4><table><thead><tr><th>要素</th><th>内容</th></tr></thead><tbody><tr><td>対象</td><td>Covered Entity（医療機関、保険者）とBusiness Associate（委託先事業者）</td></tr><tr><td>BAA（Business Associate Agreement）</td><td>委託先がPHI（保護対象医療情報）を扱う場合に<strong>法律で義務づけられた契約</strong></td></tr><tr><td>Security Rule</td><td>管理的・物理的・技術的セーフガードの実装を義務づけ</td></tr><tr><td>Privacy Rule</td><td>PHIの使用・開示の制限、最小限必要原則</td></tr><tr><td>Breach Notification Rule</td><td>情報漏えい時の通知義務（個人・HHS・メディア）</td></tr><tr><td>罰則</td><td>民事罰: 1件100ドル〜5万ドル（年間上限185万ドル）、刑事罰あり</td></tr></tbody></table><h4>HIPAAが保存場所を規定しない理由</h4><p>HIPAAは医療データの保存場所（国内/国外）を<strong>規定していない</strong>。米国の医療データが海外のサーバーに保存されることは、HIPAAの下では禁止されていない。HIPAAが重視するのは<strong>「どこにあるか」ではなく「どう守られているか」</strong>である。</p><ul><li>暗号化されているか（技術的セーフガード）</li><li>アクセス制御が適切か（管理的・技術的セーフガード）</li><li>BAA（委託先契約）が締結されているか</li><li>漏えい時の通知体制があるか</li><li>定期的なリスク分析が行われているか</li></ul><p>Google WorkspaceはHIPAA BAA対応サービスであり、BAA締結の上でPHI（保護対象医療情報）を取り扱うことが認められている。これは、Googleのセキュリティ体制が<strong>米国連邦法の基準で医療データを扱える水準</strong>にあることの証拠である。</p><h4>日本のガイドラインとの比較</h4><table><thead><tr><th>観点</th><th>HIPAA（米国連邦法）</th><th>厚労省GL（日本行政指針）</th></tr></thead><tbody><tr><td>法的強制力</td><td>あり（罰則付き連邦法）</td><td>ガイドライン自体に罰則なし。ただし省令義務の具体化基準として事実上の強制力あり</td></tr><tr><td>保存場所の規定</td><td>なし（能力ベース）</td><td>あり（国内法適用を遵守事項として記載）</td></tr><tr><td>委託先契約の義務</td><td>BAA必須（法律で義務化）</td><td>契約を推奨（ガイドラインで記載）</td></tr><tr><td>漏えい通知</td><td>法律で義務化（期限・対象・方法を規定）</td><td>ガイドラインで推奨</td></tr><tr><td>評価アプローチ</td><td>能力ベース（何をしているか）</td><td>事実確認ベース（どこにあるか）</td></tr></tbody></table><p>HIPAAは<a href="#hipaa-enforcement">罰則付きの連邦法</a>でありながら保存場所を規定せず、日本のガイドラインは省令義務の具体化基準（事実上の強制力あり）でありながら保存場所の確認を遵守事項としている。この構造の逆転は、日本の医療データ保護制度が<strong>場所ベースの確認に依存しすぎている</strong>可能性を示唆する。</p></div>
+</section>
+<section class="review-block" id="location-vs-capability">
+<h3>日本のガイドラインが場所ベースである構造的理由</h3>
+<div class="block-content"><h4>執行メカニズムの比較</h4>
+<table><thead><tr><th>比較軸</th><th>日本（3省2GL）</th><th>米国（HIPAA）</th></tr></thead><tbody><tr><td>クラウド事業者への法的義務</td><td>ガイドライン（法的拘束力なし）</td><td>BAA（法定の契約義務）</td></tr><tr><td>執行の対象</td><td><strong>医療機関のみ</strong>（海外事業者に直接及ばない）</td><td><strong>Covered Entity + Business Associate</strong>（事業者も直接の義務主体）</td></tr><tr><td>違反時の罰則</td><td>直接の罰金規定なし</td><td>民事罰 最大約200万ドル/年 + 刑事罰 最大10年</td></tr><tr><td>漏えい時の公表義務</td><td>個人情報保護法で義務化（2022年〜）</td><td>厳格な3段階通知義務（個人・HHS・メディア）</td></tr><tr><td>立入検査・監査</td><td>医療法第25条（行政指導 → 措置命令）</td><td>OCR（公民権局）による監査・調査</td></tr><tr><td>保存場所の規定</td><td>確認を求める（ガイドライン）</td><td>規定なし</td></tr><tr><td>海外側の法律リスク</td><td>データ所在地を国内に限定して<strong>回避</strong></td><td>BAA + 違反コスト設計で<strong>抑止</strong></td></tr></tbody></table>
+<h4>場所で補償する構造</h4><p>日本のガイドラインが「保存場所」「国内法適用」「国外法リスク」を明示的に要件とする背景には、HIPAAのような執行構造がないことがある。</p><ul><li><strong>執行が医療機関にしか及ばない</strong>: 海外のクラウド事業者に対して日本の規制当局が直接義務を課す法的根拠がない。HIPAAのBAA相当の法定契約義務も存在しない（ガイドラインの推奨にとどまる）</li><li><strong>行政指導に法的拘束力がない</strong>: エスカレーション経路の第一段階である行政指導について、行政手続法第32条は「行政指導に従わなかったことを理由として不利益な取扱いをしてはならない」と定めており、法的強制力を持たない</li><li><strong>違反に対する高額の罰金制度がない</strong>: HIPAA のような「違反コストを十分に高くして抑止する」仕組みが制度として存在しない</li></ul><p>執行メカニズムが弱い環境では、データの物理的所在を国内に限定することで、「最悪の事態でも日本法が適用される」「行政が物理的にアクセスできる」という担保を確保するしかない。これは<strong>執行力の不足を場所で補償する構造</strong>であり、能力が低いわけではなく、制度設計の前提が異なることによる帰結である。</p><h4>v6.0のリスクベースアプローチはこの構造を部分的に緩和する</h4>
+<p>3省2ガイドライン v6.0がリスクベースアプローチに転換したことは、「場所の0/1判定」から「リスク評価に基づく判断」への移行を意味する。ISMAPのような外部認証を取得し、データリージョンを日本に設定し、CLOUD Act等のリスクを評価した上でリスク受容する判断は、v6.0の枠組みの中で合理的に位置づけられる。</p></div>
+</section>
+<section class="review-block" id="two-paths">
+<h2>結論: 短期的リスク受容と中長期的制度整備</h2>
+<div class="block-content"><p>第2層ではガイドラインの3要件をリスクベースで評価し、GWSが「条件付き受容」に該当すること、補完措置により残存リスクを低減できることを示した。第3層では国際比較を通じて、日本のガイドラインが場所ベースである構造的理由と、能力ベースへの移行の方向性を考察した。本章では、これらの分析を踏まえ、医療機関が取り得る2つの道を提示する。</p><h3>道A: 現行制度下でのリスク受容（短期）</h3><p>以下は医療機関が<strong>内部の意思決定プロセス</strong>として行うフレームワークである。患者や行政への外部開示を前提としたものではなく、組織としてGWS利用の判断根拠を整理・記録し、立入検査等で求められた場合に提示できるよう備えるものである。</p><p>現行の法律は医療データの国内保存を義務づけていない。ガイドラインは国内法適用の確認を遵守事項としている。ガイドライン違反に直接の罰則はないが、省令義務の具体化基準として事実上の強制力を有する。したがって、以下の条件を満たした上でGWSの利用を開始することは、<strong>法律・省令に直接違反するものではなく、リスクを取れる判断</strong>である。</p><ol><li><strong>法律上の義務は充足</strong>: 個人情報保護法の安全管理措置（ISMAPで実質的にカバー）、医療法の保存義務（電子保存の要件を満たす）</li><li><strong>ガイドライン逸脱の明示</strong>: 保存場所・国内法適用・国外法リスクの3点についてガイドラインの遵守事項を文言通りには満たさないことを文書化</li><li><strong>リスク低減の証拠</strong>: ISMAP認証、HIPAA BAA対応、CSE/HYOK等の補完措置により、ガイドラインの趣旨（医療データの安全管理）は実質的に達成されていることを整理</li><li><strong>経営層の明示的判断</strong>: 残存リスクとベネフィットを比較した上で、経営層が明示的にリスクを受容し、その判断根拠を記録</li><li><strong>定期的な再評価</strong>: ガイドライン改定、法改正、サービス変更に応じて判断を見直す仕組みを構築</li></ol><p><strong>リスク</strong>: 3要件は立入検査チェックリストに含まれておらず、定期検査で直接問われる蓋然性は低い。ただし、ガイドライン逸脱として行政指導の対象となる可能性はある（罰則なし）。また、医療事故・漏えい発生時にはチェックリストの有無にかかわらずガイドライン全体に照らした調査が行われうるため、逸脱が注目される可能性、医療機関の評価・認定への影響の可能性がある。</p><h3>道B: HIPAA的な能力ベース制度の整備（中長期）</h3><p>日本の医療データ保護制度がHIPAAのような能力ベースのアプローチに移行するなら、以下の方向性が考えられる。</p><ol><li><strong>法律レベルでの医療データ保護</strong>: 個人情報保護法の医療分野ガイダンスを格上げし、医療データ専用の法的枠組みを整備する（HIPAA的な位置づけ）</li><li><strong>BAA相当の契約義務化</strong>: 医療データを扱う委託先との間で、セキュリティ要件・漏えい通知・監査権・データ返却等を法律で義務化する（現行はガイドライン推奨）</li><li><strong>場所ベースから能力ベースへの転換</strong>: 「どこにあるか」ではなく「どう守られているか」を評価基準とする。ISMAP等の第三者認証を能力証明として法的に位置づける</li><li><strong>漏えい通知の法定化</strong>: 医療データの漏えい通知について、対象・期限・方法・罰則を法律で明確化する</li></ol><p>この方向に制度が整備された場合、ISMAP認証済みかつHIPAA BAA対応のGWSは、保存場所にかかわらず<strong>能力ベースの基準を満たすサービス</strong>として位置づけられることになる。逆に、外部認証を持たない国内事業者は、国内DCで運用していても能力証明が求められることになる。</p><p><strong>現時点での意義</strong>: 道Bは将来の制度変更の可能性であり、現行制度下での判断に直接適用することはできない。しかし、道Aの「短期的リスク受容」を判断する際に、制度の方向性として「能力ベースへの移行は合理的」という論拠は、リスク受容の判断根拠を補強する。</p></div>
+</section>
+<section class="review-block" id="small-clinic-assessment">
+<h2>適用例: 20床以下の有床診療所における評価</h2>
+<div class="block-content"><p>前章で示した道A（現行制度下でのリスク受容）を、20床以下の有床診療所に適用した場合の評価を具体的に行う。</p>
+
+<h3>想定する診療所の特性</h3>
+<table>
+<thead><tr><th>項目</th><th>典型的な状況</th></tr></thead>
+<tbody>
+<tr><td>病床数</td><td>19床以下（医療法上「診療所」に分類）</td></tr>
+<tr><td>IT体制</td><td>専任の情報システム担当者がいない。電子カルテベンダーやIT保守業者に依存</td></tr>
+<tr><td>セキュリティ対策の現状</td><td>ファイアウォール・ウイルス対策は導入済みだが、暗号化・ログ監視・インシデント対応手順は未整備の場合が多い</td></tr>
+<tr><td>現行のデータ管理</td><td>院内サーバーまたは小規模NASに保存。バックアップは外付けHDDやUSBメモリで手動運用</td></tr>
+<tr><td>予算</td><td>ITセキュリティへの年間投資額は限定的。専用セキュリティ製品の導入は困難</td></tr>
+</tbody>
+</table>
+
+<h3>この規模での3要件のリスク評価</h3>
+<p>20床以下の診療所では、3要件の実務上のリスクは大規模病院と異なる。</p>
+
+<table>
+<thead><tr><th>要件</th><th>大規模病院でのリスク</th><th>20床以下診療所でのリスク</th></tr></thead>
+<tbody>
+<tr><td>保存場所</td><td>大量の患者データ。地域医療の基幹として行政の注目度が高い</td><td>患者データ量は相対的に少ない。立入検査の頻度も低く、チェックリスト外の論点が問われる蓋然性はさらに低い</td></tr>
+<tr><td>国内法適用</td><td>法務部門が契約条件を精査可能</td><td>法務リソースが限られるが、Google合同会社との日本法準拠契約で対応可能</td></tr>
+<tr><td>国外法リスク</td><td>大規模データへの外国政府アクセスは注目度が高い</td><td>小規模診療所の患者データが外国政府の関心対象となる蓋然性は極めて低い</td></tr>
+</tbody>
+</table>
+
+<h3>代替手段との現実的な比較</h3>
+<p>この規模の診療所がGWSを避けて国内保存を選択した場合、現実的な代替手段は以下のいずれかになる。</p>
+
+<table>
+<thead><tr><th>代替手段</th><th>3要件の充足</th><th>セキュリティ上の課題</th></tr></thead>
+<tbody>
+<tr><td>院内サーバー（自前運用）</td><td>充足（国内保存・国内法適用）</td><td>パッチ適用の遅延、バックアップの不備、物理セキュリティの限界、災害時のデータ喪失リスク。<strong>ランサムウェア被害の大半がこの構成</strong></td></tr>
+<tr><td>国内中小クラウド</td><td>充足（国内DC・国内法準拠）</td><td>外部認証未取得の事業者が多い。SLA・監査体制・インシデント対応力がGWSに大きく劣る場合がある</td></tr>
+<tr><td>大手国内クラウド（AWS東京等）</td><td>部分的（AWS自体は米国企業であり、CLOUD Actの適用可能性は同じ）</td><td>セキュリティ水準は高いが、3要件の問題はGWSと同構造。かつISMAP登録はサービス単位であり、GWSと同等のカバー範囲とは限らない</td></tr>
+</tbody>
+</table>
+
+<p>20床以下の診療所において<strong>最も蓋然性の高いセキュリティリスクは、3要件の不充足ではなく、院内サーバーの脆弱性に起因するランサムウェア感染やデータ喪失</strong>である。厚生労働省の注意喚起においても、医療機関のサイバーセキュリティ対策の強化が繰り返し求められており、その中心は基本的な安全管理措置の徹底にある。</p>
+
+<h3>推奨する補完措置</h3>
+<p>この規模の診療所では、補完措置の階層モデルのうち第1層〜第2層が現実的な対応範囲になる。</p>
+
+<ol>
+<li><strong>第1層: 認証の活用</strong>（追加コストなし）: GWSのISMAP登録・ISO認証を委託先選定の根拠として文書化する</li>
+<li><strong>第2層: 契約条項の整備</strong>（追加コスト小）: Google合同会社との契約で準拠法・裁判管轄・監査権・データ返却条項を確認・記録する。Business Plusプラン以上であればデータリージョン設定も活用する</li>
+<li><strong>第3層: 技術的措置</strong>（検討事項）: CSE（クライアントサイド暗号化）の導入はEnterprise Plus以上のプランが必要であり、コストと運用負荷を勘案して判断する。導入しない場合はその判断根拠を記録する</li>
+</ol>
+
+<h3>総合評価</h3>
+<p>20床以下の有床診療所がGWSを道Aで採用する場合の評価は以下のとおりである。</p>
+
+<table>
+<thead><tr><th>評価項目</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td>法律上の障壁</td><td>なし（第1層で確認済み）</td></tr>
+<tr><td>ガイドライン3要件</td><td>文言上は不充足だが、立入検査チェックリスト外であり即時対応の優先度は低い</td></tr>
+<tr><td>ISMAP評価</td><td>セキュリティの技術的・組織的管理は医療GLの大半をカバー</td></tr>
+<tr><td>代替手段との比較</td><td>院内サーバー運用のセキュリティリスク（ランサムウェア・データ喪失）のほうが、3要件の不充足リスクより蓋然性・影響度ともに高い</td></tr>
+<tr><td>ガイドラインの趣旨との整合</td><td>患者データの安全管理という趣旨に照らせば、GWS採用はリスクを低減する方向の判断</td></tr>
+<tr><td>3段階判定</td><td>条件付き受容（第2層の補完措置を前提）</td></tr>
+</tbody>
+</table>
+
+<h3>定期的な見直し</h3>
+<p>道Aは「現時点での判断」であり、前提条件の変化に応じて見直す仕組みが必要である。</p>
+
+<table>
+<thead><tr><th>見直しトリガー</th><th>確認内容</th><th>頻度・タイミング</th></tr></thead>
+<tbody>
+<tr><td>ガイドライン改定</td><td>3要件の記載に変更がないか、リスクベースアプローチの位置づけに変更がないか</td><td>改定時（不定期。改定情報は厚労省サイトで公表される）</td></tr>
+<tr><td>法改正</td><td>個人情報保護法・医療法等の改正で、クラウド外部保存に関する新たな義務が追加されていないか</td><td>改正時</td></tr>
+<tr><td>GWSのサービス変更</td><td>データリージョン選択肢の追加（日本リージョン対応等）、ISMAP登録の更新状況、契約条件の変更</td><td>年1回 + サービス変更通知時</td></tr>
+<tr><td>セキュリティインシデント</td><td>GWSに関するデータ漏えい・不正アクセス事案の発生。自院の漏えい・事故発生時</td><td>発生時</td></tr>
+<tr><td>立入検査</td><td>検査でクラウド外部保存について指摘を受けた場合、判断根拠の見直しと対応方針の再検討</td><td>検査後</td></tr>
+<tr><td>定期レビュー</td><td>上記トリガーがなくても、判断根拠と補完措置の有効性を確認する</td><td>年1回（例: 年度末の情報セキュリティ委員会等）</td></tr>
+</tbody>
+</table>
+
+<p>見直しの結果は判断根拠の文書に追記し、経営層の承認を得て記録する。前提条件が大きく変わった場合（例: 日本リージョンが利用可能になった場合や、ガイドラインが3要件を必須化した場合）は、判定そのものを再評価する。</p>
+
+<p><strong>結論</strong>: 20床以下の有床診療所にとって、GWSの採用は「ガイドラインの3要件を文言通りには満たさないが、患者データの安全性を総合的に高める合理的な判断」と位置づけられる。経営層がこの判断根拠を文書化し、補完措置（少なくとも第1層・第2層）を実施し、定期的に再評価する体制を整えることが、道Aにおける実務上の要件となる。</p></div>
+</section>
+<section class="review-block" id="appendix-header">
+<h2>参考: 法令詳細分析・認証データ・原文対比</h2>
+<div class="callout info"><div class="co-ico">i</div><div><div class="co-body"><p>本章は、本文の各層で示した評価結果の根拠となる詳細分析を収録する。第1層の対象法令ごとの分析、第2層で参照したISMAP管理基準と医療ガイドラインの原文対比・認証カバレッジ、第3層のHIPAA執行メカニズムの詳細を含む。</p></div></div></div>
+</section>
+<section class="review-block" id="legal-appi">
+<h3>個人情報保護法 — 委託・外国提供・本人請求</h3>
+<div class="block-content"><p>個人情報保護法上の論点は、既存レポートのセクション3で詳細に分析済みである。要点を以下に整理する。</p>
+<h4>委託（第27条第5項第1号）</h4>
+<p>GWSへの医療情報保存は、個人情報保護法上の「委託」に該当する。委託の場合、第三者提供には当たらず本人同意は不要だが、委託元（医療機関）は委託先（Google）に対する監督義務（第25条）を負う。</p>
+<p>監督義務の内容として、(1) 適切な委託先の選定、(2) 委託契約における安全管理措置の明確化、(3) 委託先における取扱状況の把握 が求められる。Googleは業務委託契約（DPA）を提供しており、これらの要件を充足する契約構成が可能。</p>
+<h4>外国にある第三者への提供（第28条）</h4>
+<p>Googleは米国法人であり、データが外国で取り扱われる可能性がある。ただし、第28条第1項各号のいずれかに該当すれば適法となる。</p>
+<p>GWSの場合、<strong>「基準適合体制」ルート（第28条第1項第2号）</strong>を使う。Googleは個人情報保護委員会規則で定める基準に適合する体制（APPI相当の安全管理措置）を整備しており、データ処理規約（DPA）でこの体制を約束している。本人同意は不要。</p>
+<h4>本人請求時の情報提供（第33条の2）</h4>
+<p>基準適合体制ルートを使う場合、本人から請求があった際に、(1) 提供先の国名、(2) 当該国の個人情報保護制度、(3) 提供先が講じている措置 を情報提供する義務がある。Googleはこの情報提供に必要な資料（ホワイトペーパー、DPA等）を公開している。</p>
+<h4>結論</h4>
+<p>個人情報保護法上、GWSを医療情報のクラウド外部保存に利用することに法的障壁はない。委託先監督義務と基準適合体制の整備を適切に行えば、法的要件を充足できる。</p></div>
+</section>
+<section class="review-block" id="legal-medical-act">
+<h3>医療法・医師法・e-文書法 — 電子保存の法的根拠</h3>
+<div class="block-content"><h4>医師法第24条: 診療録の保存義務</h4>
+<p>医師は診療録を5年間保存する義務を負う（医師法第24条第2項）。この保存義務は紙媒体に限定されておらず、e-文書法（民間事業者等が行う書面の保存等における情報通信の技術の利用に関する法律）により電子的な保存が認められている。</p>
+<h4>e-文書法と電子保存の3要件</h4>
+<p>e-文書法に基づく厚生労働省令により、診療録等の電子保存には以下の3要件を満たすことが求められる。</p>
+<ol>
+<li><strong>真正性</strong>: 作成責任者の識別・認証、改ざん防止</li>
+<li><strong>見読性</strong>: 必要に応じて肉眼で見読可能な形式で表示・印刷できること</li>
+<li><strong>保存性</strong>: 法令で定める保存期間にわたり復元可能な状態で保存されること</li>
+</ol>
+<p>GWSはこれらの要件を技術的に充足できる。アクセスログによる作成者の識別、暗号化による改ざん防止、ブラウザ・アプリからの即時表示、冗長化ストレージによる長期保存がそれぞれ対応する。</p>
+<h4>療担規則第9条: 保険医療機関の帳簿保存</h4>
+<p>保険医療機関は診療録・帳簿を整備し保存する義務を負う（保険医療機関及び保険医療養担当規則第9条）。外部保存については、厚労省通知「診療録等の保存を行う場所について」（医政発第0329003号）により、電子媒体による外部保存が認められている。</p>
+<h4>医療法施行規則第14条第2項</h4>
+<p>令和5年改正で新設された同条項は、病院等の管理者に「サイバーセキュリティを確保するために必要な措置」を講じることを義務付ける。ただし、「サイバーセキュリティ」と「データ主権・法域」は異なる概念であり、保存場所・国内法適用・国外法リスクの3要件は同条の直接的な射程に入るかは論点がある。この点は本文第2層（省令からガイドラインへの法的連鎖）で分析している。</p>
+<h4>結論</h4>
+<p>医療法・医師法・e-文書法の観点で、GWSを電子的な外部保存先として利用することに法的障壁はない。電子保存の3要件（真正性・見読性・保存性）はGWSの技術的機能で充足可能である。</p></div>
+</section>
+<section class="review-block" id="legal-criminal-duty">
+<h3>守秘義務 — 刑法・各業法・民法</h3>
+<div class="block-content"><h4>刑法第134条: 秘密漏示罪</h4>
+<p>医師が「正当な理由がないのに、その業務上取り扱ったことについて知り得た人の秘密を漏らしたとき」は、6月以下の懲役又は10万円以下の罰金に処せられる。</p>
+<p>クラウドサービスへの医療情報の保存が「秘密を漏らす」行為にあたるかが論点となる。通説・実務上、<strong>正当な業務委託であり、委託先との間で守秘義務契約が締結されている場合は「漏示」にあたらない</strong>と解される。Googleとの業務委託契約（DPA）に守秘義務条項が含まれており、この要件を満たす。</p>
+<h4>各業法の守秘義務</h4>
+<table>
+<thead><tr><th>法令</th><th>対象者</th><th>罰則</th></tr></thead>
+<tbody>
+<tr><td>刑法第134条</td><td>医師、薬剤師、助産師 等</td><td>6月以下の懲役 / 10万円以下の罰金</td></tr>
+<tr><td>保健師助産師看護師法第42条の2</td><td>保健師、看護師、准看護師</td><td>6月以下の懲役 / 10万円以下の罰金</td></tr>
+<tr><td>感染症法第73条・第74条</td><td>医療従事者・業務関係者</td><td>1年以下の懲役 / 100万円以下の罰金</td></tr>
+<tr><td>精神保健福祉法第53条</td><td>精神科病院管理者、指定医 等</td><td>1年以下の懲役 / 100万円以下の罰金</td></tr>
+<tr><td>がん登録推進法第52条</td><td>がん登録事務従事者</td><td>2年以下の拘禁刑 / 100万円以下の罰金</td></tr>
+<tr><td>難病法第43条・第44条</td><td>審査会委員、委託先職員 等</td><td>1年以下の拘禁刑 / 100万円以下の罰金</td></tr>
+</tbody>
+</table>
+<p>いずれの守秘義務も、情報の保存場所・保存方法を直接規制するものではない。クラウド保存自体が「秘密を漏らす」行為にあたるのではなく、<strong>不十分なセキュリティ措置により漏えいが発生した場合</strong>に守秘義務違反が問われうる。GWSの技術的安全管理措置（暗号化、アクセス制御、監査ログ）と業務委託契約上の守秘義務条項により、適切な体制を構築できる。</p>
+<h4>民法第644条: 善管注意義務</h4>
+<p>診療契約は準委任契約（民法第656条）と解され、医療機関は善管注意義務（第644条）を負う。患者情報の管理もこの義務の範囲に含まれる。GWSのような外部認証（ISMAP等）を取得したクラウドサービスの利用は、善管注意義務を果たすための適切な手段と評価できる。</p></div>
+</section>
+<section class="review-block" id="legal-other">
+<h3>その他の関係法令</h3>
+<div class="block-content"><h4>労働安全衛生法</h4>
+<p>事業者は健康診断個人票を5年間（特殊健診の一部は30年間）、ストレスチェック結果を5年間保存する義務を負う。e-文書法により電子保存が認められており、GWSでの保存は技術的に可能。ただし、ストレスチェック結果は実施者・実施事務従事者以外への閲覧を厳格に制限する必要があり、GWSのアクセス制御設定で対応する。</p>
+<h4>介護保険法・障害者総合支援法</h4>
+<p>いずれもサービス提供記録の5年間保存義務と秘密保持義務を定めるが、クラウド保存を直接規制する条文はない。個人情報保護法の安全管理措置義務との重畳適用の下で、GWSの利用は可能。</p>
+<h4>臓器移植法</h4>
+<p>臓器あっせん機関の秘密保持義務（第13条）と帳簿保存義務（第14条、5年間）を定めるが、クラウド保存に関する直接的な規制はない。</p>
+<h4>関係しない法令</h4>
+<ul>
+<li><strong>薬機法</strong>: GWSは医療機器プログラムに該当しない。GWSは汎用的なクラウドサービスであり、疾病の診断・治療・予防を目的とするプログラムではない。</li>
+<li><strong>電気通信事業法</strong>: Googleは電気通信事業者としての届出を行っているが、通信の秘密保護義務はクラウド保存の適法性に追加の制約を課すものではない。</li>
+<li><strong>電子署名法</strong>: 電子カルテの真正性確保はe-文書法・3省2ガイドラインの要件であり、電子署名法の直接的な適用場面は限定的。</li>
+<li><strong>母子保健法</strong>: 民間事業者のクラウド保存を規制する法律ではない。</li>
+</ul></div>
+</section>
+<section class="review-block" id="ismap-registration">
+<h3>ISMAP登録状況</h3>
+<div class="block-content"><p>GWSが取得している認証のうち、医療情報の外部保存におけるリスクを最も幅広くカバーするのがISMAP登録である。ISMAPは政府が調達するクラウドサービスのセキュリティ要件適合を第三者が評価・登録する制度であり、技術的安全管理（暗号化・アクセス制御・監査ログ等）、組織的安全管理（ガバナンス・方針・責任体制）、運用管理（BCP・インシデント対応）、委託先管理（サプライチェーン）を包括的に評価対象とする。本章ではGWSのISMAP登録をベースラインとし、医療GLが追加で求める要件との差分を特定することで、追加対応が必要な範囲を明確にする。</p><p>Google WorkspaceはISMAP公式クラウドサービスリストに、Google Cloud Platformとは別のクラウドサービスとして登録されている。</p><table><thead><tr><th>サービス</th><th>登録番号</th><th>事業者</th><th>備考</th></tr></thead><tbody><tr><td>Google Workspace</td><td>C21-0005-2</td><td>Google LLC</td><td>2026/03/02 更新申請中、登録有効</td></tr><tr><td>Google Cloud Platform</td><td>C21-0004-2</td><td>Google LLC</td><td>別登録。GCPの登録をGWSに読み替えることはできない</td></tr></tbody></table><p>GWSの言明対象範囲には、Admin Console、Gmail、Calendar、Drive、Docs、Sheets、Meet、Chat、Vault、Gemini for Google Workspace等が含まれる。基盤の一部（Google Cloud Storage等）はGCP登録側の対象。ISMAP-LIUリストではGoogleの登録は確認できず、通常ISMAPとして整理する。</p></div>
+</section>
+<section class="review-block" id="certifications">
+<h3>取得認証一覧</h3>
+<div class="block-content"><table><thead><tr><th>認証</th><th>取得状況</th><th>対象範囲</th></tr></thead><tbody><tr><td>ISO/IEC 27001</td><td>取得済</td><td>Google Cloud / Google Workspace</td></tr><tr><td>ISO/IEC 27017</td><td>取得済</td><td>クラウドセキュリティ管理策</td></tr><tr><td>ISO/IEC 27018</td><td>取得済</td><td>クラウド上の個人識別情報保護</td></tr><tr><td>ISO/IEC 27701</td><td>取得済</td><td>プライバシー情報管理</td></tr><tr><td>SOC 2 Type II</td><td>取得済</td><td>Compliance Reports Managerで確認</td></tr><tr><td>SOC 3</td><td>取得済</td><td>SOC 2と同範囲の公開レポート</td></tr><tr><td>CSA STAR Level 2</td><td>取得済</td><td>Google Cloud / Workspace</td></tr><tr><td>FedRAMP High</td><td>取得済</td><td>米国政府向け。対応版の構成確認が必要</td></tr><tr><td>BSI C5</td><td>取得済</td><td>ドイツ政府向けクラウド統制カタログ</td></tr><tr><td>MTCS</td><td>取得済</td><td>シンガポール</td></tr><tr><td>HIPAA BAA</td><td>対応可能</td><td>BAA締結が前提。対象機能リストの範囲内に限定</td></tr><tr><td>ISMAP</td><td>C21-0005-2</td><td>日本政府調達向け</td></tr></tbody></table></div>
+</section>
+<section class="review-block" id="three-categories">
+<h3>3分類の整理</h3>
+<div class="block-content"><ul><li><strong>(a) 重なる観点（認証で充足可能）</strong>: ガバナンス、リスクアセスメント、アクセス制御、暗号化、可用性、サプライチェーン、セキュア開発<br>→ ISMAP登録は「これらの観点について第三者評価済み」の証拠として使える。医療機関の委託先選定で「この事業者は技術的・運用的な安全管理能力を持つ」ことの根拠になる。</li><li><strong>(b) 重なるが追加確認必須（認証だけでは不十分）</strong>: 保存場所、国内法適用、国外法リスク、契約終了・返却<br>→ ISMAPにも管理策は存在するが、医療GLはサービス個別の確認を医療機関の責任として求める。以下で3論点ごとに原文を対比し、差異の構造と程度を分析する。</li><li><strong>(c) 医療GL固有（認証では代替不可）</strong>: 患者説明・説明責任<br>→ 医療機関固有の義務であり、クラウドサービスの認証では代替できない。</li></ul></div>
+</section>
+<section class="review-block" id="domestic-paradox">
+<h3>比較: ISMAP認証済み外資 vs 未認証国内事業者</h3>
+<div class="block-content"><p>「国内事業者・国内DC」というだけで安全と判断するリスクを可視化するため、2つの仮想的な選択肢を比較する。</p><table><thead><tr><th>評価軸</th><th>A: ISMAP認証済み外資クラウド<br>（例: GWS）</th><th>B: 未認証の国内事業者<br>（国内DC運用）</th></tr></thead><tbody><tr><td>保存場所</td><td>米国/欧州（日本指定不可）</td><td>日本国内DC</td></tr><tr><td>国内法適用</td><td>物理的法域は米国/欧州</td><td>日本法が適用</td></tr><tr><td>国外法リスク</td><td>CLOUD Act等の適用あり</td><td>原則なし</td></tr><tr><td>第三者セキュリティ評価</td><td>ISMAP, ISO 27001/17/18, SOC 2, FedRAMP等 — 複数の独立した監査機関による継続的評価</td><td>なし。自己申告のみ</td></tr><tr><td>暗号化</td><td>保存時・通信時の暗号化が標準。CSE/HYOKオプションあり</td><td>実装水準は不明。監査されていない</td></tr><tr><td>アクセス制御</td><td>ゼロトラスト、JIT特権、MFA、詳細監査ログ</td><td>実装水準は不明</td></tr><tr><td>可用性・BCP</td><td>SLA 99.9%以上、地理的冗長、定期DR訓練</td><td>SLA・DR体制は不明</td></tr><tr><td>インシデント対応</td><td>専門チーム常設、透明性報告、脆弱性報奨金制度</td><td>体制・実績は不明</td></tr><tr><td>サプライチェーン管理</td><td>サブプロセッサ一覧公開、変更通知あり</td><td>再委託先の透明性は不明</td></tr></tbody></table><p>ガイドラインの保存場所・国内法・国外法の3要件を0/1で適用すると、<strong>Bが「適合」、Aが「不適合」</strong>になる。しかし、患者データに対する実質的な保護水準はAの方が圧倒的に高い。</p><p>この比較が示すのは、<strong>保存場所・法域の要件は、セキュリティ要件全体の一部にすぎない</strong>ということである。保存場所の要件だけを絶対視して他の要件を軽視すれば、総合的なリスクはむしろ上がる。外部認証は保存場所・法域リスクを直接解消しないが、<strong>セキュリティ全体のリスクを大幅に下げることで、法域リスクが顕在化した場合の影響を限定する効果</strong>がある（CSE導入済みなら、仮にCLOUD Actに基づく開示命令が出ても平文が渡らない等）。</p></div>
+</section>
+<section class="review-block" id="hipaa-enforcement">
+<h3>HIPAAが場所を不問にできる理由 — 執行メカニズムの強度</h3>
+<div class="block-content"><h4>BAA（Business Associate Agreement）</h4>
+<p>HIPAAは、医療情報（PHI: Protected Health Information）を取り扱う全ての事業者に対して、BAA（業務提携契約）の締結を法律で義務付ける。BAAはガイドラインの推奨ではなく法的義務であり、違反には罰則が伴う。</p>
+<p>クラウドサービス事業者はBusiness Associate（業務提携者）として位置づけられ、BAA を通じて HIPAA Security Rule の遵守を契約上も法律上も義務付けられる。Google は Google Cloud / Workspace の BAA を提供している。</p>
+<h4>Security Rule — 技術的安全管理措置</h4>
+<p>HIPAA Security Rule は、アクセス制御、監査制御、完全性制御、伝送セキュリティ等を「場所を問わず」義務付ける。サーバがどこにあっても、これらの措置を実装していれば適合となる。</p>
+<h4>Breach Notification Rule — 漏えい時の通知義務</h4>
+<p>500人以上の患者に影響する漏えいが発生した場合、(1) 影響を受けた個人への通知、(2) HHS（保健福祉省）への報告、(3) メディアへの通知 が義務付けられる。この「公開処刑」に近い仕組みが強力な抑止力として機能する。</p>
+<h4>罰則の段階</h4>
+<table>
+<thead><tr><th>違反の程度</th><th>罰金（1件あたり）</th><th>年間上限</th></tr></thead>
+<tbody>
+<tr><td>認識なし</td><td>$137〜$68,928</td><td>$2,067,813</td></tr>
+<tr><td>合理的な原因あり</td><td>$1,379〜$68,928</td><td>$2,067,813</td></tr>
+<tr><td>故意の怠慢（是正あり）</td><td>$13,785〜$68,928</td><td>$2,067,813</td></tr>
+<tr><td>故意の怠慢（是正なし）</td><td>$68,928</td><td>$2,067,813</td></tr>
+</tbody>
+</table>
+<p>さらに、故意の違反には刑事罰（最大10年の禁固・$250,000の罰金）が科される可能性がある。</p>
+<h4>場所を不問にできる理由 — 外国法リスクの処理構造</h4><p>HIPAAが保存場所を規制しないのは、<strong>場所に依存せず執行力が及ぶ仕組み</strong>を備えているからである。</p><p><strong>契約による管轄権の延長</strong>: BAAにより、Business Associateはデータの物理的所在にかかわらずHIPAAの義務を負い、米国の裁判管轄に服する。日本のガイドラインが「国内法適用の確認」として場所で担保しようとしている問題を、HIPAAは契約メカニズムで解決している。</p><p><strong>外国政府からのアクセス要求への対応</strong>: データが海外にある場合、当該国の政府が自国法に基づいてデータの開示を要求する可能性がある。この場合でも、BAAのもとでは開示はHIPAA違反となり、民事罰（最大年間約200万ドル）・刑事罰（最大10年の禁固）の対象となる。つまり、外国政府に応じるコストがHIPAA違反のコストを下回る場合にのみ開示が合理的になるよう、<strong>違反コストを十分に高く設計する</strong>ことで抑止している。</p><p>大手クラウド事業者（Google、Microsoft、AWS等）にとっては、HIPAA違反による罰金・刑事罰に加え、米国医療市場へのアクセス喪失という事業リスクが加わるため、外国政府の要求に安易に応じる経済的合理性がない。実際にこれらの事業者は政府からのアクセス要求を法的に争い、透明性レポートで公表する運用を行っている。</p><p><strong>まとめ</strong>: HIPAAは外国法リスクを「消す」のではなく、(1) BAAで契約管轄権を延長し、(2) 違反コストを十分に高く設計し、(3) 漏えい通知で隠蔽を不可能にすることで、合理的な事業者がリスクを取らない構造を作っている。「どこに置くか」ではなく「違反したらどうなるか」で担保する仕組みである。</p></div>
+</section>
+<section class="review-block" id="comparison-matrix">
+<h3>ISMAP管理基準 vs 医療GL要件: 観点の重なりと差異</h3>
+<div class="block-content"><table><thead><tr><th>観点</th><th>ISMAP管理基準</th><th>医療GL第6.0版</th><th>分類</th></tr></thead><tbody><tr><td>ガバナンス・方針・責任体制</td><td>情報セキュリティ体制を要求</td><td>経営層・企画管理者・委員会・委託先管理を要求</td><td>重なり</td></tr><tr><td>リスクアセスメント・監査・証跡</td><td>リスク基準・対応・内部監査・適合性監査</td><td>リスク分析・証跡整備・点検・監査・経営層報告</td><td>重なり</td></tr><tr><td>アクセス制御・認証・権限管理</td><td>ID管理・認証・アクセス権・特権管理・ログ監視を詳細化</td><td>利用者登録・認証・権限設定・監査</td><td>重なり</td></tr><tr><td>暗号化・鍵管理・通信保護</td><td>暗号管理策・鍵管理・通信保護</td><td>保存・通信・持ち出しの安全管理</td><td>重なり</td></tr><tr><td>可用性・BCP・インシデント対応</td><td>バックアップ・冗長化・監視・インシデント管理・事業継続</td><td>非常時対応・BCP・サイバー攻撃対応・委託終了時対応</td><td>重なり</td></tr><tr><td>サプライチェーン・再委託</td><td>サプライヤ関係・ICTサプライチェーン・委託先管理</td><td>再委託を含む委託先監督・契約条項・事業者選定</td><td>重なり</td></tr><tr><td>セキュア開発・脆弱性・変更管理</td><td>技術的管理策として詳細に扱う</td><td>技術的安全管理対策として扱う</td><td>重なり（ISMAP側が詳細）</td></tr><tr><td><strong>保存場所・データセンター所在地</strong></td><td>→ 下記で原文対比</td><td>→ 下記で原文対比</td><td><strong>重なるが追加確認必須</strong></td></tr><tr><td><strong>国内法の適用</strong></td><td>→ 下記で原文対比</td><td>→ 下記で原文対比</td><td><strong>重なるが追加確認必須</strong></td></tr><tr><td><strong>国外法・外国政府アクセスリスク</strong></td><td>→ 下記で原文対比</td><td>→ 下記で原文対比</td><td><strong>重なるが追加確認必須</strong></td></tr><tr><td>契約終了・返却・破棄</td><td>削除・返却・資産管理・証跡</td><td>返却方法・破棄証跡を契約で定める</td><td>重なるが医療GL側が明示度高</td></tr><tr><td><strong>患者説明・説明責任</strong></td><td>（該当なし）</td><td>外部保存の安全性やリスクを患者に説明すること</td><td><strong>医療GL固有</strong></td></tr></tbody></table></div>
+</section>
+<section class="review-block" id="deep-dive-intro">
+<h3>3論点の原文対比と差異分析</h3>
+<div class="callout info"><div class="co-ico">i</div><div><div class="co-body"><p>比較マトリクスで「重なるが追加確認必須」とした3行（保存場所・国内法適用・国外法リスク）について、ISMAP管理基準と医療GL企画管理編の原文を並べ、何がどの程度違うのかを分析する。差異の核心は「ISMAPは事業者の管理能力（体制・プロセス）を評価し、医療GLは医療機関に個別事実の確認を義務づけている」という粒度の違いにある。</p></div></div></div>
+</section>
+<section class="review-block" id="deep-dive-location">
+<h3>論点1: 保存場所・データセンター所在地 — 原文対比</h3>
+<div class="block-content"><p><strong>前提: GWSのデータリージョン制約</strong> — Google Workspaceのデータリージョン設定では「米国」「欧州連合/ヨーロッパ」「指定なし」を選択可能だが、日本リージョンを指定する機能は現時点で提供されていない。この制約が保存場所の論点に直結する。</p><h4>ISMAP管理基準の原文</h4><p><strong>管理策 6.1.3.3.PB</strong></p><blockquote>クラウドサービス事業者は、クラウドサービス利用者に、クラウドサービス事業者の組織の地理的所在地、及びクラウドサービス事業者がクラウドサービス利用者のデータを保管する可能性のある国々を通知する。</blockquote><p><strong>管理策 15.1.1.16.B</strong>（抜粋）</p><blockquote>…必要に応じてクラウドサービス利用者が扱う情報が取り扱われる場所及び契約に定める準拠法・裁判管轄を指定する。</blockquote><h4>医療GL企画管理編の原文</h4><p><strong>7章【遵守事項】⑥ h</strong>（企画管理編 p.34）</p><blockquote>外部保存の委託先事業者を選定する際は、少なくとも次に掲げる事項について確認すること。<br>h 医療情報を保存する情報機器が設置されている場所(地域、国)</blockquote><p><strong>Q&amp;A 企Q-27</strong>（Q&amp;A p.45）</p><blockquote>法令上の保存義務を有する医療機関等は、システム堅牢性の高い安全な情報の保存場所を選定する必要があります。</blockquote><h4>差異の分析</h4><table><thead><tr><th>比較軸</th><th>ISMAP</th><th>医療GL</th></tr></thead><tbody><tr><td>主語</td><td>クラウドサービス<strong>事業者</strong>が通知する</td><td><strong>医療機関</strong>が確認する</td></tr><tr><td>要求の性質</td><td>「保管する<strong>可能性のある</strong>国々を通知」</td><td>「情報機器が設置されている<strong>場所</strong>を確認」</td></tr><tr><td>条件</td><td>「<strong>必要に応じて</strong>」場所を指定</td><td>「<strong>少なくとも</strong>」確認する事項として列挙</td></tr><tr><td>確認の粒度</td><td>国レベルの通知で充足</td><td>「地域、国」の単位で特定</td></tr></tbody></table><h4>差異の程度</h4><p>ISMAPは「事業者がデータ保管国を利用者に<strong>通知できる体制</strong>を持っている」ことを評価する。医療GLは「医療機関が実際に保存場所を<strong>確認・特定した</strong>こと」を遵守事項とする。ISMAPが通知体制の存在を保証しても、医療機関が実際にその通知を受け取り、具体的な場所を特定し、選定判断に使ったかどうかは別の問題である。</p><p><strong>Google Workspaceの場合</strong>: ISMAPに登録されているため、Googleにはデータ保管国を通知する体制がある。しかし実際に通知される内容は「米国/欧州/指定なし」であり、日本を指定する選択肢がない。ISMAPの管理策は満たしているが、医療GLの観点では「保存場所が日本国内である」という確認結果が得られない。</p><h4>残存リスクの評価</h4><p>保存場所が日本国外であることに伴うリスクを、GWSの典型的な利用形態（電子カルテがマスター、GWSは外部保存先）を前提に評価する。</p><ul><li><strong>行政調査への対応</strong>: 医療法第25条の立入検査等で診療録の提出が求められる場合、マスターデータは電子カルテ（EHR）にあるため、EHRから行政に提供できる。GWSは外部保存先（バックアップ・アーカイブ等）としての位置づけであり、GWSの物理的所在が米国であっても行政調査の実務に直接の障壁は生じない。EHRのデータが消失しGWSのみに残存するケースでは間接的な影響があり得るが、その場合もGWSからのデータエクスポートで対応可能である。なお、GWS上にはEHRに存在しないデータ（Gmail/Chatでの患者との事務的やりとり、医師・コメディカル間の連絡等）が生じる場合があるが、これらは診療録（医師法第24条の保存義務対象）ではなく業務コミュニケーションデータであり、立入検査における診療録提出の直接の対象ではない</li><li><strong>災害・障害時の可用性</strong>: データセンターが海外にある場合、日本の災害対策法制に基づく優先復旧の対象にならないことは事実である。しかし、GWSは複数リージョンにデータを複製するグローバル分散アーキテクチャにより、99.9%以上のSLAを提供している。日本国内の単一拠点に保存する場合と比較すると、地震・台風等の日本固有の災害リスクに対してグローバル分散のほうが可用性が高い。法制度上の位置づけと技術的な可用性は分けて評価する必要がある</li><li><strong>患者からの問い合わせへの対応</strong>: 個人情報保護法上、物理的な保存場所を患者に積極的に開示する法的義務はない（委託として整理すれば第三者提供にあたらず、基準適合体制ルートなら外国提供の同意も不要）。患者から問い合わせがあった場合には、保存場所に加えてISMAP認証・暗号化・アクセス制御・監査ログ等のセキュリティ体制全体を説明することで、適切に対応できる。なお、場所が日本国内であっても安全管理が不十分な事業者に預けるほうが実質的なリスクは高く、保存場所そのものが安全性を保証するわけではない</li></ul><h4>ISMAPと医療GLの関係 — 上乗せ構造</h4><p>ISMAPは政府が調達するクラウドサービスのセキュリティ要求適合を評価・登録する制度であり、データ所在国そのものを承認する制度ではない。政府情報システムのクラウド利用方針（DS-310）は、データセンター設置場所について<strong>「国内であることを基本」</strong>とし、海外保管が必要な場合は準拠法・国際裁判管轄・暗号化・鍵管理等の個別確認を求めている。</p><p>つまり、政府調達においてもデータの海外保存は無条件に受容されているわけではなく、ISMAP登録は個別のデータ所在判断の前提となるセキュリティ評価である。医療GLはこのセキュリティ評価の基盤の上に、医療固有の要件（保存場所の特定、行政調査への対応能力等）を<strong>上乗せ</strong>している関係にある。</p><p>ただし、上乗せの根拠は医療データの特殊性にある。医療機関は個々の患者との診療契約における受任者として善管注意義務（民法第644条）を負い、患者情報は行政監督（医療法第25条の立入検査等）の対象でもある。政府が自らのデータについて行う政策判断と、医療機関が患者のデータについて負う管理責任ではアカウンタビリティの構造が異なるため、ISMAP評価をそのまま適用するのではなく、医療固有の確認事項を追加して判断することが求められる。</p></div>
+</section>
+<section class="review-block" id="deep-dive-domestic-law">
+<h3>論点2: 国内法の適用 — 原文対比</h3>
+<div class="block-content"><h4>ISMAP管理基準の原文</h4><p><strong>管理策 15.1.1.16.B</strong></p><blockquote>当該事業者が提供するサービス上で取り扱われる情報に対して国内法以外の法令及び規制が適用された結果、クラウドサービス利用者の意図しないまま当該利用者の管理する情報にアクセスされ、又は処理されるリスクを評価して外部委託先を選定し、必要に応じてクラウドサービス利用者が扱う情報が取り扱われる場所及び契約に定める準拠法・裁判管轄を指定する。</blockquote><p><strong>管理策 18.1.1</strong></p><blockquote>各情報システム及び組織について、全ての関連する法令、規制及び契約上の要求事項、並びにこれらの要求事項を満たすための組織の取組みを、明確に特定し、文書化し、また、最新に保つ。</blockquote><h4>医療GL企画管理編の原文</h4><p><strong>7章【遵守事項】⑤</strong>（企画管理編 p.33）</p><blockquote>外部の事業者との契約に基づいて医療情報を外部保存する場合、以下の対応を行うこと。重要度の高い委託の場合は、経営層に丁寧に報告し、承認を得ること。<br>－ 保存された情報を格納する情報機器等が、国内法の適用を受けることを確認すること。</blockquote><p><strong>Q&amp;A 企Q-27</strong>（Q&amp;A p.45）</p><blockquote>外部保存されている医療情報は、保存される情報やその目的に応じて厚生労働省等、所管する行政機関の調査等に供するため、提出等を行う必要が生じうることから、これを円滑に実現できることが求められます。<br>そのため外部保存の受託事業者の選定にあたっては、国内法の適用があることや、逆にこれを阻害するような国外法の適用がないことなどを確認し、適切に判断した上で選定することが求められます。</blockquote><p><strong>Q&amp;A 企Q-26</strong>（Q&amp;A p.45）— 例外規定</p><blockquote>医療情報が保存されないことが、契約等において担保されている場合は国内法の適用を受けていないサーバを利用可能です。</blockquote><h4>差異の分析</h4><table><thead><tr><th>比較軸</th><th>ISMAP</th><th>医療GL</th></tr></thead><tbody><tr><td>要求の性質</td><td>法令・規制を「特定し文書化」＋「<strong>必要に応じて</strong>」準拠法を指定</td><td>「国内法の適用を受けること<strong>を確認する</strong>」（無条件の遵守事項）</td></tr><tr><td>判断基準</td><td>リスク評価結果に基づく判断</td><td>「国内法の適用」という<strong>二値判定</strong>（適用を受ける/受けない）</td></tr><tr><td>目的の明示</td><td>一般的な法令遵守</td><td>「行政機関の調査等に供するため」と<strong>具体的目的</strong>を明示</td></tr><tr><td>条件の厳格さ</td><td>プロセス要件（評価・文書化）</td><td>結果要件（国内法が適用されている事実）</td></tr></tbody></table><h4>差異の程度</h4><p>ISMAPは「関連法令を特定・文書化し、リスクを評価して、必要に応じて準拠法を指定する<strong>プロセス</strong>を持っている」ことを評価する。医療GLは「保存された情報を格納する情報機器等が国内法の適用を受けている<strong>事実</strong>」を確認することを遵守事項とする。</p><p>この差は単なる表現の違いではない。ISMAPの管理策は「リスクを評価した結果、準拠法を指定しないという判断」も許容する（「必要に応じて」）。医療GLは「国内法の適用を受けること」を無条件の確認事項としており、「評価した結果、国内法適用でなくてもよい」という判断の余地を与えていない。</p><p>さらにQ&amp;Aは「行政機関の調査等に供するため提出等を行う必要が生じうる」と目的を明示しており、国内法適用の要件は抽象的なコンプライアンスではなく、行政調査への対応能力という具体的要請に根ざしている。</p><p><strong>Google Workspaceの場合</strong>: Googleは法令特定・文書化のプロセスを持ち（ISMAP適合）、契約で準拠法を指定できる。しかし、データの保存先が米国/欧州であり、情報機器が物理的に日本国外にある場合、「情報機器等が国内法の適用を受ける」という確認結果は得られない可能性が高い。</p><h4>「契約上の準拠法」と「物理的法域」の違い — 何がどこまで効くか</h4><p>「契約で日本法を準拠法に指定すれば国内法適用の要件を満たせるのでは」という疑問が生じるが、この2つは法的に異なる層の話であり、カバー範囲が重ならない部分がある。</p><table><thead><tr><th>層</th><th>契約上の準拠法指定</th><th>情報機器所在地に基づく法域</th></tr></thead><tbody><tr><td>何を規律するか</td><td>当事者間（医療機関とGoogle）の権利義務・紛争解決ルール</td><td>情報機器が物理的に置かれた国の公法（行政法・刑事法・規制法）が当該機器に及ぶ範囲</td></tr><tr><td>効力の範囲</td><td>契約当事者間のみ。第三者（外国政府等）を拘束しない</td><td>当該国の領域内にある機器に対して、国家権力が直接行使される</td></tr><tr><td>行政調査への効果</td><td>日本の行政機関が医療機関に「データを出せ」と命じる根拠にはなるが、Googleが米国にあるサーバーからデータを取り出す義務は契約上の問題になる</td><td>日本の行政機関が直接サーバーに対して調査権限を行使するには、機器が日本国内にある必要がある</td></tr><tr><td>外国政府の介入</td><td>排除できない。契約で「第三者にデータを開示しない」と定めても、米国裁判所の令状には対抗できない</td><td>機器が米国にあれば、米国の捜索令状・差押え・CLOUD Act命令の物理的執行が可能</td></tr></tbody></table><h4>ギャップの実際の大きさ</h4><p>このギャップは理論上のものではなく、実務上の以下の場面で顕在化する。</p><ul><li><strong>場面1: 厚労省が立入検査で診療録の提出を求める</strong> — 医療機関はGoogleに契約に基づきデータ取得を依頼できるが、Googleが応じる速度と確実性は契約上のSLAに依存する。ただし、この構造はサーバーが国内にあっても本質的に変わらない。現代の分散システムではデータは暗号化・分散されており、行政機関が物理的にサーバーを差し押さえてもデータを取得できない。国内・海外を問わず、行政調査はサービス事業者の技術的協力に依存する。差異があるのは法的プロセスの層であり、国内事業者には裁判所命令で直接協力を強制できるのに対し、海外事業者には国際司法共助を経る必要がある点である</li><li><strong>場面2: 訴訟で患者の診療録が証拠として必要になる</strong> — 日本の裁判所が文書提出命令を出しても、執行先が米国のサーバーであれば、国際司法共助の手続きを経る必要がある場合がある</li><li><strong>場面3: 米国政府がCLOUD Actに基づきGoogleにデータ開示を命じる</strong> — CLOUD Actは米国企業が保有するデータに適用され、データセンターの物理的所在地は無関係である。Google Cloud の東京リージョンやAWSの東京リージョンを利用し、データが日本国内に保存されていても、Google・Amazon が米国企業である限り CLOUD Act の適用を受ける。つまり、ガイドラインの「保存場所を日本に指定する」という要件は CLOUD Act リスクに対しては防御にならない。このリスクはサービス事業者の本社所在地（法域）の問題であり、データの物理的所在地の問題ではない</li></ul><p>ただし、以下の点は過度に悲観的な評価を避けるために考慮すべきである。</p><ul><li>医療機関が自らデータをエクスポートし国内に保持する運用を組み合わせれば、行政調査への対応は可能になる（ただしリアルタイムデータは対象外）</li><li>米国政府が日本の患者の診療録を特定して開示請求する実務上の蓋然性は低い（ただし蓋然性の低さはガイドライン遵守の根拠にはならない）</li><li>Google自身が「法的に可能な範囲で利用者に通知し、不当な請求には異議を申し立てる」方針を公表している（ただし通知禁止命令がある場合は通知できない）</li></ul><h4>残存リスク</h4><ul><li><strong>行政調査の法的プロセスの差異</strong>: 医療法・健康保険法等に基づく立入検査や報告命令が出された場合、データの取得はいずれの場合もサービス事業者の技術的協力を要する（物理的にサーバーを差し押さえてもデータは取得できない）。差異は法的プロセスにある。国内事業者には日本の裁判所が直接命令を出せるが、海外事業者には国際司法共助を経る必要があり、速度と確実性に差が生じうる</li><li><strong>「契約上の準拠法」と「物理的な法域」の乖離</strong>: 契約で日本法を準拠法と定めても、情報機器が米国にあれば米国裁判所の管轄権が及ぶ。契約上の準拠法は当事者間の紛争解決ルールであり、第三者（米国政府等）による法的介入を排除するものではない</li><li><strong>国内法の「適用を受ける」の解釈問題</strong>: 企画管理編の「国内法の適用を受けることを確認する」が何を意味するか — 契約上の準拠法で足りるのか、情報機器の物理的所在に基づく法域が必要なのか — は解釈に幅があるが、Q&amp;Aが「行政機関の調査等に供するため」と目的を明示している以上、行政権限が実効的に及ぶことが求められていると読むのが自然である</li></ul><h4>政府調達と医療GLの位置関係</h4><p>政府情報システムのクラウド利用方針（DS-310）自体が「データセンター設置場所は<strong>国内であることを基本</strong>」としており、海外保管は個別のリスク評価と保護措置を前提としている。つまり、政府調達でもデータの海外保存は無条件に許容されているわけではない。</p><p>ISMAPはこの方針の中でクラウドサービスのセキュリティ評価を担う制度であり、医療GLは医療固有の確認事項（行政調査への対応能力、保存場所の特定等）をISMAPの評価基盤の上に上乗せする関係にある。ISMAPが「保管可能国の通知」「国外法リスクの評価」を管理策として求め、DS-310が「国内を基本」とし、医療GLが「国内法の適用を確認」を遵守事項とするのは、抽象度と要求の厳格さが段階的に上がる構造であり、矛盾ではなく上乗せである。</p></div>
+</section>
+<section class="review-block" id="deep-dive-foreign-law">
+<h3>論点3: 国外法・外国政府アクセスリスク — 原文対比</h3>
+<div class="block-content"><h4>ISMAP管理基準の原文</h4><p><strong>管理策 15.1.1.16.B</strong></p><blockquote>当該事業者が提供するサービス上で取り扱われる情報に対して国内法以外の法令及び規制が適用された結果、クラウドサービス利用者の意図しないまま当該利用者の管理する情報にアクセスされ、又は処理されるリスクを評価して外部委託先を選定し…</blockquote><h4>医療GL企画管理編の原文</h4><p><strong>7章【遵守事項】⑥ i</strong>（企画管理編 p.34）</p><blockquote>外部保存の委託先事業者を選定する際は、少なくとも次に掲げる事項について確認すること。<br>i 委託先事業者に対する国外法の適用可能性</blockquote><p><strong>Q&amp;A 企Q-27</strong>（Q&amp;A p.45）</p><blockquote>外部保存の受託事業者の選定にあたっては、国内法の適用があることや、逆にこれを阻害するような国外法の適用がないことなどを確認し、適切に判断した上で選定することが求められます。</blockquote><h4>差異の分析</h4><table><thead><tr><th>比較軸</th><th>ISMAP</th><th>医療GL</th></tr></thead><tbody><tr><td>確認の対象</td><td>「国内法以外の法令・規制が適用された<strong>結果</strong>」のリスク</td><td>「委託先事業者に対する国外法の<strong>適用可能性</strong>」そのもの</td></tr><tr><td>要求の性質</td><td>リスクを「<strong>評価</strong>」する</td><td>適用可能性を「<strong>確認</strong>」する</td></tr><tr><td>判断の方向性</td><td>リスク評価に基づく委託先<strong>選定</strong></td><td>国内法を阻害する国外法がないことの<strong>確認</strong></td></tr><tr><td>閾値</td><td>リスク水準に応じた判断（段階的）</td><td>「阻害するような国外法の適用がないこと」（有無の判定）</td></tr></tbody></table><h4>差異の程度</h4><p>ISMAPは国外法リスクを「<strong>評価</strong>」し、評価結果に基づいて委託先を「<strong>選定</strong>」することを求める。リスクが存在しても、評価した上で受容する判断は制度上あり得る。</p><p>医療GLは国外法の「<strong>適用可能性を確認</strong>」し、Q&amp;Aでは「国内法の適用を<strong>阻害するような</strong>国外法の適用がないこと」を確認するよう求める。「阻害する国外法があるが、評価した結果受容する」という判断の余地は、Q&amp;Aの文言上は明示されていない。</p><p>ここに最大の構造的ギャップがある。ISMAPはリスクベースの評価（程度問題）を認めるが、医療GLは「阻害する国外法がないこと」の確認（有無の問題）を求めている。CLOUD Act等の域外適用法制が存在する米国系事業者の場合、ISMAPのリスク評価では「リスクを認識し対策を講じた上で利用する」という整理が可能だが、医療GLの「阻害する国外法がないことの確認」は文言上クリアしにくい。</p><p><strong>Google Workspaceの場合</strong>: Google LLC は米国法人であり、CLOUD Act (18 U.S.C. §2713) の適用を受ける。ISMAPの管理策に従えば「CLOUD Actによる強制開示リスクを評価し、対策を講じた上で利用する」という整理は可能。しかし医療GLのQ&amp;Aが求める「国内法の適用を阻害するような国外法の適用がないこと」については、CLOUD Actの存在自体が「阻害する可能性のある国外法」に該当し得る。この点が、補完措置（CSE/HYOK等による技術的対策）で「条件付き受容」に持ち込めるかどうかの焦点になる。</p><h4>残存リスク</h4><ul><li><strong>患者データへの外国政府アクセス</strong>: CLOUD Actに基づき、米国政府がGoogle LLCに対してデータ開示命令を出した場合、Googleは保存場所にかかわらず当該データを提出する法的義務を負う。患者の同意も医療機関への通知もなく、診療録が米国政府に開示される可能性がある</li><li><strong>通知禁止命令のリスク</strong>: 米国の裁判所はgag order（通知禁止命令）を併発できるため、Googleが医療機関に「あなたのデータが開示された」と通知することすら禁じられる場合がある。医療機関は自らの患者データが外国政府に渡ったことを知らないまま診療を継続するリスクがある</li><li><strong>「阻害する国外法がない」と言えない状態</strong>: CLOUD Actが存在する以上、「国内法の適用を阻害するような国外法の適用がないこと」を確認した結果は「阻害し得る国外法が存在する」になる。これは医療GLの遵守事項を文言通り満たせないことを意味する</li></ul><h4>政府調達では許容され、医療では許容しにくい理由</h4><p>政府調達の文脈では、ISMAPの管理策15.1.1.16.Bは国外法リスクを<strong>「評価」して委託先を「選定」する</strong>ことを求めている。これはリスクベースの判断であり、「リスクを認識した上で、対策を講じて利用する」という結論が制度上許容される。政府は<strong>自らの情報資産に対するリスク許容度を自ら決定する権限</strong>を持つ。</p><p>医療GLは「阻害するような国外法の適用が<strong>ないこと</strong>」の確認を求めている。これはリスクベースの程度問題ではなく、<strong>有無の判定</strong>である。医療機関は患者情報の受託者であり、患者データに対する外国政府のアクセス可能性を「リスクとして受容する」権限を当然には持たない。医療GLがリスク評価ではなく事実確認を求めているのは、<strong>患者の権利保護と行政監督の実効性は、医療機関のリスク判断で左右されるべきではない</strong>という制度設計に基づく。</p></div>
+</section>
+<section class="review-block" id="ismap-risk-hedge">
+<h3>ISMAPが3論点に対して提供するリスクヘッジ — 原文に基づく評価</h3>
+<div class="block-content"><p>前節の原文対比では、ISMAPの管理策と医療GLの遵守事項の間に構造的な差異（体制評価 vs 事実確認）があることを示した。しかしこの差異は「ISMAPが3論点に対して何もしていない」ことを意味しない。ISMAP認証済みの事業者は、3論点のそれぞれについて<strong>具体的な義務を監査で確認されている</strong>。</p><h4>論点1: 保存場所に対するISMAPのリスクヘッジ</h4><p><strong>管理策 6.1.3.3.PB</strong>（原文）</p><blockquote>クラウドサービス事業者は、クラウドサービス利用者に、クラウドサービス事業者の組織の地理的所在地、及びクラウドサービス事業者がクラウドサービス利用者のデータを保管する可能性のある国々を通知する。</blockquote><p><strong>これが意味するリスクヘッジ</strong>: ISMAP認証済みの事業者は、データ保管国を利用者に通知する義務が監査で確認されている。利用者（医療機関）は「どこに保存されるか分からない」状態にはならない。GWSの場合、「米国/欧州/指定なし」という選択肢が明示されており、保存場所の<strong>不透明性リスクは解消</strong>されている。残るのは「日本ではない」という事実に対する評価であり、これは不透明性とは質の異なるリスクである。</p><h4>論点2: 国内法適用に対するISMAPのリスクヘッジ</h4><p><strong>管理策 15.1.1.16.B</strong>（原文）</p><blockquote>…必要に応じてクラウドサービス利用者が扱う情報が取り扱われる場所及び契約に定める準拠法・裁判管轄を指定する。</blockquote><p><strong>管理策 18.1.1</strong>（原文）</p><blockquote>各情報システム及び組織について、全ての関連する法令、規制及び契約上の要求事項、並びにこれらの要求事項を満たすための組織の取組みを、明確に特定し、文書化し、また、最新に保つ。</blockquote><p><strong>これが意味するリスクヘッジ</strong>: ISMAP認証済みの事業者は、(1) 契約で準拠法・裁判管轄を指定する仕組みを持ち、(2) 関連法令を特定・文書化・更新する体制が監査で確認されている。GWSの場合、日本法を準拠法とする契約締結が可能であり、Google合同会社を契約主体として日本の裁判管轄を指定できる。契約上の準拠法は物理的法域と異なる層の保護だが、<strong>当事者間の紛争解決、損害賠償請求、契約違反に対する救済は日本法で行える</strong>。「国内法が一切及ばない」状態ではない。</p><h4>論点3: 国外法リスクに対するISMAPのリスクヘッジ</h4><p><strong>管理策 15.1.1.16.B</strong>（原文）</p><blockquote>当該事業者が提供するサービス上で取り扱われる情報に対して国内法以外の法令及び規制が適用された結果、クラウドサービス利用者の意図しないまま当該利用者の管理する情報にアクセスされ、又は処理されるリスクを評価して外部委託先を選定し…</blockquote><p><strong>これが意味するリスクヘッジ</strong>: ISMAP認証済みの事業者は、国外法による意図しないアクセスリスクを<strong>評価し、その評価に基づいて対策を講じていること</strong>が監査で確認されている。GWSの場合、Googleは年次透明性報告で政府からのデータ開示請求件数と対応を公開しており、法的に可能な範囲で利用者通知・異議申立てを行う方針を持つ。CLOUD Actの適用可能性は存在するが、ISMAP認証は「リスクを把握していない」「対策がない」状態ではないことを保証する。</p><h4>まとめ: ISMAPが解消するリスクと残存するリスク</h4><table><thead><tr><th>論点</th><th>ISMAPが解消するリスク</th><th>ISMAPでは解消しない残存リスク</th></tr></thead><tbody><tr><td>保存場所</td><td>不透明性（どこか分からない）</td><td>日本国外であること自体</td></tr><tr><td>国内法適用</td><td>契約的無保護（準拠法・管轄の未設定）</td><td>情報機器の物理的法域が日本外であること</td></tr><tr><td>国外法リスク</td><td>無認識・無対策（リスクを知らない・備えがない）</td><td>CLOUD Act等の国外法が存在すること自体</td></tr></tbody></table><p>ISMAPは3論点のリスクを「ゼロ」にはしないが、「不透明・無保護・無認識」という最も危険な状態を排除する。残存リスクは「保存場所が日本でない」「物理的法域が日本外」「CLOUD Actが存在する」という<strong>事実に対する評価</strong>に絞られる。この残存リスクを、サービスのベネフィットと補完措置を含めて総合的に判断するのが、リスクベースの評価である。</p></div>
+</section>
+<section class="review-block" id="overlap-coverage">
+<h3>認証で達成済みと見なせる範囲</h3>
+<div class="block-content"><p>ISMAP登録済みサービス（Google Workspace: C21-0005-2）について、以下の観点は「ISMAP管理基準に基づく第三者監査で適合が確認されている」と整理できる。</p><table><thead><tr><th>観点</th><th>ISMAPでの確認内容</th><th>医療GL要件との対応</th></tr></thead><tbody><tr><td>組織的安全管理</td><td>情報セキュリティ方針、体制、責任分担の文書化</td><td>企画管理編の組織体制要件をカバー</td></tr><tr><td>技術的安全管理</td><td>アクセス制御、認証、暗号化、脆弱性管理、ログ監視</td><td>システム運用編の技術要件の大部分をカバー</td></tr><tr><td>運用管理</td><td>変更管理、構成管理、インシデント対応、事業継続</td><td>運用編の管理要件をカバー</td></tr><tr><td>委託先管理（1次）</td><td>サプライヤ関係、ICTサプライチェーン管理</td><td>委託先選定・監督の基本要件をカバー</td></tr></tbody></table><p>ただし、これは「事業者側の能力確認」であり、「医療機関側の管理義務」（委託先監督、契約管理、院内体制構築等）を免除するものではない。</p></div>
+</section>
+<section class="review-block" id="guideline-positioning">
+<h3>ISMAPがカバーする範囲の整理</h3>
+<div class="block-content"><p>本文のISMAP評価概要（4.5節）で示したカバー状況の根拠として、ガイドライン要件分類ごとのISMAPカバー範囲を詳細に整理する。</p><table><thead><tr><th>ガイドラインの要件分類</th><th>ISMAPによるカバー</th><th>位置づけ</th></tr></thead><tbody><tr><td>技術的安全管理（暗号化、アクセス制御、監査ログ等）</td><td>高い。第三者監査で継続的に確認</td><td>法律（個人情報保護法の安全管理措置）の具体化部分 → ISMAPで実質的に充足</td></tr><tr><td>組織的安全管理（体制、方針、責任）</td><td>高い。ガバナンス基準で確認</td><td>同上 → ISMAPで実質的に充足</td></tr><tr><td>運用管理（BCP、インシデント対応、変更管理）</td><td>高い。マネジメント基準で確認</td><td>同上 → ISMAPで実質的に充足</td></tr><tr><td>委託先管理（選定基準、監督、再委託）</td><td>中〜高。サプライチェーン管理で確認</td><td>同上 → ISMAPで大部分充足、言明書確認で補完</td></tr><tr><td>保存場所・法域（国内保存、国内法適用、国外法リスク）</td><td>部分的。体制・プロセスは確認済み、事実の適合は別途</td><td>ガイドライン固有の遵守事項（法律・省令には直接の規定なし） → ISMAPでリスク低減、事実面は補完措置で対応</td></tr><tr><td>患者説明・説明責任</td><td>対象外</td><td>医療機関固有の義務 → 認証とは独立に対応</td></tr></tbody></table><p>ISMAPは法律・省令が求める安全管理措置の大部分をカバーする。3論点（保存場所・国内法・国外法）はガイドライン固有の遵守事項であり、法律・省令には直接の規定がない。ISMAPはこの3論点に対してもリスク低減効果を持つが、ガイドラインの文言通りの「事実確認」は別途必要になる。</p><h4>考察</h4><p>ISMAPは技術的・組織的・運用的な安全管理措置と委託先管理について高いカバレッジを持ち、医療GLが求める要件の大部分をセキュリティ基盤として充足している。一方、ISMAPがカバーしないのは<strong>保存場所・法域に関する確認事項</strong>（保存場所の特定、国内法適用の確認、国外法リスクの評価）であり、これらは医療データ固有の要件としてガイドラインが上乗せしている部分である。つまり、ISMAP登録をベースラインとして採用した上で、残る3論点についてのみ追加の評価と補完措置を設計すればよい、という構造になっている。</p></div>
+</section>
+<section class="review-block" id="qualitative-axes">
+<h3>定性評価軸（7軸）</h3>
+<div class="block-content"><p>本文の判断フレームワーク（4.10節）で用いる定性評価軸の詳細を以下に示す。医療機関がクラウド外部保存のリスクを評価する際の確認項目と判定基準である。</p><table><thead><tr><th>評価軸</th><th>確認内容</th><th>高リスク例</th><th>低リスク例</th></tr></thead><tbody><tr><td>データ分類</td><td>患者識別可能情報、仮名化情報、匿名加工情報、ログ、メタデータの区別</td><td>患者識別可能情報と鍵・対応表が同一クラウド内</td><td>医療情報は暗号化・仮名化され、対応表は別管理</td></tr><tr><td>所在マップ</td><td>保存・バックアップ・ログ・監視・サポート・フェイルオーバーの国・地域</td><td>保存先は指定だがログ・サポート・バックアップの国が不明</td><td>全処理経路が国・地域単位で列挙され、変更通知・承認がある</td></tr><tr><td>法域マップ</td><td>契約主体・親会社・準拠法・裁判管轄・運用者所在・再委託先</td><td>米国系事業者で復号可能、国外サポートが医療情報にアクセス可能</td><td>日本法人契約、国外アクセス不可または顧客承認制</td></tr><tr><td>鍵管理</td><td>CSE/BYOK/HYOK、鍵管理主体、事業者の復号可否</td><td>事業者が平文または鍵に通常アクセス可能</td><td>顧客管理鍵で事業者はコンテンツを復号できない</td></tr><tr><td>アクセス統制</td><td>特権アクセス、JIT承認、MFA、操作ログ、緊急アクセス</td><td>常設特権、監査ログ不十分</td><td>全特権アクセスがJIT、MFA、詳細ログ、事後レビュー対象</td></tr><tr><td>法的請求対応</td><td>当局請求時の通知・異議申立て・開示範囲最小化・透明性報告</td><td>通知不可時の代替報告なし、開示範囲不明</td><td>禁止されない限り通知、異議申立て、年次透明性報告</td></tr><tr><td>終了・移行</td><td>契約終了時の返却形式・破棄証明・移行テスト</td><td>返却形式や破棄証跡が未定</td><td>定期的なエクスポート試験、破棄証明、移行手順あり</td></tr></tbody></table><h4>GWSへの適用所見</h4><p>7軸のうち、GWSが「低リスク例」に該当するのは<strong>事業者監査</strong>（ISMAP・SOC2・ISO27001等の第三者評価あり）、<strong>鍵管理</strong>（CSE/CMEK選択可能）、<strong>終了・移行</strong>（Google Takeoutによるエクスポート可能）の3軸である。<strong>データ分類</strong>と<strong>所在マップ</strong>は医療機関側の運用設計に依存し、<strong>法域マップ</strong>と<strong>インシデント対応</strong>は米国法域に起因する構造的リスクが残る。特に法域マップ（CLOUD Actの適用可能性）は、補完措置で低減はできても排除はできない点に留意が必要である。</p></div>
+</section>
+<section class="review-block" id="quantitative-indicators">
+<h3>定量評価指標（9指標）</h3>
+<div class="block-content"><table><thead><tr><th>指標</th><th>目標値</th><th>意味</th></tr></thead><tbody><tr><td>対象データ種別の所在マップ化率</td><td>100%</td><td>医療情報・ログ・バックアップ・メタデータの所在不明を残さない</td></tr><tr><td>再委託先・サブプロセッサ列挙率</td><td>100%</td><td>未承認の処理者をなくす</td></tr><tr><td>未承認国外アクセス経路</td><td>0件</td><td>サポート・障害対応・監視経路を含める</td></tr><tr><td>暗号化適用率</td><td>100%</td><td>保存時・通信時。高リスク医療情報はCSE/HYOK等を検討</td></tr><tr><td>事業者が復号可能な高リスク医療情報</td><td>原則0件</td><td>国外法による強制開示時の平文開示リスクを下げる</td></tr><tr><td>特権アクセスのJIT化率</td><td>100%</td><td>常設特権をなくす</td></tr><tr><td>緊急アクセスレビュー期限</td><td>1-5営業日以内</td><td>緊急時の例外を後追いで閉じる</td></tr><tr><td>法的請求通知SLA</td><td>契約期限内</td><td>通知不能時の統計・透明性報告も確認</td></tr><tr><td>RTO/RPO</td><td>医療機関の業務継続要件</td><td>診療継続性を評価する</td></tr></tbody></table><h4>GWSでの達成見込み</h4><p>9指標のうち、GWSの標準構成で達成可能なのは<strong>所在マップ化率</strong>（Google公開情報で保存・処理場所を特定可能）、<strong>再委託先列挙率</strong>（サブプロセッサリスト公開）、<strong>暗号化適用率</strong>（転送時・保存時ともにデフォルトで暗号化）、<strong>インシデント通知SLA</strong>（BAA対象の通知体制あり）の4指標である。<strong>事業者が復号可能な高リスク医療情報</strong>はCSE導入で原則0件に近づけられるが、メタデータ・ファイル名・検索インデックス等は対象外となる。<strong>未承認国外アクセス経路</strong>はサポート経路の完全国内化が困難な点で課題が残る。</p></div>
+</section>
+<section class="review-block" id="references">
+<h2>参照資料</h2>
+<div class="block-content"><ul>
+<li><a href="https://laws.e-gov.go.jp/law/415AC0000000057">個人情報の保護に関する法律（個人情報保護法）</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/323AC0000000201">医療法</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/323AC0000000201#Mp-At_14_2">医療法施行規則 第14条第2項</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/321AC0000000202">医師法</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/416AC0000000149">e-文書法（民間事業者等が行う書面の保存等における情報通信の技術の利用に関する法律）</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/140AC0000000045#Mp-At_134">刑法 第134条（秘密漏示）</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/425AC0000000027">行政手続における特定の個人を識別するための番号の利用等に関する法律（マイナンバー法）</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/329AC0000000031">保健師助産師看護師法</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/129AC0000000089#Mp-At_644">民法 第644条（善管注意義務）</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/347AC0000000057">労働安全衛生法</a></li>
+<li><a href="https://www.mhlw.go.jp/stf/shingi/0000516275_00006.html">厚生労働省「医療情報システムの安全管理に関するガイドライン 第6.0版 企画管理編」</a></li>
+<li><a href="https://www.mhlw.go.jp/stf/shingi/0000516275_00006.html">厚生労働省「医療情報システムの安全管理に関するガイドライン第6.0版 Q&amp;A 令和7年5月」</a></li>
+<li><a href="https://www.soumu.go.jp/main_sosiki/joho_tsusin/top/Local_government/pdf/safetymanagement_guideline.pdf">総務省・経済産業省「医療情報を取り扱う情報システム・サービスの提供事業者における安全管理ガイドライン」</a></li>
+<li><a href="https://www.digital.go.jp/resources/standard_guidelines">デジタル庁「デジタル社会推進標準ガイドライン」</a></li>
+<li><a href="https://www.ismap.go.jp/csm?id=cloud_service_list">ISMAPクラウドサービスリスト（ismap.go.jp）</a></li>
+<li><a href="https://www.ismap.go.jp/csm?id=cloud_service_list">Google Workspace ISMAP言明対象範囲（C21-0005-2）</a></li>
+<li><a href="https://www.ismap.go.jp/csm?id=ismap_management_std">ISMAP管理基準マニュアル</a></li>
+<li><a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationssicherheit/C5/C5_node.html">BSI C5 Cloud Computing Compliance Criteria Catalogue</a></li>
+<li><a href="https://www.fedramp.gov/documents-templates/">FedRAMP Rev5 Documents &amp; Templates</a></li>
+<li><a href="https://www.edpb.europa.eu/our-work-tools/our-documents/recommendations/recommendations-012020-measures-supplement-transfer_en">EDPB Recommendations 01/2020 on supplementary measures for international transfers</a></li>
+<li><a href="https://www.jahis.jp/standard/contents_type=33">JAHIS「製造業者/サービス事業者による医療情報セキュリティ開示書」ガイドVer.5.0</a></li>
+</ul></div>
+</section>
+              </div>
+            </div>
+          </article>
+          
+        </div>
+      </div>
+</main>
+</body>
+</html>
