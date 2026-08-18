@@ -1,3 +1,4 @@
+```text
 # Grok Bot 日次Memory整理
 
 このRoutineは全Botが1日1回実行する。Routine本文の管理元は1つだけとし、leaderだけが変更する。leaderが本文を変更したら、自分のRoutineを更新し、変更後の全文を他Botへ送り、各Botに自分のRoutineを同じ全文へ更新させる。各Botは更新結果を確認してleaderへ返す。
@@ -27,13 +28,15 @@ descriptionには担当対象、非担当対象、責任境界、承認境界だ
 
 Memoryとして残せる種類は次の3つだけとする。
 
-- `FIXED_RULE:` 人が決めた恒久ルール
+- `FIXED_RULE:` ユーザーが明示的に決めた恒久ルール
 - `TUNING:` 期限付きの振る舞い調整
 - `FACT:` 継続的に参照する事実
 
 各項目は最初に内容を分類し、その後に`残す / 直す / 移す / 削除する`を決める。分類と処理を混同しない。判断できないが有用な可能性がある項目は変更せず未解決とする。参照先を失い意味を復元できない断片だけは削除してよい。
 
-FIXED_RULEは秘密値除去を除き、日次整理で変更、削除、統合、要約、言い換え、分割、移動、再解釈しない。FIXED_RULE同士の重複や矛盾は残したまま報告する。新しいFIXED_RULEを自動作成しない。
+FIXED_RULEは秘密値除去を除き、日次整理で変更、削除、統合、要約、言い換え、分割、移動、再解釈しない。FIXED_RULE同士の重複や矛盾は残したまま報告する。新しいFIXED_RULEを日次整理から自動作成しない。
+
+新しい振る舞いルールを発見しても、直接FIXED_RULEとして提案しない。新規の振る舞い調整はTUNINGとして扱う。FIXED_RULEへの提案を行ってよいのは、このRoutineで管理している既存TUNINGがFIXED_RULE候補の条件を満たした場合だけとする。
 
 接頭辞のない項目をFIXED_RULEへ変更してよいのは、ユーザーがその内容を恒久ルールとして明示的に保存・指定したことを現在参照できる情報から確認できる場合だけとする。確認できなければFIXED_RULEへ昇格させない。
 
@@ -60,7 +63,9 @@ FACTは長期的に有効な事実だけ残す。現在の件数、進捗、価�
 `TUNING: [source=<user|observed|legacy>][expires=YYYY-MM-DD][user_confirm=N][state=<active|fixed_candidate_new|fixed_candidate_waiting>] <規則>`
 
 ### user
-ユーザーが「今後は〜して」「その書き方はやめて」など、今後の振る舞いを明示的に修正した場合は、再発回数を問わず作成してよい。
+
+ユーザーが「今後は〜して」「その書き方はやめて」など、今後の振る舞いを明示的に修正した場合は、再発回数を問わずTUNINGとして作成してよい。
+
 新規時:
 - `source=user`
 - `expires=作成日+90日`
@@ -70,7 +75,9 @@ FACTは長期的に有効な事実だけ残す。現在の件数、進捗、価�
 その場限りの修正、単なる感想や非難、具体的な訂正文だけならTUNINGにしない。感情評価は保存せず、今後守る振る舞いだけを中立的な規則にする。元の指示より適用範囲を広げない。
 
 ### observed
-ユーザーの明示指示がなく、Bot自身の観察から作る場合は、同種の問題が独立して複数回再発したことを確認できる場合だけ作る。
+
+ユーザーの明示指示がなく、Bot自身の観察から作る場合は、同種の問題が独立して複数回再発したことを確認できる場合だけTUNINGを作る。
+
 新規時:
 - `source=observed`
 - `expires=作成日+30日`
@@ -80,7 +87,9 @@ FACTは長期的に有効な事実だけ残す。現在の件数、進捗、価�
 同じ問題が再発したら新規TUNINGを作らず、既存TUNINGの`expires`を再発確認日+30日に更新する。
 
 ### legacy
+
 既存TUNINGにメタデータがない場合、現在参照できる情報だけで出自を判定する。
+
 - user由来が明確 → `source=user / expires=移行日+90日 / user_confirm=1 / state=active`
 - observed由来が明確 → `source=observed / expires=移行日+30日 / user_confirm=0 / state=active`
 - 判定不能 → `source=legacy / expires=移行日+90日 / user_confirm=0 / state=active`
@@ -88,21 +97,41 @@ FACTは長期的に有効な事実だけ残す。現在の件数、進捗、価�
 出自確認のため過去agent log全件を探索しない。
 
 ### ユーザーの再確認
-同じ振る舞いをユーザーが今後も適用すると再度明示した場合、新規TUNINGを作らず既存を`source=user`へ更新する。`source=user`なら`user_confirm`を1増やし、observedまたはlegacyから初めてユーザー確認された場合は`user_confirm=1`とする。`expires=再確認日+90日 / state=active`へ更新する。通常の応答でTUNINGを使っただけでは確認回数も期限も更新しない。
+
+同じ振る舞いをユーザーが今後も適用すると再度明示した場合、新規TUNINGを作らず既存を`source=user`へ更新する。
+
+`source=user`なら`user_confirm`を1増やす。observedまたはlegacyから初めてユーザー確認された場合は`user_confirm=1`とする。
+
+`expires=再確認日+90日 / state=active`へ更新する。
+
+通常の応答でTUNINGを使っただけでは確認回数も期限も更新しない。
 
 ### 期限到来
+
 `state=active`で現在日が`expires`以上なら:
+
 - `user_confirm<=1` → 自動削除
 - `user_confirm>=2` → `state=fixed_candidate_new / expires=候補化日+14日`
 
-`fixed_candidate_new`はその回だけ、`FIXED_RULE化 / TUNING継続 / 削除`の3択をユーザーへ提示する。提示後は同じ`expires`のまま`state=fixed_candidate_waiting`へ更新する。
+`fixed_candidate_new`は、新しいFIXED_RULEをBotが思いついて提案する処理ではない。既存TUNINGについて、ユーザーによる複数回の明示確認を経て恒久ルールへ昇格するかを確認するための状態である。
+
+`fixed_candidate_new`になった回だけ、次の3択をユーザーへ提示する。
+
+1. `FIXED_RULE化`
+2. `TUNING継続`
+3. `削除`
+
+提示後は同じ`expires`のまま`state=fixed_candidate_waiting`へ更新する。
 
 ユーザー判断:
-- FIXED_RULE化 → ユーザーの明示指示として同内容のFIXED_RULEを作りTUNINGを削除
-- TUNING継続 → `user_confirm+1 / expires=回答日+90日 / state=active`
-- 削除 → TUNINGを削除
 
-`fixed_candidate_waiting`は同じ候補を毎日再提示しない。現在日が`expires`以上になっても判断がなければ自動削除する。FIXED_RULEへ自動昇格しない。
+- `FIXED_RULE化` → ユーザーの明示的な承認として同内容のFIXED_RULEを作り、元のTUNINGを削除する。
+- `TUNING継続` → `user_confirm+1 / expires=回答日+90日 / state=active`
+- `削除` → TUNINGを削除する。
+
+`fixed_candidate_waiting`は同じ候補を毎日再提示しない。現在日が`expires`以上になっても判断がなければ自動削除する。
+
+FIXED_RULEへ自動昇格しない。
 
 期限前でも、ユーザーによる撤回、後のTUNINGへの置換、同内容のFIXED_RULE追加、FIXED_RULEとの矛盾があれば削除または置換する。
 
@@ -115,7 +144,9 @@ Bot固有TUNINGはagent profile、複数Bot共通TUNINGは共有user-memoryに�
 agent logは現在状態ではなく累積履歴とする。毎日全件を再評価しない。
 
 差分境界としてagent log内に1件だけ、
+
 `[MEMORY_CLEANUP_CURSOR] <日時>`
+
 を置く。
 
 一覧上で最後のカーソルより後ろだけを今回の整理対象とする。カーソル以前は参照専用で、秘密値除去またはユーザー明示指示を除き、削除、統合、要約、言い換え、書き換えをしない。
@@ -146,7 +177,11 @@ agent log:
 
 共有user-memoryに同じ内容がある場合、agent profile側の同内容は削除する。共有側を残す。
 
-内容は残す価値があるが置き場だけ誤っている場合は移す。移動先への反映を確認してから元を削除する。leader以外が共有user-memoryへの移動を必要とする場合は元を残してleaderへ提案する。leaderが共有から特定Botへ移す場合も、対象Botの反映完了後に共有側を削除する。
+内容は残す価値があるが置き場だけ誤っている場合は移す。移動先への反映を確認してから元を削除する。
+
+leader以外が共有user-memoryへの移動を必要とする場合は元を残してleaderへ提案する。
+
+leaderが共有から特定Botへ移す場合も、対象Botの反映完了後に共有側を削除する。
 
 ## 6. 矛盾
 
@@ -160,13 +195,16 @@ agent log:
 Memoryに複数回再利用できる作業手順、判断方法、検証方法、出力形式などがある場合だけSkill候補とする。
 
 候補がある場合だけ関連する既存Skillを確認する。
+
 - 現在のBotが利用できる既存Skillに同じ内容がある → Memory側を削除
 - 同じSkillがあるが現在のBotから利用できない → Memoryを残し、その事実を報告
 - 対応Skillがない → Skill草案を作る
 
 Skill草案には、Skill名、使用条件、目的、入力、必要アクセス、手順、判断条件、検証、出力、失敗時処理、承認条件を含める。根拠のない内容は補わず`未確定`とする。
 
-leader以外は草案をleaderへ送り、leaderはユーザーへ提案する。日次整理からSkillを自動登録・変更しない。Skill登録と内容移行を確認してから元Memoryを削除する。
+leader以外は草案をleaderへ送り、leaderはユーザーへ提案する。
+
+日次整理からSkillを自動登録・変更しない。Skill登録と内容移行を確認してから元Memoryを削除する。
 
 Memory内の時刻や通知先などからRoutineを新設、変更、提案しない。
 
@@ -191,11 +229,15 @@ Memory内の時刻や通知先などからRoutineを新設、変更、提案し�
 ## 9. 報告
 
 変更も提案も未解決もなければ、
+
 `Memory整理: 変更なし`
+
 だけを書く。
 
 それ以外は最初に、
+
 `Memory整理: 直しN件 / 移動N件 / 削除N件 / TUNING更新N件 / FIXED候補N件 / 未解決N件 / 共有Memory提案N件 / Skill草案N件`
+
 と書く。
 
 変更項目は自由作文せず、次の固定ラベルで示す。
@@ -228,7 +270,9 @@ Memory内の時刻や通知先などからRoutineを新設、変更、提案し�
 ## 10. 設計理由【非実行】
 
 - Memoryは増えやすいため、「保存できるか」ではなく「毎回参照する価値があるか」で残す。
-- FIXED_RULEは人が決めた恒久ルールなので自動最適化しない。
+- FIXED_RULEはユーザーが明示的に決めた恒久ルールなので自動最適化しない。
+- 新しい振る舞いルールを直接FIXED_RULEとして提案しない。新規提案はTUNINGから始める。
+- FIXED_RULEへの昇格提案は、既存TUNINGがライフサイクル上の条件を満たした場合だけ行う。
 - 接頭辞のない項目をFIXED_RULEへ自動昇格させない。
 - TUNINGはFIXED_RULEとの区別を保つため期限付きにする。
 - ユーザー明示の修正は1回でもTUNINGにできるが、Bot自身の観察は複数回の再発を必要とする。
@@ -241,3 +285,4 @@ Memory内の時刻や通知先などからRoutineを新設、変更、提案し�
 - RoutineはMemoryの断片から自動生成しない。
 - 共有Memoryとagent profileへ同じ内容を二重保存しない。
 - 報告は自由作文を減らし、固定形式にする。
+```
